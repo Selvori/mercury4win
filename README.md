@@ -316,38 +316,96 @@ OPML 导入/导出功能实际上可用——`sidebar.tsx` 直接使用 `tauri-p
 
 ## 快速开始
 
-### 环境要求
+### 前置条件
 
-- **Node.js** ≥ 18
-- **Rust** ≥ 1.77.2
-- **Windows**: WebView2（Win 10/11 预装）
-- **macOS**: ≥ 12.0
-- **Linux**: `libwebkit2gtk-4.1-0` + `libgtk-3-0`
+#### 必需安装的软件
 
-### 开发
+| 工具 | 最低版本 | 检查命令 | 说明 |
+|------|---------|---------|------|
+| **Node.js** | ≥ 18 | `node --version` | 运行时 + npm 包管理 |
+| **Rust** | ≥ 1.77.2 | `rustc --version` | Rust 编译器 + Cargo 构建系统 |
+| **Git** | 任意 | `git --version` | Clone 仓库 |
+
+#### 平台特定依赖
+
+| 平台 | 需要 | 说明 |
+|------|------|------|
+| **Windows** | WebView2 Runtime | Win 10/11 预装，无需额外安装 |
+| **macOS** | ≥ 12.0 | 使用系统内置 WKWebView，无需额外安装 |
+| **Linux** | `libwebkit2gtk-4.1-0` + `libgtk-3-0` | Ubuntu/Debian: `sudo apt install libwebkit2gtk-4.1-dev libgtk-3-dev` |
+
+#### 确认无误的项目（无需额外安装）
+
+| 项 | 原因 |
+|---|------|
+| SQLite | `rusqlite` crate 开启 `bundled` 特性，编译时自动内嵌 SQLite 3 |
+| Tauri CLI | `npx tauri` 会自动下载正确的 CLI 版本 |
+| Visual Studio / C++ Build Tools | Rust 工具链自带链接器（GNU 和 MSVC 工具链均可） |
+
+### 环境验证
+
+在终端依次运行以下命令，确认全部通过：
 
 ```bash
-# 安装依赖
-npm install
-
-# 启动 Tauri 开发模式（Vite + Rust 后端）
-npm run tauri dev
-
-# 仅前端开发
-npm run dev
+node --version    # 应 ≥ 18
+rustc --version   # 应 ≥ 1.77.2
+git --version     # 应输出 git version x.x.x
 ```
 
-### 构建
+### 从 Clone 到运行
 
 ```bash
-# 完整构建（生成安装程序）
+# 1. Clone 仓库
+git clone git@github.com:Selvori/mercury4win-linux.git
+cd mercury4win-linux
+
+# 2. 安装前端依赖
+npm install
+
+# 3. 启动 Tauri 开发模式
+npx tauri dev
+```
+
+首次运行 `npx tauri dev` 时：
+- 自动下载 Tauri CLI（约 30 秒）
+- 编译 Rust 依赖（约 300+ crates，首次耗时 5-15 分钟，之后增量编译只需几秒）
+- 启动 Vite 开发服务器 + Rust 后端
+
+### 开发命令
+
+```bash
+# 仅前端开发（不启动 Rust 后端，AI 功能不可用）
+npm run dev
+
+# 启动 Tauri 开发模式（完整应用）
+npx tauri dev
+
+# TypeScript 类型检查
+npx tsc -b
+
+# 代码检查
+npm run lint
+```
+
+### 构建与打包
+
+```bash
+# 完整构建（生成 Windows .exe + .msi 安装程序）
 npx tauri build
 
-# 仅 Rust 发布构建
+# 仅编译 Rust 发布版
 cargo build --release --manifest-path src-tauri/Cargo.toml
 ```
 
-构建产物位于 `src-tauri/target/release/bundle/`。
+构建产物位于 `src-tauri/target/release/bundle/`：
+- `nsis/Mercury_x.x.x_x64-setup.exe` — NSIS 安装程序
+- `msi/Mercury_x.x.x_x64_en-US.msi` — MSI 安装程序
+
+### 注意事项
+
+- **AI 功能按需配置**：摘要、翻译、标签等 AI 功能需要配置 OpenAI 兼容 API Key。不配置也可正常使用所有非 AI 功能（Feed 订阅、阅读、笔记等）。
+- **跨平台开发**：macOS 用户无需额外配置；Linux 用户参照上方平台依赖安装 WebKit 库。
+- **Firewall / VPN**：部分 Feed 源可能被网络限制，建议开发环境中配置可访问海外站点的网络环境。
 
 ---
 
