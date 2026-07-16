@@ -2,7 +2,7 @@
 // Agent settings panel — provider/model/profile management
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Cpu, Plus, Trash2, Play, Layers, Settings2 } from "lucide-react";
+import { Cpu, Plus, Trash2, Play, Layers, Settings2, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -20,8 +20,9 @@ import {
 } from "@/lib/tauri_bindings";
 import type { ModelProfile, AgentProfile } from "@/types";
 import { useState } from "react";
+import { UsageStats } from "@/features/usage/components/usage_stats";
 
-type Tab = "providers" | "models" | "profiles";
+type Tab = "providers" | "models" | "profiles" | "usage";
 
 export function AgentSettings() {
   const [tab, set_tab] = useState<Tab>("providers");
@@ -33,6 +34,7 @@ export function AgentSettings() {
           { value: "providers" as Tab, label: "Providers", icon: Cpu },
           { value: "models" as Tab, label: "Models", icon: Layers },
           { value: "profiles" as Tab, label: "Profiles", icon: Settings2 },
+          { value: "usage" as Tab, label: "Usage", icon: BarChart3 },
         ]).map((opt) => (
           <Button
             key={opt.value}
@@ -54,6 +56,7 @@ export function AgentSettings() {
         {tab === "providers" && <ProvidersTab />}
         {tab === "models" && <ModelsTab />}
         {tab === "profiles" && <ProfilesTab />}
+        {tab === "usage" && <UsageStats />}
       </div>
     </div>
   );
