@@ -93,6 +93,12 @@ pub fn run() {
             commands::agent_cmd::run_tagging,
             commands::agent_cmd::cancel_agent_task,
             commands::agent_cmd::get_agent_status,
+            commands::agent_cmd::list_models,
+            commands::agent_cmd::add_model,
+            commands::agent_cmd::update_model,
+            commands::agent_cmd::delete_model,
+            commands::agent_cmd::get_agent_profile,
+            commands::agent_cmd::update_agent_profile,
             // Digest
             commands::digest_cmd::generate_digest,
             commands::digest_cmd::export_digest,

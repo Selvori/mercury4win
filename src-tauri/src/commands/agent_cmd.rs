@@ -193,3 +193,110 @@ pub async fn get_agent_status(
     let status = rt.get_status(tt);
     Ok(AgentStatus { agent_type: status.agent_type, state: status.state, current_entry_id: status.current_entry_id, queue_depth: status.queue_depth })
 }
+
+// ── Model management ──
+
+#[tauri::command]
+pub async fn list_models(
+    pool: State<'_, Pool>,
+    provider_id: String,
+) -> Result<Vec<AgentModelProfile>, String> {
+    agent_store::list_models(&pool, &provider_id).await
+}
+
+#[tauri::command]
+pub async fn add_model(
+    pool: State<'_, Pool>,
+    provider_id: String,
+    name: String,
+    model_name: String,
+) -> Result<(), String> {
+    let id = uuid::Uuid::new_v4().to_string();
+    let pool = pool.inner().clone();
+    pool.get().await.map_err(|e| e.to_string())?
+        .interact(move |conn| {
+            conn.execute(
+                "INSERT INTO agent_model_profile (id, provider_id, name, model_name)
+                 VALUES (?1, ?2, ?3, ?4)",
+                rusqlite::params![id, provider_id, name, model_name],
+            )
+        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn update_model(
+    pool: State<'_, Pool>,
+    id: String,
+    name: String,
+    model_name: String,
+    supports_summary: bool,
+    supports_translation: bool,
+    supports_tagging: bool,
+) -> Result<(), String> {
+    let pool = pool.inner().clone();
+    pool.get().await.map_err(|e| e.to_string())?
+        .interact(move |conn| {
+            conn.execute(
+                "UPDATE agent_model_profile SET name = ?1, model_name = ?2,
+                 supports_summary = ?3, supports_translation = ?4, supports_tagging = ?5
+                 WHERE id = ?6",
+                rusqlite::params![name, model_name, supports_summary, supports_translation, supports_tagging, id],
+            )
+        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn delete_model(
+    pool: State<'_, Pool>,
+    id: String,
+) -> Result<(), String> {
+    let pool = pool.inner().clone();
+    pool.get().await.map_err(|e| e.to_string())?
+        .interact(move |conn| {
+            conn.execute("DELETE FROM agent_model_profile WHERE id = ?1", rusqlite::params![id])
+        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+// ── Agent profile ──
+
+#[tauri::command]
+pub async fn get_agent_profile(
+    pool: State<'_, Pool>,
+    agent_type: String,
+) -> Result<Option<AgentProfile>, String> {
+    agent_store::get_agent_profile(&pool, &agent_type).await
+}
+
+#[tauri::command]
+pub async fn update_agent_profile(
+    pool: State<'_, Pool>,
+    agent_type: String,
+    primary_model_id: Option<String>,
+    fallback_model_id: Option<String>,
+    target_language: Option<String>,
+    detail_level: Option<String>,
+    prompt_strategy: Option<String>,
+    concurrency_degree: Option<i32>,
+) -> Result<(), String> {
+    let pool = pool.inner().clone();
+    pool.get().await.map_err(|e| e.to_string())?
+        .interact(move |conn| {
+            conn.execute(
+                "INSERT INTO agent_profile (agent_type, primary_model_id, fallback_model_id,
+                 target_language, detail_level, prompt_strategy, concurrency_degree)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+                 ON CONFLICT(agent_type) DO UPDATE SET
+                   primary_model_id = excluded.primary_model_id,
+                   fallback_model_id = excluded.fallback_model_id,
+                   target_language = excluded.target_language,
+                   detail_level = excluded.detail_level,
+                   prompt_strategy = excluded.prompt_strategy,
+                   concurrency_degree = excluded.concurrency_degree",
+                rusqlite::params![agent_type, primary_model_id, fallback_model_id, target_language, detail_level, prompt_strategy, concurrency_degree],
+            )
+        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+    Ok(())
+}

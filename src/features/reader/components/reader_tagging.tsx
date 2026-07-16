@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Tag, Sparkles, Loader2, Plus, X } from "lucide-react";
+import { Tag, Sparkles, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { run_tagging, add_tag } from "@/lib/tauri_bindings";
 import { cn } from "@/lib/utils";

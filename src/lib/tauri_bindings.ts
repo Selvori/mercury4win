@@ -15,6 +15,8 @@ import type {
   BatchTagResult,
   TimeRange,
   ProviderProfile,
+  ModelProfile,
+  AgentProfile,
   AgentStatus,
   ProviderConfig,
 } from "@/types";
@@ -189,6 +191,70 @@ export async function run_tagging(entry_id: number): Promise<string[]> {
 
 export async function cancel_agent_task(task_type: string): Promise<void> {
   return invoke("cancel_agent_task", { taskType: task_type });
+}
+
+// ── Model management ──
+
+export async function list_models(
+  provider_id: string,
+): Promise<ModelProfile[]> {
+  return invoke("list_models", { providerId: provider_id });
+}
+
+export async function add_model(
+  provider_id: string,
+  name: string,
+  model_name: string,
+): Promise<void> {
+  return invoke("add_model", { providerId: provider_id, name, modelName: model_name });
+}
+
+export async function update_model(
+  id: string,
+  name: string,
+  model_name: string,
+  supports_summary: boolean,
+  supports_translation: boolean,
+  supports_tagging: boolean,
+): Promise<void> {
+  return invoke("update_model", {
+    id, name, modelName: model_name,
+    supportsSummary: supports_summary,
+    supportsTranslation: supports_translation,
+    supportsTagging: supports_tagging,
+  });
+}
+
+export async function delete_model(id: string): Promise<void> {
+  return invoke("delete_model", { id });
+}
+
+// ── Agent profile ──
+
+export async function get_agent_profile(
+  agent_type: string,
+): Promise<AgentProfile | null> {
+  return invoke("get_agent_profile", { agentType: agent_type });
+}
+
+export async function update_agent_profile(
+  agent_type: string,
+  primary_model_id: string | null,
+  fallback_model_id: string | null,
+  target_language: string | null,
+  detail_level: string | null,
+  prompt_strategy: string | null,
+  concurrency_degree: number | null,
+): Promise<void> {
+  return invoke("update_agent_profile", {
+    agentType: agent_type,
+    primaryModelId: primary_model_id,
+    fallbackModelId: fallback_model_id,
+    targetLanguage: target_language,
+    detailLevel: detail_level,
+    promptStrategy: prompt_strategy,
+    concurrencyDegree: concurrency_degree,
+  });
 }
 
 // ── Tags ──

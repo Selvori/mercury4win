@@ -1,1 +1,110 @@
-{}
+// mercury4win-linux/src/i18n/en.json
+{
+  "sidebar": {
+    "feeds": "Feeds",
+    "tags": "Tags",
+    "settings": "Settings",
+    "mercury": "Mercury"
+  },
+  "reader": {
+    "reader": "Reader",
+    "notes": "Notes",
+    "summary": "Summary",
+    "translation": "Translation",
+    "tags": "Tags",
+    "light": "Light",
+    "dark": "Dark",
+    "paperLight": "Paper Light",
+    "paperDark": "Paper Dark"
+  },
+  "note": {
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "addNote": "Add Note",
+    "noNotes": "No notes for this entry",
+    "clickToAdd": "Click \"Add Note\" to write your thoughts",
+    "placeholder": "Write your notes in Markdown...",
+    "loading": "Loading..."
+  },
+  "summary": {
+    "generate": "Generate a summary",
+    "summarize": "Summarize",
+    "generating": "Generating summary...",
+    "brief": "Brief",
+    "medium": "Medium",
+    "detailed": "Detailed"
+  },
+  "translation": {
+    "translate": "Translate",
+    "start": "Start Translation",
+    "translateArticle": "Translate this article"
+  },
+  "tagging": {
+    "suggestTags": "Suggest Tags",
+    "analyzing": "Analyzing...",
+    "suggestedTags": "Suggested tags (click to apply):",
+    "applied": "Applied:",
+    "addTag": "Add tag...",
+    "noTags": "No tags for this entry",
+    "clickToSuggest": "Click \"Suggest Tags\" to let AI analyze this article, or type a tag manually.",
+    "analyzingArticle": "Analyzing article content..."
+  },
+  "entry": {
+    "entries": "entries",
+    "noEntries": "No entries found",
+    "selectFeedOrTag": "Select a feed or tag to view entries",
+    "selectFeed": "Select a feed to view entries",
+    "markAllRead": "Mark all read",
+    "unread": "Unread",
+    "untitled": "(untitled)"
+  },
+  "readerPane": {
+    "failedToLoad": "Failed to load content",
+    "extractionFailed": "Content extraction failed. The article may not be available in reader mode."
+  },
+  "settings": {
+    "providers": "Providers",
+    "models": "Models",
+    "profiles": "Profiles",
+    "title": "AI Providers",
+    "description": "Configure OpenAI-compatible API endpoints for summaries, translations, and tagging.",
+    "addProvider": "Add Provider",
+    "saving": "Saving...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "noProviders": "No AI providers configured",
+    "noProvidersHint": "Add a provider like OpenAI, Anthropic, or any OpenAI-compatible API.",
+    "testConnection": "Test connection",
+    "connectionResult": "Connection test result:",
+    "providerName": "Provider name (e.g., OpenAI)",
+    "baseUrl": "Base URL (e.g., https://api.openai.com/v1)",
+    "apiKey": "API Key",
+    "selectProvider": "Select a provider...",
+    "selectProviderToManage": "Select a provider to manage models",
+    "noModels": "No models for this provider",
+    "addModel": "Add Model",
+    "displayName": "Display name",
+    "modelId": "Model ID (e.g., gpt-4o-mini)",
+    "update": "Update",
+    "profilesDescription": "Configure which model each agent type uses, along with default options.",
+    "primaryModel": "Primary Model",
+    "targetLanguage": "Target Language",
+    "detailLevel": "Detail Level",
+    "promptStrategy": "Prompt Strategy",
+    "auto": "Auto (first available)",
+    "standard": "Standard",
+    "hyMtOptimized": "HY-MT Optimized (Chinese)"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "noData": "No data"
+  },
+  "app": {
+    "welcome": "Mercury",
+    "subtitle": "Select a feed and an entry to start reading"
+  }
+}

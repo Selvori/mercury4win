@@ -2,7 +2,7 @@
 // Left sidebar with feed list and navigation
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Rss, Library, Tags, Settings, X } from "lucide-react";
+import { Rss, Library, Tags, Settings } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
 import { TagLibrary } from "@/features/tags/components/tag_library";
 import { import_opml, export_opml } from "@/lib/tauri_bindings";
