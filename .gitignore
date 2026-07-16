@@ -46,7 +46,8 @@ Desktop.ini
 .env.*
 !.env.example
 
-# --- Logs ---
+# --- Reports ---
+PROJECT_REPORT.md
 logs/
 *.log
 npm-debug.log*
