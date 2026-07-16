@@ -25,6 +25,12 @@ pub async fn add_provider(
     config: ProviderConfig,
 ) -> Result<AgentProviderProfile, String> {
     let id = uuid::Uuid::new_v4().to_string();
+    log::info!("[add_provider] id={id}, name={}, base_url={}, has_key={}",
+        config.name, config.base_url, config.api_key.is_some());
+    if let Some(ref k) = config.api_key {
+        let masked = if k.len() > 8 { format!("{}...{}", &k[..4], &k[k.len()-4..]) } else { "***".into() };
+        log::info!("[add_provider] storing key: {masked} (len={})", k.len());
+    }
     if let Some(ref api_key) = config.api_key {
         credential_store::store_api_key(&app_handle, &id, api_key).await?;
     }
@@ -50,7 +56,81 @@ pub async fn test_provider_connection(
     let provider = providers.iter().find(|p| p.id == provider_id)
         .ok_or("Provider not found")?;
     let api_key = credential_store::get_api_key(&app_handle, &provider_id).await?.unwrap_or_default();
+    log::info!("[test_provider_connection] provider_id={}, base_url={}, key_len={}, model={}",
+        provider_id, provider.base_url, api_key.len(), model_name);
     provider::test_connection(&client.0, &provider.base_url, &api_key, &model_name).await
+}
+
+// ── Resolve model for agent ──
+// Looks up the agent_profile.primary_model_id first; falls back to first enabled
+// provider with a compatible model. Returns (base_url, api_key, model_name).
+async fn resolve_agent_model(
+    pool: &Pool,
+    app_handle: &AppHandle,
+    agent_type: &str,
+    capability: impl Fn(&AgentModelProfile) -> bool,
+    default_model: &str,
+) -> Result<(String, String, String), String> {
+    let agent_profile = agent_store::get_agent_profile(pool, agent_type).await?;
+    let providers = agent_store::list_providers(pool).await?;
+
+    // 1) Use the profile's primary_model_id if set
+    if let Some(ref profile) = agent_profile {
+        if let Some(ref model_id) = profile.primary_model_id {
+            for provider in &providers {
+                if !provider.is_enabled {
+                    continue;
+                }
+                let models = agent_store::list_models(pool, &provider.id).await?;
+                if let Some(model) = models.iter().find(|m| m.id == *model_id && m.is_enabled) {
+                    let key = credential_store::get_api_key(app_handle, &provider.id)
+                        .await?
+                        .unwrap_or_default();
+                    log::info!(
+                        "[resolve_agent_model] agent={} using profile model: provider={}, model={}",
+                        agent_type, provider.id, model.model_name
+                    );
+                    return Ok((provider.base_url.clone(), key, model.model_name.clone()));
+                }
+            }
+            log::warn!(
+                "[resolve_agent_model] agent={} primary_model_id={} not found, falling back",
+                agent_type, model_id
+            );
+        }
+    }
+
+    // 2) Fallback: first enabled provider with a compatible model
+    for provider in &providers {
+        if !provider.is_enabled {
+            continue;
+        }
+        let models = agent_store::list_models(pool, &provider.id).await?;
+        if let Some(model) = models.iter().find(|m| m.is_enabled && capability(m)) {
+            let key = credential_store::get_api_key(app_handle, &provider.id)
+                .await?
+                .unwrap_or_default();
+            log::info!(
+                "[resolve_agent_model] agent={} using fallback: provider={}, model={}",
+                agent_type, provider.id, model.model_name
+            );
+            return Ok((provider.base_url.clone(), key, model.model_name.clone()));
+        }
+    }
+
+    // 3) Last resort: first enabled provider + hardcoded model name
+    if let Some(provider) = providers.iter().find(|p| p.is_enabled) {
+        let key = credential_store::get_api_key(app_handle, &provider.id)
+            .await?
+            .unwrap_or_default();
+        log::warn!(
+            "[resolve_agent_model] agent={} no compatible model found, using default={}",
+            agent_type, default_model
+        );
+        return Ok((provider.base_url.clone(), key, default_model.to_string()));
+    }
+
+    Err("No enabled AI provider configured. Add a provider in Settings.".into())
 }
 
 // ── Agent runtime commands ──
@@ -72,21 +152,11 @@ pub async fn run_summary(
         rt.submit(entry_id, TaskType::Summary);
     }
 
-    // Look up agent config
-    let agent_profile = agent_store::get_agent_profile(&pool, "summary").await?;
-    let model_id = agent_profile.as_ref().and_then(|p| p.primary_model_id.clone()).unwrap_or_default();
-    let providers = agent_store::list_providers(&pool).await?;
-
-    // Find active provider with models
-    let (base_url, api_key, model_name) = if let Some(provider) = providers.iter().find(|p| p.is_enabled) {
-        let models = agent_store::list_models(&pool, &provider.id).await?;
-        let model = models.iter().find(|m| m.is_enabled && m.supports_summary);
-        let key = credential_store::get_api_key(&app_handle, &provider.id).await?.unwrap_or_default();
-        let mn = model.map(|m| m.model_name.clone()).unwrap_or_else(|| "gpt-4o-mini".to_string());
-        (provider.base_url.clone(), key, mn)
-    } else {
-        return Err("No enabled AI provider configured. Add a provider in Settings.".into());
-    };
+    let (base_url, api_key, model_name) = resolve_agent_model(
+        &pool, &app_handle, "summary",
+        |m| m.supports_summary,
+        "gpt-4o-mini",
+    ).await?;
 
     // Run summary agent
     crate::agent::summary::run_summary(
@@ -112,24 +182,24 @@ pub async fn run_translation(
     }
 
     let agent_profile = agent_store::get_agent_profile(&pool, "translation").await?;
-    let providers = agent_store::list_providers(&pool).await?;
     let prompt_strategy = agent_profile.as_ref().and_then(|p| p.prompt_strategy.clone());
+    let concurrency = agent_profile
+        .as_ref()
+        .and_then(|p| p.concurrency_degree)
+        .map(|c| if c <= 0 { 3 } else { c as usize })
+        .unwrap_or(3);
 
-    let (base_url, api_key, model_name) = if let Some(provider) = providers.iter().find(|p| p.is_enabled) {
-        let models = agent_store::list_models(&pool, &provider.id).await?;
-        let model = models.iter().find(|m| m.is_enabled && m.supports_translation);
-        let key = credential_store::get_api_key(&app_handle, &provider.id).await?.unwrap_or_default();
-        let mn = model.map(|m| m.model_name.clone()).unwrap_or_else(|| "gpt-4o-mini".to_string());
-        (provider.base_url.clone(), key, mn)
-    } else {
-        return Err("No enabled AI provider configured. Add a provider in Settings.".into());
-    };
+    let (base_url, api_key, model_name) = resolve_agent_model(
+        &pool, &app_handle, "translation",
+        |m| m.supports_translation,
+        "gpt-4o-mini",
+    ).await?;
 
     crate::agent::translation::run_translation(
         &pool, &client.0,
         entry_id, &target_language,
         &base_url, &api_key, &model_name,
-        prompt_strategy.as_deref(), on_event,
+        prompt_strategy.as_deref(), concurrency, on_event,
     ).await
 }
 
@@ -146,20 +216,18 @@ pub async fn run_tagging(
         rt.submit(entry_id, TaskType::Tagging);
     }
 
-    let providers = agent_store::list_providers(&pool).await?;
-    let (base_url, api_key, model_name) = if let Some(provider) = providers.iter().find(|p| p.is_enabled) {
-        let models = agent_store::list_models(&pool, &provider.id).await?;
-        let model = models.iter().find(|m| m.is_enabled && m.supports_tagging);
-        let key = credential_store::get_api_key(&app_handle, &provider.id).await?.unwrap_or_default();
-        let mn = model.map(|m| m.model_name.clone()).unwrap_or_else(|| "gpt-4o-mini".to_string());
-        (provider.base_url.clone(), key, mn)
-    } else {
-        return Err("No enabled AI provider configured. Add a provider in Settings.".into());
-    };
+    let (base_url, api_key, model_name) = resolve_agent_model(
+        &pool, &app_handle, "tagging",
+        |m| m.supports_tagging,
+        "gpt-4o-mini",
+    ).await?;
 
     crate::agent::tagging::run_tagging(
         &pool, &client.0, entry_id, &base_url, &api_key, &model_name,
-    ).await
+    ).await.map_err(|e| {
+        log::error!("[run_tagging] failed for entry_id={entry_id}: {e}");
+        e
+    })
 }
 
 #[tauri::command]

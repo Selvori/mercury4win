@@ -1,17 +1,17 @@
 // mercury4win-linux/src/components/layout/sidebar.tsx
 // Left sidebar with feed list and navigation
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Rss, Library, Tags, Settings } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
 import { TagLibrary } from "@/features/tags/components/tag_library";
-import { import_opml, export_opml } from "@/lib/tauri_bindings";
 
 interface Props {
   selected_feed_id: number | null;
   on_select_feed: (id: number) => void;
   on_add_feed: () => void;
+  on_import_opml: () => void;
+  on_export_opml: () => void;
   on_open_settings: () => void;
   view: "feeds" | "tags";
   on_change_view: (view: "feeds" | "tags") => void;
@@ -23,6 +23,8 @@ export function Sidebar({
   selected_feed_id,
   on_select_feed,
   on_add_feed,
+  on_import_opml,
+  on_export_opml,
   on_open_settings,
   view,
   on_change_view,
@@ -30,42 +32,9 @@ export function Sidebar({
   on_select_tag,
 }: Props) {
   const { t } = useTranslation();
-  const query_client = useQueryClient();
-
-  const import_mutation = useMutation({
-    mutationFn: async () => {
-      const { open } = await import("@tauri-apps/plugin-dialog");
-      const selected = await open({
-        filters: [{ name: "OPML", extensions: ["opml", "xml"] }],
-        multiple: false,
-      });
-      if (selected) {
-        await import_opml(selected as string);
-      }
-    },
-    onSuccess: () => {
-      query_client.invalidateQueries({ queryKey: ["feeds"] });
-      query_client.invalidateQueries({ queryKey: ["entries"] });
-    },
-  });
-
-  const export_mutation = useMutation({
-    mutationFn: async () => {
-      const { save } = await import("@tauri-apps/plugin-dialog");
-      const path = await save({
-        filters: [{ name: "OPML", extensions: ["opml"] }],
-      });
-      if (path) {
-        await export_opml(path, undefined);
-      }
-    },
-  });
-
-  const handle_import = () => import_mutation.mutate();
-  const handle_export = () => export_mutation.mutate();
 
   return (
-    <aside className="flex w-64 flex-col border-r border-border bg-sidebar">
+    <aside className="flex h-full flex-col border-r border-border bg-sidebar">
       <div className="flex h-12 items-center gap-2 border-b border-border px-4">
         <Rss className="h-5 w-5 text-primary" />
         <span className="font-semibold text-sidebar-foreground">Mercury</span>
@@ -102,8 +71,8 @@ export function Sidebar({
             selected_id={selected_feed_id}
             on_select={on_select_feed}
             on_add={on_add_feed}
-            on_import={handle_import}
-            on_export={handle_export}
+            on_import={on_import_opml}
+            on_export={on_export_opml}
           />
         ) : (
           <TagLibrary

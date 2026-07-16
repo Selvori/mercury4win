@@ -6,8 +6,6 @@ use serde::{Deserialize, Serialize};
 use tauri::ipc::Channel;
 use std::time::Duration;
 
-// ── Request types ──
-
 #[derive(Debug, Serialize)]
 pub struct ChatCompletionRequest {
     pub model: String,
@@ -50,22 +48,6 @@ pub struct UsageInfo {
     pub total_tokens: u32,
 }
 
-#[derive(Debug, Deserialize)]
-struct SseChunk {
-    choices: Option<Vec<SseChoice>>,
-}
-
-#[derive(Debug, Deserialize)]
-struct SseChoice {
-    delta: Option<SseDelta>,
-    finish_reason: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct SseDelta {
-    content: Option<String>,
-}
-
 /// Non-streaming chat completion.
 pub async fn chat_completion(
     client: &Client,
@@ -75,6 +57,17 @@ pub async fn chat_completion(
 ) -> Result<ChatCompletionResponse, String> {
     let url = format!("{}/chat/completions", base_url.trim_end_matches('/'));
 
+    // Debug: include masked key + url in error messages
+    let masked_key = if api_key.len() > 8 {
+        format!("{}...{}", &api_key[..4], &api_key[api_key.len()-4..])
+    } else if api_key.is_empty() {
+        "(empty)".to_string()
+    } else {
+        format!("*** (len={})", api_key.len())
+    };
+    let debug_info = format!("[DEBUG] url={} | key={}", url, masked_key);
+    log::info!("[chat_completion] {debug_info}");
+
     let response = client
         .post(&url)
         .header("Authorization", format!("Bearer {}", api_key))
@@ -83,11 +76,12 @@ pub async fn chat_completion(
         .json(request)
         .send()
         .await
-        .map_err(|e| format!("HTTP error: {}", e))?;
+        .map_err(|e| format!("HTTP error: {} | {}", e, debug_info))?;
 
     if !response.status().is_success() {
         let body = response.text().await.unwrap_or_default();
-        return Err(format!("API error: {}", body));
+        log::error!("[chat_completion] API error response: {body}");
+        return Err(format!("API error: {} | {}", body, debug_info));
     }
 
     response
@@ -108,6 +102,16 @@ pub async fn chat_completion_stream(
 
     let url = format!("{}/chat/completions", base_url.trim_end_matches('/'));
 
+    let masked_key = if api_key.len() > 8 {
+        format!("{}...{}", &api_key[..4], &api_key[api_key.len()-4..])
+    } else if api_key.is_empty() {
+        "(empty)".to_string()
+    } else {
+        format!("*** (len={})", api_key.len())
+    };
+    let debug_info = format!("[DEBUG] url={} | key={}", url, masked_key);
+    log::info!("[chat_completion_stream] {debug_info}");
+
     let response = client
         .post(&url)
         .header("Authorization", format!("Bearer {}", api_key))
@@ -117,11 +121,11 @@ pub async fn chat_completion_stream(
         .json(&request)
         .send()
         .await
-        .map_err(|e| format!("HTTP error: {}", e))?;
+        .map_err(|e| format!("HTTP error: {} | {}", e, debug_info))?;
 
     if !response.status().is_success() {
         let body = response.text().await.unwrap_or_default();
-        return Err(format!("API error: {}", body));
+        return Err(format!("API error: {} | {}", body, debug_info));
     }
 
     let mut stream = response.bytes_stream();
@@ -131,11 +135,20 @@ pub async fn chat_completion_stream(
 
     use futures_util::StreamExt;
 
+    // Buffer for partial lines that may span TCP frame boundaries
+    let mut line_buffer = String::new();
+
     while let Some(chunk_result) = stream.next().await {
         let chunk = chunk_result.map_err(|e| format!("Stream error: {}", e))?;
         let text = String::from_utf8_lossy(&chunk);
 
-        for line in text.lines() {
+        line_buffer.push_str(&text);
+
+        // Process complete lines; keep incomplete trailing line in buffer
+        while let Some(line_end) = line_buffer.find('\n') {
+            let line = line_buffer[..line_end].trim_end_matches('\r').to_string();
+            line_buffer = line_buffer[line_end + 1..].to_string();
+
             if line.is_empty() || line.starts_with(':') {
                 continue;
             }
@@ -147,12 +160,30 @@ pub async fn chat_completion_stream(
                         total_tokens,
                     });
                 }
-                if let Ok(sse) = serde_json::from_str::<SseChunk>(data) {
-                    if let Some(choices) = &sse.choices {
+                if let Ok(sse) = serde_json::from_str::<serde_json::Value>(data) {
+                    // Extract usage if present (many providers include it in the last chunk)
+                    if let Some(usage) = sse.get("usage") {
+                        prompt_tokens = usage.get("prompt_tokens")
+                            .and_then(|v| v.as_u64())
+                            .map(|v| v as u32)
+                            .unwrap_or(prompt_tokens);
+                        completion_tokens = usage.get("completion_tokens")
+                            .and_then(|v| v.as_u64())
+                            .map(|v| v as u32)
+                            .unwrap_or(completion_tokens);
+                        total_tokens = usage.get("total_tokens")
+                            .and_then(|v| v.as_u64())
+                            .map(|v| v as u32)
+                            .unwrap_or(total_tokens);
+                    }
+                    // Extract delta content
+                    if let Some(choices) = sse.get("choices").and_then(|v| v.as_array()) {
                         for choice in choices {
-                            if let Some(ref delta) = choice.delta {
-                                if let Some(ref content) = delta.content {
-                                    let _ = on_event.send(content.clone());
+                            if let Some(delta) = choice.get("delta") {
+                                if let Some(content) = delta.get("content").and_then(|v| v.as_str()) {
+                                    if !content.is_empty() {
+                                        let _ = on_event.send(content.to_string());
+                                    }
                                 }
                             }
                         }

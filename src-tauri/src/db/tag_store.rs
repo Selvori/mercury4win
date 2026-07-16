@@ -58,11 +58,32 @@ pub async fn add_tag(pool: &Pool, entry_id: i64, name: &str) -> Result<Tag, Stri
         .interact(move |conn| {
             let tx = conn.unchecked_transaction().map_err(|e| e.to_string())?;
 
-            // Upsert tag
+            // Upsert tag — don't blindly increment, recalculate from entry_tag afterwards
             tx.execute(
                 "INSERT INTO tag (name, normalized_name) VALUES (?1, ?2)
-                 ON CONFLICT(normalized_name) DO UPDATE SET usage_count = usage_count + 1",
+                 ON CONFLICT(normalized_name) DO UPDATE SET name = excluded.name",
                 params![name, normalized],
+            )
+            .map_err(|e| e.to_string())?;
+
+            // Link to entry (INSERT OR IGNORE prevents duplicate links)
+            tx.execute(
+                "INSERT OR IGNORE INTO entry_tag (entry_id, tag_id, source)
+                 VALUES (?1, (SELECT id FROM tag WHERE normalized_name = ?2), 'manual')",
+                params![entry_id, normalized],
+            )
+            .map_err(|e| e.to_string())?;
+
+            // Recalculate usage_count from entry_tag, excluding soft-deleted entries
+            tx.execute(
+                "UPDATE tag SET usage_count = (
+                    SELECT COUNT(*) FROM entry_tag et
+                    INNER JOIN entry e ON e.id = et.entry_id
+                    WHERE et.tag_id = (
+                        SELECT id FROM tag WHERE normalized_name = ?1
+                    ) AND e.is_deleted = 0
+                ) WHERE normalized_name = ?1",
+                params![normalized],
             )
             .map_err(|e| e.to_string())?;
 
@@ -83,13 +104,6 @@ pub async fn add_tag(pool: &Pool, entry_id: i64, name: &str) -> Result<Tag, Stri
                 )
                 .map_err(|e| e.to_string())?;
 
-            // Link to entry
-            tx.execute(
-                "INSERT OR IGNORE INTO entry_tag (entry_id, tag_id, source) VALUES (?1, ?2, 'manual')",
-                params![entry_id, tag.id],
-            )
-            .map_err(|e| e.to_string())?;
-
             tx.commit().map_err(|e| e.to_string())?;
             Ok(tag)
         })
@@ -104,13 +118,19 @@ pub async fn remove_tag(pool: &Pool, entry_id: i64, tag_id: i64) -> Result<(), S
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
             let tx = conn.unchecked_transaction().map_err(|e| e.to_string())?;
+            // Remove the entry-tag link
             tx.execute(
                 "DELETE FROM entry_tag WHERE entry_id = ?1 AND tag_id = ?2",
                 params![entry_id, tag_id],
             )
             .map_err(|e| e.to_string())?;
+            // Recalculate usage_count, excluding soft-deleted entries
             tx.execute(
-                "UPDATE tag SET usage_count = (SELECT COUNT(*) FROM entry_tag WHERE tag_id = ?1) WHERE id = ?1",
+                "UPDATE tag SET usage_count = (
+                    SELECT COUNT(*) FROM entry_tag et
+                    INNER JOIN entry e ON e.id = et.entry_id
+                    WHERE et.tag_id = ?1 AND e.is_deleted = 0
+                ) WHERE id = ?1",
                 params![tag_id],
             )
             .map_err(|e| e.to_string())?;
@@ -141,9 +161,13 @@ pub async fn merge_tags(pool: &Pool, source_id: i64, target_id: i64) -> Result<(
                 params![source_id],
             )
             .map_err(|e| e.to_string())?;
-            // Update usage counts
+            // Update usage counts (only count non-deleted entries)
             tx.execute(
-                "UPDATE tag SET usage_count = (SELECT COUNT(*) FROM entry_tag WHERE tag_id = ?1) WHERE id = ?1",
+                "UPDATE tag SET usage_count = (
+                    SELECT COUNT(*) FROM entry_tag et
+                    INNER JOIN entry e ON e.id = et.entry_id
+                    WHERE et.tag_id = ?1 AND e.is_deleted = 0
+                ) WHERE id = ?1",
                 params![target_id],
             )
             .map_err(|e| e.to_string())?;
@@ -234,10 +258,14 @@ pub async fn batch_tag(
                 count
             };
 
-            // Update usage counts
+            // Update usage counts (only count non-deleted entries)
             for tag_id in &tag_ids {
                 tx.execute(
-                    "UPDATE tag SET usage_count = (SELECT COUNT(*) FROM entry_tag WHERE tag_id = ?1) WHERE id = ?1",
+                    "UPDATE tag SET usage_count = (
+                        SELECT COUNT(*) FROM entry_tag et
+                        INNER JOIN entry e ON e.id = et.entry_id
+                        WHERE et.tag_id = ?1 AND e.is_deleted = 0
+                    ) WHERE id = ?1",
                     params![tag_id],
                 )
                 .map_err(|e| e.to_string())?;

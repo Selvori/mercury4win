@@ -139,6 +139,25 @@
     "adding": "Adding...",
     "cancel": "Cancel"
   },
+  "opml": {
+    "importTitle": "Import OPML",
+    "importDescription": "Select an OPML file to import feeds from another RSS reader.",
+    "selectFile": "Select file",
+    "importing": "Importing...",
+    "startImport": "Import",
+    "importSuccess": "Import complete: {{added}} feeds added, {{skipped}} skipped.",
+    "importError": "Import failed",
+    "exportTitle": "Export OPML",
+    "exportDescription": "Export your feed subscriptions to an OPML file.",
+    "exportAllFeeds": "All feeds ({{count}})",
+    "selectFeeds": "Select feeds to export",
+    "exporting": "Exporting...",
+    "export": "Export",
+    "exportSuccess": "Exported {{count}} feeds successfully.",
+    "exportError": "Export failed",
+    "noFileSelected": "No file selected",
+    "fileSelected": "File selected"
+  },
   "app": {
     "welcome": "Mercury",
     "subtitle": "Select a feed and an entry to start reading"

@@ -65,7 +65,15 @@ export interface LoadEntriesParams {
 export async function load_entries(
   params: LoadEntriesParams,
 ): Promise<EntryPage> {
-  return invoke("load_entries", { ...params });
+  return invoke("load_entries", {
+    feedId: params.feed_id ?? null,
+    tagIds: params.tag_ids ?? null,
+    unreadOnly: params.unread_only ?? null,
+    search: params.search ?? null,
+    tagMode: params.tag_mode ?? null,
+    cursor: params.cursor ?? null,
+    limit: params.limit ?? null,
+  });
 }
 
 export async function mark_read(
@@ -136,7 +144,14 @@ export async function list_providers(): Promise<ProviderProfile[]> {
 export async function add_provider(
   config: ProviderConfig,
 ): Promise<ProviderProfile> {
-  return invoke("add_provider", { config });
+  return invoke("add_provider", {
+    config: {
+      name: config.name,
+      baseUrl: config.base_url,
+      displayName: config.display_name ?? null,
+      apiKey: config.api_key ?? null,
+    },
+  });
 }
 
 export async function delete_provider(id: string): Promise<void> {

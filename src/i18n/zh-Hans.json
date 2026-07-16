@@ -139,6 +139,25 @@
     "adding": "添加中...",
     "cancel": "取消"
   },
+  "opml": {
+    "importTitle": "导入 OPML",
+    "importDescription": "选择 OPML 文件以从其他 RSS 阅读器导入订阅源。",
+    "selectFile": "选择文件",
+    "importing": "导入中...",
+    "startImport": "导入",
+    "importSuccess": "导入完成：已添加 {{added}} 个订阅源，跳过 {{skipped}} 个。",
+    "importError": "导入失败",
+    "exportTitle": "导出 OPML",
+    "exportDescription": "将你的订阅源导出为 OPML 文件。",
+    "exportAllFeeds": "全部订阅源（{{count}}）",
+    "selectFeeds": "选择要导出的订阅源",
+    "exporting": "导出中...",
+    "export": "导出",
+    "exportSuccess": "成功导出 {{count}} 个订阅源。",
+    "exportError": "导出失败",
+    "noFileSelected": "未选择文件",
+    "fileSelected": "已选择文件"
+  },
   "app": {
     "welcome": "Mercury",
     "subtitle": "选择一个订阅源和文章开始阅读"

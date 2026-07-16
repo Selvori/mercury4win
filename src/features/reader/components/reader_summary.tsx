@@ -1,13 +1,14 @@
 // mercury4win-linux/src/features/reader/components/reader_summary.tsx
 // Summary panel — streaming display with detail level control
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Channel } from "@tauri-apps/api/core";
 import { Sparkles, Loader2, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { run_summary } from "@/lib/tauri_bindings";
+import { run_summary, get_agent_profile } from "@/lib/tauri_bindings";
 
 interface Props {
   entry_id: number;
@@ -24,7 +25,21 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
   const [error, set_error] = useState<string | null>(null);
   const channel_ref = useRef<Channel<string> | null>(null);
 
-  const start_summary = useCallback(async () => {
+  // Load user's language preference from agent settings
+  const { data: profile } = useQuery({
+    queryKey: ["agent_profile", "summary"],
+    queryFn: () => get_agent_profile("summary"),
+  });
+  const target_language = profile?.target_language ?? "en";
+
+  // Clear state when switching to a different entry
+  useEffect(() => {
+    set_content("");
+    set_error(null);
+    set_is_loading(false);
+  }, [entry_id]);
+
+  const do_summary = useCallback(async (level: DetailLevel) => {
     set_content("");
     set_error(null);
     set_is_loading(true);
@@ -44,18 +59,24 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
           set_is_loading(false);
         }
       } catch {
-        // Treat as raw text chunk from LLM streaming
         set_content((prev) => prev + chunk);
       }
     };
 
     try {
-      await run_summary(entry_id, "en", detail_level, channel);
+      await run_summary(entry_id, target_language, level, channel);
     } catch (e) {
       set_error(String(e));
       set_is_loading(false);
     }
-  }, [entry_id, detail_level]);
+  }, [entry_id, target_language]);
+
+  function handle_detail_change(level: DetailLevel) {
+    set_detail_level(level);
+    if (content) {
+      do_summary(level);
+    }
+  }
 
   const detail_options: { value: DetailLevel; label: string }[] = [
     { value: "brief", label: t("summary.brief") },
@@ -78,7 +99,7 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
                 "h-6 px-2 text-[11px] rounded-sm",
                 detail_level === opt.value && "bg-background shadow-sm",
               )}
-              onClick={() => set_detail_level(opt.value)}
+              onClick={() => handle_detail_change(opt.value)}
               disabled={is_loading}
             >
               {opt.label}
@@ -92,7 +113,7 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
           <div className="flex h-full flex-col items-center justify-center text-center">
             <FileText className="h-8 w-8 text-muted-foreground/50" />
             <p className="mt-2 text-sm text-muted-foreground">{t("summary.generate")}</p>
-            <Button size="sm" className="mt-3" onClick={start_summary}>
+            <Button size="sm" className="mt-3" onClick={() => do_summary(detail_level)}>
               <Sparkles className="mr-1 h-3.5 w-3.5" />
               {t("summary.summarize")}
             </Button>

@@ -6,7 +6,6 @@ system: |
   Guidelines:
   - Capture the main thesis and key supporting points
   - Preserve the author's intent and tone
-  - Use the same language as the source article for the output
   - Be concise but complete — don't omit important context
 
   {{#detail_level}}
@@ -15,6 +14,10 @@ system: |
   - medium: 3-5 sentences covering main points
   - detailed: Full paragraph structure with supporting details
   {{/detail_level}}
+
+  {{#target_language}}
+  IMPORTANT: You MUST write the entire summary in {{target_language}}. Do not use any other language.
+  {{/target_language}}
 
 user: |
   Please summarize the following article:
@@ -26,5 +29,5 @@ user: |
   {{content}}
 
   {{#target_language}}
-  Output the summary in {{target_language}}.
+  IMPORTANT: Output the summary in {{target_language}}.
   {{/target_language}}

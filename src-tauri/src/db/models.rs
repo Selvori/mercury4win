@@ -298,6 +298,7 @@ pub struct BatchTagResult {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProviderConfig {
     pub name: String,
     pub base_url: String,

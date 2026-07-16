@@ -45,8 +45,26 @@ pub async fn run_summary(
         detail.entry.author.unwrap_or_default(),
     );
     params.insert("content".into(), markdown.to_string());
-    params.insert("target_language".into(), target_language.to_string());
-    params.insert("detail_level".into(), detail_level.to_string());
+    // Map locale codes to readable language names for the LLM
+    let lang_name = match target_language {
+        "zh-Hans" => "Simplified Chinese",
+        "zh-Hant" => "Traditional Chinese",
+        "ja" => "Japanese",
+        "ko" => "Korean",
+        "fr" => "French",
+        "de" => "German",
+        "es" => "Spanish",
+        other => other,
+    };
+    params.insert("target_language".into(), lang_name.to_string());
+    // Map detail_level to a human-readable name for the template conditional
+    let detail_name = match detail_level {
+        "brief" => "brief",
+        "medium" => "medium",
+        "detailed" => "detailed",
+        other => other,
+    };
+    params.insert("detail_level".into(), detail_name.to_string());
 
     let rendered = template.render(&params);
 
@@ -74,11 +92,14 @@ pub async fn run_summary(
 
     // Stream via provider
     match provider::chat_completion_stream(
-        client, provider_base_url, api_key, request, on_event,
+        client, provider_base_url, api_key, request, on_event.clone(),
     )
     .await
     {
         Ok(usage) => {
+            // Signal completion to the frontend
+            let _ = on_event.send(r#"{"type":"done"}"#.to_string());
+
             // Log usage
             let _ = usage_store::insert_usage_event(
                 pool,
@@ -98,6 +119,9 @@ pub async fn run_summary(
             .await;
             Ok(())
         }
-        Err(e) => Err(e),
+        Err(e) => {
+            let _ = on_event.send(format!(r#"{{"type":"error","message":"{}"}}"#, e));
+            Err(e)
+        }
     }
 }

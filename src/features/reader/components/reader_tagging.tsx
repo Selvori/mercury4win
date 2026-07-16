@@ -1,12 +1,12 @@
 // mercury4win-linux/src/features/reader/components/reader_tagging.tsx
 // Tagging panel — AI tag suggestions + manual tag input
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Tag, Sparkles, Loader2, Plus } from "lucide-react";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Tag, Sparkles, Loader2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { run_tagging, add_tag } from "@/lib/tauri_bindings";
+import { run_tagging, add_tag, remove_tag, load_entry_detail } from "@/lib/tauri_bindings";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -21,24 +21,69 @@ export function ReaderTagging({ entry_id }: Props) {
   const [manual_tag, set_manual_tag] = useState("");
   const [error, set_error] = useState<string | null>(null);
 
+  // Load existing tags for this entry
+  const { data: entry_detail } = useQuery({
+    queryKey: ["entry_detail", entry_id],
+    queryFn: () => load_entry_detail(entry_id),
+  });
+
+  // Sync applied_tags from backend when entry detail changes
+  // (e.g., after adding/removing a tag, or switching entries)
+  useEffect(() => {
+    if (entry_detail?.tags) {
+      set_applied_tags(new Set(entry_detail.tags.map((t) => t.name)));
+    } else {
+      set_applied_tags(new Set());
+    }
+  }, [entry_detail]);
+
+  // Clear suggestions and error only when switching to a different entry
+  useEffect(() => {
+    set_suggestions([]);
+    set_error(null);
+  }, [entry_id]);
+
   const suggest_mutation = useMutation({
     mutationFn: () => run_tagging(entry_id),
     onSuccess: (tags) => {
-      set_suggestions(tags);
-      set_error(null);
+      if (!tags || tags.length === 0) {
+        set_error("AI returned no tags for this article. Try again or add tags manually.");
+      } else {
+        set_suggestions(tags);
+        set_error(null);
+      }
     },
-    onError: (e) => set_error(String(e)),
+    onError: (e) => {
+      const msg = String(e);
+      // Clean up common error prefixes for readability
+      set_error(msg.replace(/^API error:\s*/, "").replace(/^HTTP error:\s*/, ""));
+    },
   });
 
   const add_tag_mutation = useMutation({
     mutationFn: (name: string) => add_tag(entry_id, name),
     onSuccess: (_tag, name) => {
-      set_applied_tags((prev) => new Set(prev).add(name));
+      // Remove the added tag from suggestions (don't clear all)
       set_suggestions((prev) => prev.filter((t) => t !== name));
       query_client.invalidateQueries({ queryKey: ["tags"] });
       query_client.invalidateQueries({ queryKey: ["entry_detail", entry_id] });
     },
   });
+
+  const remove_tag_mutation = useMutation({
+    mutationFn: (tag_id: number) => remove_tag(entry_id, tag_id),
+    onSuccess: () => {
+      query_client.invalidateQueries({ queryKey: ["entry_detail", entry_id] });
+      query_client.invalidateQueries({ queryKey: ["tags"] });
+    },
+  });
+
+  function handle_remove_from_applied(tag_name: string) {
+    const tag_info = entry_detail?.tags.find((t) => t.name === tag_name);
+    if (tag_info) {
+      remove_tag_mutation.mutate(tag_info.tag_id);
+    }
+  }
 
   function handle_add_manual() {
     const name = manual_tag.trim();
@@ -100,15 +145,20 @@ export function ReaderTagging({ entry_id }: Props) {
 
         {error && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 mb-4">
-            <p className="text-sm text-destructive">{error}</p>
+            <p className="text-sm text-destructive whitespace-pre-wrap break-words">{error}</p>
           </div>
         )}
 
         {suggestions.length > 0 && (
+          (() => {
+            const applied_names = new Set((entry_detail?.tags ?? []).map((t) => t.name));
+            const remaining = suggestions.filter((t) => !applied_names.has(t));
+            if (!remaining.length) return null;
+            return (
           <div className="mb-4">
             <p className="text-xs text-muted-foreground mb-2">{t("tagging.suggestedTags")}</p>
             <div className="flex flex-wrap gap-1.5">
-              {suggestions.map((tag) => (
+              {remaining.map((tag) => (
                 <button
                   key={tag}
                   onClick={() => add_tag_mutation.mutate(tag)}
@@ -125,6 +175,8 @@ export function ReaderTagging({ entry_id }: Props) {
               ))}
             </div>
           </div>
+            );
+          })()
         )}
 
         {/* Applied tags */}
@@ -139,6 +191,12 @@ export function ReaderTagging({ entry_id }: Props) {
                 >
                   <Tag className="h-3 w-3" />
                   {tag}
+                  <button
+                    onClick={() => handle_remove_from_applied(tag)}
+                    className="ml-0.5 rounded-full p-0.5 hover:bg-destructive/20"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
                 </span>
               ))}
             </div>

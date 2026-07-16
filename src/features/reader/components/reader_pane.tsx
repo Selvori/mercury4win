@@ -1,12 +1,9 @@
 // mercury4win-linux/src/features/reader/components/reader_pane.tsx
-// Reader main panel — renders article HTML with theme control and side panels
+// Reader main panel — renders article HTML with resizable side panels
 
 import { useQuery } from "@tanstack/react-query";
 import {
   Loader2,
-  Monitor,
-  Moon,
-  Sun,
   FileText,
   Sparkles,
   Languages,
@@ -17,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { build_reader_content } from "@/lib/tauri_bindings";
 import type { Entry } from "@/types";
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ReaderNote } from "./reader_note";
 import { ReaderSummary } from "./reader_summary";
@@ -28,26 +25,48 @@ interface Props {
   entry: Entry;
 }
 
-type Theme = "classic-light" | "classic-dark" | "paper-light" | "paper-dark";
 type Panel = "reader" | "notes" | "summary" | "translation" | "tags";
 
 export function ReaderPane({ entry }: Props) {
   const { t } = useTranslation();
-  const [theme, set_theme] = useState<Theme>("classic-light");
   const [panel, set_panel] = useState<Panel>("reader");
+  const [side_panel_width, set_side_panel_width] = useState(320);
+  const [dragging_side, set_dragging_side] = useState(false);
+  const drag_ref = useRef<{ start_x: number; start_w: number } | null>(null);
+
+  // Global mouse handlers for side panel resize
+  const on_mouse_move = useCallback((e: MouseEvent) => {
+    if (!drag_ref.current) return;
+    const { start_x, start_w } = drag_ref.current;
+    const delta = start_x - e.clientX; // reversed: drag left = wider panel
+    set_side_panel_width(Math.max(200, Math.min(560, start_w + delta)));
+  }, []);
+  const on_mouse_up = useCallback(() => {
+    drag_ref.current = null;
+    set_dragging_side(false);
+    window.getSelection()?.removeAllRanges();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("mousemove", on_mouse_move);
+    window.addEventListener("mouseup", on_mouse_up);
+    return () => {
+      window.removeEventListener("mousemove", on_mouse_move);
+      window.removeEventListener("mouseup", on_mouse_up);
+    };
+  }, [on_mouse_move, on_mouse_up]);
+
+  const start_side_resize = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    drag_ref.current = { start_x: e.clientX, start_w: side_panel_width };
+    set_dragging_side(true);
+  }, [side_panel_width]);
 
   const { data: reader_html, isLoading, isFetching, isError, error } = useQuery({
-    queryKey: ["reader", entry.id, theme],
+    queryKey: ["reader", entry.id],
     queryFn: () => build_reader_content(entry.id),
     staleTime: 0,
   });
-
-  const theme_options: { value: Theme; icon: typeof Sun; label: string }[] = [
-    { value: "classic-light", icon: Sun, label: t("reader.light") },
-    { value: "classic-dark", icon: Moon, label: t("reader.dark") },
-    { value: "paper-light", icon: Monitor, label: t("reader.paperLight") },
-    { value: "paper-dark", icon: Monitor, label: t("reader.paperDark") },
-  ];
 
   const panel_options: { value: Panel; icon: typeof BookOpen; label: string }[] = [
     { value: "reader", icon: BookOpen, label: t("reader.reader") },
@@ -57,10 +76,12 @@ export function ReaderPane({ entry }: Props) {
     { value: "tags", icon: Tag, label: t("reader.tags") },
   ];
 
+  const show_side_panel = panel !== "reader";
+
   return (
     <div className="flex h-full">
       {/* Main reader area */}
-      <div className={cn("flex h-full flex-col", panel !== "reader" ? "flex-1 border-r border-border" : "flex-1")}>
+      <div className="flex h-full flex-col flex-1 overflow-hidden">
         {/* Toolbar */}
         <div className="flex items-center gap-1.5 border-b border-border px-3 py-1.5">
           {/* Panel tabs */}
@@ -85,23 +106,6 @@ export function ReaderPane({ entry }: Props) {
             <h2 className="text-sm font-medium truncate max-w-md">
               {entry.title || t("entry.untitled")}
             </h2>
-          </div>
-          <div className="flex items-center gap-0.5 rounded-md border border-border bg-muted/50 p-0.5">
-            {theme_options.map((opt) => (
-              <Button
-                key={opt.value}
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-7 w-7 rounded-sm",
-                  theme === opt.value && "bg-background shadow-sm",
-                )}
-                onClick={() => set_theme(opt.value)}
-                title={opt.label}
-              >
-                <opt.icon className="h-3.5 w-3.5" />
-              </Button>
-            ))}
           </div>
         </div>
 
@@ -135,13 +139,30 @@ export function ReaderPane({ entry }: Props) {
         </div>
       </div>
 
-      {/* Side panel */}
-      {panel === "notes" && <ReaderNote entry_id={entry.id} />}
-      {panel === "summary" && (
-        <ReaderSummary entry_id={entry.id} entry_title={entry.title || t("entry.untitled")} />
+      {/* Resize handle + Side panel */}
+      {show_side_panel && (
+        <>
+          {/* Draggable splitter */}
+          <div
+            className={cn(
+              "relative w-1.5 shrink-0 cursor-col-resize border-l border-border select-none",
+              dragging_side && "bg-primary/50",
+            )}
+            onMouseDown={start_side_resize}
+          >
+            <div className="absolute inset-y-0 -left-1 -right-1" />
+          </div>
+
+          <div style={{ width: side_panel_width }} className="shrink-0 overflow-hidden">
+            {panel === "notes" && <ReaderNote entry_id={entry.id} />}
+            {panel === "summary" && (
+              <ReaderSummary entry_id={entry.id} entry_title={entry.title || t("entry.untitled")} />
+            )}
+            {panel === "translation" && <ReaderTranslation entry_id={entry.id} />}
+            {panel === "tags" && <ReaderTagging entry_id={entry.id} />}
+          </div>
+        </>
       )}
-      {panel === "translation" && <ReaderTranslation entry_id={entry.id} />}
-      {panel === "tags" && <ReaderTagging entry_id={entry.id} />}
     </div>
   );
 }

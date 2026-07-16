@@ -4,9 +4,10 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Channel } from "@tauri-apps/api/core";
+import { useQuery } from "@tanstack/react-query";
 import { Languages, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { run_translation } from "@/lib/tauri_bindings";
+import { run_translation, get_agent_profile } from "@/lib/tauri_bindings";
 
 interface Props {
   entry_id: number;
@@ -23,6 +24,13 @@ export function ReaderTranslation({ entry_id }: Props) {
   const [is_loading, set_is_loading] = useState(false);
   const [progress, set_progress] = useState({ current: 0, total: 0 });
   const [error, set_error] = useState<string | null>(null);
+
+  // Load user's language preference from agent settings
+  const { data: profile } = useQuery({
+    queryKey: ["agent_profile", "translation"],
+    queryFn: () => get_agent_profile("translation"),
+  });
+  const target_language = profile?.target_language ?? "zh-Hans";
 
   const start_translation = useCallback(async () => {
     set_segments([]);
@@ -53,12 +61,12 @@ export function ReaderTranslation({ entry_id }: Props) {
     };
 
     try {
-      await run_translation(entry_id, "zh-Hans", channel);
+      await run_translation(entry_id, target_language, channel);
     } catch (e) {
       set_error(String(e));
       set_is_loading(false);
     }
-  }, [entry_id]);
+  }, [entry_id, target_language]);
 
   return (
     <div className="flex h-full flex-col border-l border-border bg-card">
