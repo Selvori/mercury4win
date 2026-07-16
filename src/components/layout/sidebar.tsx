@@ -2,8 +2,9 @@
 // Left sidebar with feed list and navigation
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Rss, Library, Tags, Settings } from "lucide-react";
+import { Rss, Library, Tags, Settings, X } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
+import { TagLibrary } from "@/features/tags/components/tag_library";
 import { import_opml, export_opml } from "@/lib/tauri_bindings";
 
 interface Props {
@@ -13,6 +14,8 @@ interface Props {
   on_open_settings: () => void;
   view: "feeds" | "tags";
   on_change_view: (view: "feeds" | "tags") => void;
+  selected_tag_id: number | null;
+  on_select_tag: (tag_id: number) => void;
 }
 
 export function Sidebar({
@@ -22,6 +25,8 @@ export function Sidebar({
   on_open_settings,
   view,
   on_change_view,
+  selected_tag_id,
+  on_select_tag,
 }: Props) {
   const query_client = useQueryClient();
 
@@ -99,11 +104,10 @@ export function Sidebar({
             on_export={handle_export}
           />
         ) : (
-          <div className="flex h-full items-center justify-center p-4 text-center">
-            <p className="text-xs text-muted-foreground">
-              Tags will be available in Phase 5
-            </p>
-          </div>
+          <TagLibrary
+            on_select_tag={on_select_tag}
+            selected_tag_id={selected_tag_id}
+          />
         )}
       </div>
 

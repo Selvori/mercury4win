@@ -10,22 +10,24 @@ import type { Entry } from "@/types";
 
 interface Props {
   feed_id: number | null;
+  tag_ids?: number[];
   selected_entry_id: number | null;
   on_select_entry: (entry: Entry) => void;
 }
 
-export function EntryList({ feed_id, selected_entry_id, on_select_entry }: Props) {
+export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry }: Props) {
   const query_client = useQueryClient();
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["entries", feed_id],
+    queryKey: ["entries", feed_id, tag_ids],
     queryFn: () =>
       load_entries({
         feed_id: feed_id ?? undefined,
+        tag_ids: tag_ids && tag_ids.length > 0 ? tag_ids : undefined,
         unread_only: false,
         limit: 100,
       }),
-    enabled: feed_id !== null,
+    enabled: feed_id !== null || (tag_ids !== undefined && tag_ids.length > 0),
     staleTime: 0,
   });
 
@@ -49,10 +51,10 @@ export function EntryList({ feed_id, selected_entry_id, on_select_entry }: Props
     onSuccess: () => query_client.invalidateQueries({ queryKey: ["entries"] }),
   });
 
-  if (feed_id === null) {
+  if (feed_id === null && (!tag_ids || tag_ids.length === 0)) {
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground">
-        <p className="text-sm">Select a feed to view entries</p>
+        <p className="text-sm">Select a feed or tag to view entries</p>
       </div>
     );
   }

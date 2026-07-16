@@ -9,7 +9,12 @@ import { cn } from "@/lib/utils";
 import { list_tags, rename_tag, delete_tag } from "@/lib/tauri_bindings";
 import { useState } from "react";
 
-export function TagLibrary() {
+interface Props {
+  on_select_tag?: (tag_id: number) => void;
+  selected_tag_id?: number | null;
+}
+
+export function TagLibrary({ on_select_tag, selected_tag_id }: Props) {
   const query_client = useQueryClient();
   const [editing_id, set_editing_id] = useState<number | null>(null);
   const [edit_name, set_edit_name] = useState("");
@@ -46,87 +51,92 @@ export function TagLibrary() {
   }
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground">Tag Library</h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Manage tags, merge duplicates, and clean up your tag library.
-        </p>
+    <div className="flex flex-col h-full">
+      <div className="p-2">
+        <Input
+          placeholder="Search tags..."
+          value={search}
+          onChange={(e) => set_search(e.target.value)}
+        />
       </div>
 
-      <Input
-        placeholder="Search tags..."
-        value={search}
-        onChange={(e) => set_search(e.target.value)}
-        className="mb-4"
-      />
-
-      {isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading...</p>
-      ) : !tags?.length ? (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <p className="text-sm text-muted-foreground">No tags yet</p>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {tags.map((tag) => (
-            <div
-              key={tag.id}
-              className={cn(
-                "flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2",
-                tag.is_provisional && "border-yellow-300 dark:border-yellow-700",
-              )}
-            >
-              {editing_id === tag.id ? (
-                <Input
-                  value={edit_name}
-                  onChange={(e) => set_edit_name(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") save_edit();
-                    if (e.key === "Escape") set_editing_id(null);
-                  }}
-                  className="h-7 text-sm flex-1"
-                  autoFocus
-                />
-              ) : (
-                <span className="flex-1 text-sm">{tag.name}</span>
-              )}
-              <span className="text-xs text-muted-foreground min-w-[2rem] text-right">
-                {tag.usage_count}
-              </span>
-              {tag.is_provisional && (
-                <span className="text-[10px] text-yellow-600 dark:text-yellow-400">
-                  provisional
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
+        {isLoading ? (
+          <p className="text-xs text-muted-foreground p-2">Loading...</p>
+        ) : !tags?.length ? (
+          <div className="p-4 text-center">
+            <p className="text-xs text-muted-foreground">No tags yet</p>
+          </div>
+        ) : (
+          <div className="space-y-0.5">
+            {tags.map((tag) => (
+              <div
+                key={tag.id}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-md px-2 py-1.5 cursor-pointer transition-colors",
+                  on_select_tag && "hover:bg-accent",
+                  selected_tag_id === tag.id && "bg-accent text-accent-foreground",
+                  tag.is_provisional && "border border-yellow-300 dark:border-yellow-700",
+                )}
+                onClick={() => on_select_tag?.(tag.id)}
+              >
+                {editing_id === tag.id ? (
+                  <Input
+                    value={edit_name}
+                    onChange={(e) => set_edit_name(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") save_edit();
+                      if (e.key === "Escape") set_editing_id(null);
+                    }}
+                    className="h-6 text-xs flex-1"
+                    autoFocus
+                  />
+                ) : (
+                  <span className="flex-1 text-xs truncate">{tag.name}</span>
+                )}
+                <span className="text-[10px] text-muted-foreground min-w-[1.5rem] text-right">
+                  {tag.usage_count}
                 </span>
-              )}
-              {editing_id === tag.id ? (
-                <Button size="sm" className="h-6 text-xs" onClick={save_edit}>
-                  Save
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={() => start_edit(tag)}
-                  >
-                    <Pencil className="h-3 w-3" />
+                {tag.is_provisional && (
+                  <span className="text-[9px] text-yellow-600 dark:text-yellow-400">
+                    AI
+                  </span>
+                )}
+                {editing_id === tag.id ? (
+                  <Button size="sm" className="h-5 px-1.5 text-[10px]" onClick={save_edit}>
+                    Save
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={() => delete_mutation.mutate(tag.id)}
-                  >
-                    <Trash2 className="h-3 w-3 text-destructive" />
-                  </Button>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        start_edit(tag);
+                      }}
+                    >
+                      <Pencil className="h-2.5 w-2.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        delete_mutation.mutate(tag.id);
+                      }}
+                    >
+                      <Trash2 className="h-2.5 w-2.5 text-destructive" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

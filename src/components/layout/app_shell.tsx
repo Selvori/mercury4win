@@ -17,6 +17,15 @@ export function AppShell() {
   const [show_feed_editor, set_show_feed_editor] = useState(false);
   const [show_settings, set_show_settings] = useState(false);
   const [sidebar_view, set_sidebar_view] = useState<"feeds" | "tags">("feeds");
+  const [selected_tag_id, set_selected_tag_id] = useState<number | null>(null);
+
+  const handle_select_tag = useCallback((tag_id: number) => {
+    set_selected_tag_id(tag_id === selected_tag_id ? null : tag_id);
+    set_selected_entry(null);
+    if (tag_id !== selected_tag_id) {
+      set_sidebar_view("feeds");
+    }
+  }, [selected_tag_id]);
 
   const handle_select_entry = useCallback((entry: Entry) => {
     set_selected_entry(entry);
@@ -55,12 +64,15 @@ export function AppShell() {
           on_open_settings={() => set_show_settings(true)}
           view={sidebar_view}
           on_change_view={set_sidebar_view}
+          selected_tag_id={selected_tag_id}
+          on_select_tag={handle_select_tag}
         />
 
         {/* Middle — entry list */}
         <div className="w-80 shrink-0 border-r border-border">
           <EntryList
             feed_id={selected_feed_id}
+            tag_ids={selected_tag_id ? [selected_tag_id] : undefined}
             selected_entry_id={selected_entry?.id ?? null}
             on_select_entry={handle_select_entry}
           />
