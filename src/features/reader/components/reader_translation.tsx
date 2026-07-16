@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { Channel } from "@tauri-apps/api/core";
 import { Languages, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { run_translation } from "@/lib/tauri_bindings";
 
 interface Props {
   entry_id: number;
@@ -21,7 +22,7 @@ export function ReaderTranslation({ entry_id }: Props) {
   const [progress, set_progress] = useState({ current: 0, total: 0 });
   const [error, set_error] = useState<string | null>(null);
 
-  const start_translation = useCallback(() => {
+  const start_translation = useCallback(async () => {
     set_segments([]);
     set_error(null);
     set_is_loading(true);
@@ -49,15 +50,12 @@ export function ReaderTranslation({ entry_id }: Props) {
       }
     };
 
-    import("@/lib/tauri_bindings")
-      .then(() => {
-        set_segments([
-          { index: 0, text: "Translation requires the Tauri runtime." },
-          { index: 1, text: "Run with `cargo tauri dev` to use this feature." },
-        ]);
-        set_is_loading(false);
-      })
-      .catch(() => set_is_loading(false));
+    try {
+      await run_translation(entry_id, "zh-Hans", channel);
+    } catch (e) {
+      set_error(String(e));
+      set_is_loading(false);
+    }
   }, [entry_id]);
 
   return (

@@ -6,6 +6,7 @@ import { Channel } from "@tauri-apps/api/core";
 import { Sparkles, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { run_summary } from "@/lib/tauri_bindings";
 
 interface Props {
   entry_id: number;
@@ -21,7 +22,7 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
   const [error, set_error] = useState<string | null>(null);
   const channel_ref = useRef<Channel<string> | null>(null);
 
-  const start_summary = useCallback(() => {
+  const start_summary = useCallback(async () => {
     set_content("");
     set_error(null);
     set_is_loading(true);
@@ -46,20 +47,12 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
       }
     };
 
-    // invoke run_summary — in browser preview, invoke won't work, show placeholder
-    import("@/lib/tauri_bindings")
-      .then(() => {
-        // Tauri invoke will be called via the Channel API
-        set_content(
-          "Summary generation requires the Tauri runtime. Run with `cargo tauri dev` to use this feature.\n\n" +
-            "In the full app, this will stream LLM-generated summaries in real-time."
-        );
-        set_is_loading(false);
-      })
-      .catch(() => {
-        set_error("Failed to start summary");
-        set_is_loading(false);
-      });
+    try {
+      await run_summary(entry_id, "en", detail_level, channel);
+    } catch (e) {
+      set_error(String(e));
+      set_is_loading(false);
+    }
   }, [entry_id, detail_level]);
 
   const detail_options: { value: DetailLevel; label: string }[] = [
