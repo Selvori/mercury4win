@@ -131,6 +131,7 @@ async fn run_full_pipeline(
             body.push_str(&format!("<p>{}</p>\n", html_escape::encode_text(&published)));
         }
         body.push_str("<hr>\n");
+        body.push_str("<div data-mercury-fallback=\"true\"></div>\n");
         body.push_str("<p><strong>Full article content is not available.</strong><br>\n");
         body.push_str("The source website may require JavaScript or block automated access (Cloudflare challenge).</p>\n");
 

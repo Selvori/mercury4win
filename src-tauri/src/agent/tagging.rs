@@ -5,7 +5,8 @@ use std::collections::HashMap;
 use reqwest::Client;
 use crate::agent::prompt_templates;
 use crate::agent::provider::{self, ChatMessage, ChatCompletionRequest};
-use crate::db::{entry_store, content_store, tag_store};
+use crate::db::{entry_store, content_store, tag_store, usage_store};
+use crate::db::models::LlmUsageEvent;
 
 /// Run tagging agent. Returns a list of suggested tag names.
 pub async fn run_tagging(
@@ -75,6 +76,26 @@ pub async fn run_tagging(
         .first()
         .map(|c| c.message.content.clone())
         .unwrap_or_default();
+
+    // Log usage
+    if let Some(ref usage) = response.usage {
+        let _ = usage_store::insert_usage_event(
+            pool,
+            &LlmUsageEvent {
+                id: 0,
+                task_run_id: None,
+                provider_name: Some("default".into()),
+                model_name: Some(model_name.into()),
+                agent_type: Some("tagging".into()),
+                prompt_tokens: Some(usage.prompt_tokens as i64),
+                completion_tokens: Some(usage.completion_tokens as i64),
+                total_tokens: Some(usage.total_tokens as i64),
+                request_status: Some("success".into()),
+                created_at: String::new(),
+            },
+        )
+        .await;
+    }
 
     // Parse tag names from LLM response (expects comma or newline-separated)
     let tags: Vec<String> = raw
