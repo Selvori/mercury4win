@@ -5,11 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { BarChart3, Loader2 } from "lucide-react";
 import { get_usage_report } from "@/lib/tauri_bindings";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 type Window = "7d" | "30d" | "90d";
 
 export function UsageStats() {
+  const { t } = useTranslation();
   const [window, set_window] = useState<Window>("30d");
 
   const { data, isLoading, isError } = useQuery({
@@ -20,17 +22,17 @@ export function UsageStats() {
   const [prompt_tokens, completion_tokens, request_count] = data ?? [0, 0, 0];
 
   const windows: { value: Window; label: string }[] = [
-    { value: "7d", label: "7 days" },
-    { value: "30d", label: "30 days" },
-    { value: "90d", label: "90 days" },
+    { value: "7d", label: t("usage.window7d") },
+    { value: "30d", label: t("usage.window30d") },
+    { value: "90d", label: t("usage.window90d") },
   ];
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Usage Statistics</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t("usage.title")}</h3>
         <p className="text-sm text-muted-foreground mt-1">
-          LLM token usage across all AI features.
+          {t("usage.description")}
         </p>
       </div>
 
@@ -55,30 +57,30 @@ export function UsageStats() {
       {isLoading ? (
         <div className="flex items-center gap-2 text-sm text-muted-foreground py-8">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Loading...
+          {t("common.loading")}
         </div>
       ) : isError ? (
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
-          <p className="text-sm text-destructive">Failed to load usage data</p>
+          <p className="text-sm text-destructive">{t("usage.loadError")}</p>
         </div>
       ) : (
         <div className="space-y-4">
           {/* Stat cards */}
           <div className="grid grid-cols-3 gap-3">
             <StatCard
-              label="Prompt Tokens"
+              label={t("usage.promptTokens")}
               value={prompt_tokens.toLocaleString()}
-              description="Input tokens sent to LLMs"
+              description={t("usage.promptTokensDesc")}
             />
             <StatCard
-              label="Completion Tokens"
+              label={t("usage.completionTokens")}
               value={completion_tokens.toLocaleString()}
-              description="Output tokens from LLMs"
+              description={t("usage.completionTokensDesc")}
             />
             <StatCard
-              label="API Requests"
+              label={t("usage.apiRequests")}
               value={String(request_count)}
-              description="Total LLM API calls"
+              description={t("usage.apiRequestsDesc")}
             />
           </div>
 
@@ -86,7 +88,7 @@ export function UsageStats() {
           <div className="rounded-lg border border-border bg-card p-4">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium">Total Tokens</span>
+              <span className="text-sm font-medium">{t("usage.totalTokens")}</span>
               <span className="text-xl font-semibold ml-auto">
                 {(prompt_tokens + completion_tokens).toLocaleString()}
               </span>
@@ -96,10 +98,7 @@ export function UsageStats() {
           {/* Usage breakdown note */}
           <div className="rounded-lg border border-border bg-muted/30 p-3">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Usage is tracked per LLM API request across Summary, Translation,
-              and Tagging features. Token counts are reported directly by each
-              model provider and reflect actual API consumption within the
-              selected time window.
+              {t("usage.breakdownNote")}
             </p>
           </div>
         </div>

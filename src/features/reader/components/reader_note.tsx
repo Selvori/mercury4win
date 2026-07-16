@@ -2,6 +2,7 @@
 // Note editor for entries — Markdown editing with save
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FileText, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function ReaderNote({ entry_id }: Props) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
   const [draft, set_draft] = useState("");
   const [is_editing, set_is_editing] = useState(false);
@@ -48,7 +50,7 @@ export function ReaderNote({ entry_id }: Props) {
     <div className="flex h-full flex-col border-l border-border bg-card">
       <div className="flex items-center gap-1 border-b border-border px-3 py-1.5">
         <FileText className="h-4 w-4 text-primary" />
-        <span className="flex-1 text-sm font-medium">Notes</span>
+        <span className="flex-1 text-sm font-medium">{t("reader.notes")}</span>
         {is_editing && (
           <Button
             size="sm"
@@ -57,7 +59,7 @@ export function ReaderNote({ entry_id }: Props) {
             disabled={save_mutation.isPending}
           >
             <Save className="mr-1 h-3 w-3" />
-            {save_mutation.isPending ? "Saving..." : "Save"}
+            {save_mutation.isPending ? t("note.saving") : t("note.save")}
           </Button>
         )}
         <Button
@@ -72,20 +74,20 @@ export function ReaderNote({ entry_id }: Props) {
             }
           }}
         >
-          {is_editing ? "Cancel" : existing_note ? "Edit" : "Add Note"}
+          {is_editing ? t("note.cancel") : existing_note ? t("note.edit") : t("note.addNote")}
         </Button>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
         {is_loading_note ? (
           <div className="flex h-full items-center justify-center">
-            <p className="text-sm text-muted-foreground">Loading...</p>
+            <p className="text-sm text-muted-foreground">{t("note.loading")}</p>
           </div>
         ) : is_editing ? (
           <textarea
             value={draft}
             onChange={(e) => set_draft(e.target.value)}
-            placeholder="Write your notes in Markdown..."
+            placeholder={t("note.placeholder")}
             className="h-full w-full resize-none rounded-lg border border-border bg-transparent p-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
           />
         ) : existing_note ? (
@@ -99,10 +101,10 @@ export function ReaderNote({ entry_id }: Props) {
           <div className="flex h-full flex-col items-center justify-center text-center">
             <FileText className="h-8 w-8 text-muted-foreground/50" />
             <p className="mt-2 text-sm text-muted-foreground">
-              No notes for this entry
+              {t("note.noNotes")}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Click "Add Note" to write your thoughts
+              {t("note.clickToAdd")}
             </p>
           </div>
         )}

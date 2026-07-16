@@ -2,6 +2,7 @@
 // Feed list sidebar component with add/import/export functionality
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Rss, Plus, RefreshCw, FileDown, FileUp, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function FeedList({ selected_id, on_select, on_add, on_import, on_export }: Props) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
 
   const { data: feeds, isLoading } = useQuery({
@@ -47,7 +49,7 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
           size="icon"
           className="h-8 w-8"
           onClick={on_add}
-          title="Add feed"
+          title={t("feed.addFeed")}
         >
           <Plus className="h-4 w-4" />
         </Button>
@@ -57,7 +59,7 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
           className="h-8 w-8"
           onClick={() => sync_mutation.mutate()}
           disabled={sync_mutation.isPending}
-          title="Sync all"
+          title={t("feed.syncAll")}
         >
           <RefreshCw className={cn("h-4 w-4", sync_mutation.isPending && "animate-spin")} />
         </Button>
@@ -66,7 +68,7 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
           size="icon"
           className="h-8 w-8"
           onClick={on_import}
-          title="Import OPML"
+          title={t("feed.importOpml")}
         >
           <FileDown className="h-4 w-4" />
         </Button>
@@ -75,7 +77,7 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
           size="icon"
           className="h-8 w-8"
           onClick={on_export}
-          title="Export OPML"
+          title={t("feed.exportOpml")}
         >
           <FileUp className="h-4 w-4" />
         </Button>
@@ -83,14 +85,14 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
 
       <div className="flex-1 overflow-y-auto p-1">
         {isLoading ? (
-          <p className="px-3 py-2 text-xs text-muted-foreground">Loading...</p>
+          <p className="px-3 py-2 text-xs text-muted-foreground">{t("common.loading")}</p>
         ) : !feeds?.length ? (
           <div className="px-3 py-8 text-center">
             <Rss className="mx-auto h-8 w-8 text-muted-foreground/50" />
-            <p className="mt-2 text-sm text-muted-foreground">No feeds yet</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t("feed.noFeeds")}</p>
             <Button variant="outline" size="sm" className="mt-3" onClick={on_add}>
               <Plus className="mr-1 h-3.5 w-3.5" />
-              Add your first feed
+              {t("feed.addFirstFeed")}
             </Button>
           </div>
         ) : (
@@ -119,7 +121,7 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
                 className="h-5 w-5 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (confirm("Delete this feed and all its entries?")) {
+                  if (confirm(t("feed.deleteConfirm"))) {
                     delete_mutation.mutate(feed.id);
                   }
                 }}

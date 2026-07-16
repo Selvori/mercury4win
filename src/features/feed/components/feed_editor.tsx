@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export function FeedEditor({ open, on_close }: Props) {
+  const { t } = useTranslation();
   const [url, set_url] = useState("");
   const query_client = useQueryClient();
 
@@ -44,12 +46,12 @@ export function FeedEditor({ open, on_close }: Props) {
     <Dialog open={open} onOpenChange={(o) => !o && on_close()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Feed</DialogTitle>
+          <DialogTitle>{t("feed.addFeed")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handle_submit}>
           <div className="space-y-3 py-4">
             <Input
-              placeholder="https://example.com/feed.xml"
+              placeholder={t("feed.feedUrlPlaceholder")}
               value={url}
               onChange={(e) => set_url(e.target.value)}
               autoFocus
@@ -60,10 +62,10 @@ export function FeedEditor({ open, on_close }: Props) {
           </div>
           <DialogFooter>
             <Button variant="outline" type="button" onClick={on_close}>
-              Cancel
+              {t("feed.cancel")}
             </Button>
             <Button type="submit" disabled={mutation.isPending || !url.trim()}>
-              {mutation.isPending ? "Adding..." : "Add Feed"}
+              {mutation.isPending ? t("feed.adding") : t("feed.addFeed")}
             </Button>
           </DialogFooter>
         </form>

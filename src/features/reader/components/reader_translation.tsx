@@ -2,6 +2,7 @@
 // Translation panel — bilingual side-by-side display
 
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Channel } from "@tauri-apps/api/core";
 import { Languages, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ interface SegmentResult {
 }
 
 export function ReaderTranslation({ entry_id }: Props) {
+  const { t } = useTranslation();
   const [segments, set_segments] = useState<SegmentResult[]>([]);
   const [is_loading, set_is_loading] = useState(false);
   const [progress, set_progress] = useState({ current: 0, total: 0 });
@@ -62,7 +64,7 @@ export function ReaderTranslation({ entry_id }: Props) {
     <div className="flex h-full flex-col border-l border-border bg-card">
       <div className="flex items-center gap-1 border-b border-border px-3 py-1.5">
         <Languages className="h-4 w-4 text-primary" />
-        <span className="flex-1 text-sm font-medium">Translation</span>
+        <span className="flex-1 text-sm font-medium">{t("reader.translation")}</span>
         {is_loading && (
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -78,7 +80,7 @@ export function ReaderTranslation({ entry_id }: Props) {
           onClick={start_translation}
           disabled={is_loading}
         >
-          Translate
+          {t("translation.translate")}
         </Button>
       </div>
 
@@ -87,11 +89,11 @@ export function ReaderTranslation({ entry_id }: Props) {
           <div className="flex h-full flex-col items-center justify-center text-center">
             <Languages className="h-8 w-8 text-muted-foreground/50" />
             <p className="mt-2 text-sm text-muted-foreground">
-              Translate this article
+              {t("translation.translateArticle")}
             </p>
             <Button size="sm" className="mt-3" onClick={start_translation}>
               <Languages className="mr-1 h-3.5 w-3.5" />
-              Start Translation
+              {t("translation.start")}
             </Button>
           </div>
         )}

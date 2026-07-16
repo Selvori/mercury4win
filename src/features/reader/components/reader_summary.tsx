@@ -4,6 +4,7 @@
 import { useState, useRef, useCallback } from "react";
 import { Channel } from "@tauri-apps/api/core";
 import { Sparkles, Loader2, FileText } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { run_summary } from "@/lib/tauri_bindings";
@@ -16,6 +17,7 @@ interface Props {
 type DetailLevel = "brief" | "medium" | "detailed";
 
 export function ReaderSummary({ entry_id, entry_title }: Props) {
+  const { t } = useTranslation();
   const [content, set_content] = useState("");
   const [is_loading, set_is_loading] = useState(false);
   const [detail_level, set_detail_level] = useState<DetailLevel>("medium");
@@ -56,16 +58,16 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
   }, [entry_id, detail_level]);
 
   const detail_options: { value: DetailLevel; label: string }[] = [
-    { value: "brief", label: "Brief" },
-    { value: "medium", label: "Medium" },
-    { value: "detailed", label: "Detailed" },
+    { value: "brief", label: t("summary.brief") },
+    { value: "medium", label: t("summary.medium") },
+    { value: "detailed", label: t("summary.detailed") },
   ];
 
   return (
     <div className="flex h-full flex-col border-l border-border bg-card">
       <div className="flex items-center gap-1 border-b border-border px-3 py-1.5">
         <Sparkles className="h-4 w-4 text-primary" />
-        <span className="flex-1 text-sm font-medium">Summary</span>
+        <span className="flex-1 text-sm font-medium">{t("reader.summary")}</span>
         <div className="flex gap-0.5 rounded-md border border-border bg-muted/50 p-0.5">
           {detail_options.map((opt) => (
             <Button
@@ -89,10 +91,10 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
         {!content && !is_loading && !error && (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <FileText className="h-8 w-8 text-muted-foreground/50" />
-            <p className="mt-2 text-sm text-muted-foreground">Generate a summary</p>
+            <p className="mt-2 text-sm text-muted-foreground">{t("summary.generate")}</p>
             <Button size="sm" className="mt-3" onClick={start_summary}>
               <Sparkles className="mr-1 h-3.5 w-3.5" />
-              Summarize
+              {t("summary.summarize")}
             </Button>
           </div>
         )}
@@ -100,7 +102,7 @@ export function ReaderSummary({ entry_id, entry_title }: Props) {
         {is_loading && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Generating summary...
+            {t("summary.generating")}
           </div>
         )}
 

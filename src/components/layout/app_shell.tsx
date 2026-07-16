@@ -2,6 +2,7 @@
 // Three-column layout: sidebar | entry list | reader
 
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Sidebar } from "./sidebar";
 import { StatusBar } from "./status_bar";
 import { EntryList } from "@/features/entry/components/entry_list";
@@ -12,6 +13,7 @@ import { useKeyboardShortcuts } from "@/hooks/use_keyboard_shortcuts";
 import type { Entry } from "@/types";
 
 export function AppShell() {
+  const { t } = useTranslation();
   const [selected_feed_id, set_selected_feed_id] = useState<number | null>(null);
   const [selected_entry, set_selected_entry] = useState<Entry | null>(null);
   const [show_feed_editor, set_show_feed_editor] = useState(false);
@@ -85,8 +87,8 @@ export function AppShell() {
           ) : (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
               <div className="text-center">
-                <h1 className="text-2xl font-semibold text-foreground">Mercury</h1>
-                <p className="mt-2">Select a feed and an entry to start reading</p>
+                <h1 className="text-2xl font-semibold text-foreground">{t("app.welcome")}</h1>
+                <p className="mt-2">{t("app.subtitle")}</p>
               </div>
             </div>
           )}

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { list_tags, rename_tag, delete_tag } from "@/lib/tauri_bindings";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   on_select_tag?: (tag_id: number) => void;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function TagLibrary({ on_select_tag, selected_tag_id }: Props) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
   const [editing_id, set_editing_id] = useState<number | null>(null);
   const [edit_name, set_edit_name] = useState("");
@@ -54,7 +56,7 @@ export function TagLibrary({ on_select_tag, selected_tag_id }: Props) {
     <div className="flex flex-col h-full">
       <div className="p-2">
         <Input
-          placeholder="Search tags..."
+          placeholder={t("tagging.searchTags")}
           value={search}
           onChange={(e) => set_search(e.target.value)}
         />
@@ -62,10 +64,10 @@ export function TagLibrary({ on_select_tag, selected_tag_id }: Props) {
 
       <div className="flex-1 overflow-y-auto px-2 pb-2">
         {isLoading ? (
-          <p className="text-xs text-muted-foreground p-2">Loading...</p>
+          <p className="text-xs text-muted-foreground p-2">{t("common.loading")}</p>
         ) : !tags?.length ? (
           <div className="p-4 text-center">
-            <p className="text-xs text-muted-foreground">No tags yet</p>
+            <p className="text-xs text-muted-foreground">{t("tagging.noTagsYet")}</p>
           </div>
         ) : (
           <div className="space-y-0.5">
@@ -104,7 +106,7 @@ export function TagLibrary({ on_select_tag, selected_tag_id }: Props) {
                 )}
                 {editing_id === tag.id ? (
                   <Button size="sm" className="h-5 px-1.5 text-[10px]" onClick={save_edit}>
-                    Save
+                    {t("note.save")}
                   </Button>
                 ) : (
                   <>

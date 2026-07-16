@@ -2,6 +2,7 @@
 // Left sidebar with feed list and navigation
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Rss, Library, Tags, Settings } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
 import { TagLibrary } from "@/features/tags/components/tag_library";
@@ -28,6 +29,7 @@ export function Sidebar({
   selected_tag_id,
   on_select_tag,
 }: Props) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
 
   const import_mutation = useMutation({
@@ -79,7 +81,7 @@ export function Sidebar({
           }`}
         >
           <Library className="h-3.5 w-3.5" />
-          Feeds
+          {t("sidebar.feeds")}
         </button>
         <button
           onClick={() => on_change_view("tags")}
@@ -90,7 +92,7 @@ export function Sidebar({
           }`}
         >
           <Tags className="h-3.5 w-3.5" />
-          Tags
+          {t("sidebar.tags")}
         </button>
       </nav>
 
@@ -117,7 +119,7 @@ export function Sidebar({
           className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-sidebar-foreground hover:bg-accent"
         >
           <Settings className="h-4 w-4" />
-          Settings
+          {t("sidebar.settings")}
         </button>
       </div>
     </aside>

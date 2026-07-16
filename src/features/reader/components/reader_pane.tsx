@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { build_reader_content } from "@/lib/tauri_bindings";
 import type { Entry } from "@/types";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ReaderNote } from "./reader_note";
 import { ReaderSummary } from "./reader_summary";
 import { ReaderTranslation } from "./reader_translation";
@@ -31,6 +32,7 @@ type Theme = "classic-light" | "classic-dark" | "paper-light" | "paper-dark";
 type Panel = "reader" | "notes" | "summary" | "translation" | "tags";
 
 export function ReaderPane({ entry }: Props) {
+  const { t } = useTranslation();
   const [theme, set_theme] = useState<Theme>("classic-light");
   const [panel, set_panel] = useState<Panel>("reader");
 
@@ -41,18 +43,18 @@ export function ReaderPane({ entry }: Props) {
   });
 
   const theme_options: { value: Theme; icon: typeof Sun; label: string }[] = [
-    { value: "classic-light", icon: Sun, label: "Light" },
-    { value: "classic-dark", icon: Moon, label: "Dark" },
-    { value: "paper-light", icon: Monitor, label: "Paper Light" },
-    { value: "paper-dark", icon: Monitor, label: "Paper Dark" },
+    { value: "classic-light", icon: Sun, label: t("reader.light") },
+    { value: "classic-dark", icon: Moon, label: t("reader.dark") },
+    { value: "paper-light", icon: Monitor, label: t("reader.paperLight") },
+    { value: "paper-dark", icon: Monitor, label: t("reader.paperDark") },
   ];
 
   const panel_options: { value: Panel; icon: typeof BookOpen; label: string }[] = [
-    { value: "reader", icon: BookOpen, label: "Reader" },
-    { value: "notes", icon: FileText, label: "Notes" },
-    { value: "summary", icon: Sparkles, label: "Summary" },
-    { value: "translation", icon: Languages, label: "Translation" },
-    { value: "tags", icon: Tag, label: "Tags" },
+    { value: "reader", icon: BookOpen, label: t("reader.reader") },
+    { value: "notes", icon: FileText, label: t("reader.notes") },
+    { value: "summary", icon: Sparkles, label: t("reader.summary") },
+    { value: "translation", icon: Languages, label: t("reader.translation") },
+    { value: "tags", icon: Tag, label: t("reader.tags") },
   ];
 
   return (
@@ -81,7 +83,7 @@ export function ReaderPane({ entry }: Props) {
           </div>
           <div className="flex-1 flex items-center gap-2">
             <h2 className="text-sm font-medium truncate max-w-md">
-              {entry.title || "(untitled)"}
+              {entry.title || t("entry.untitled")}
             </h2>
           </div>
           <div className="flex items-center gap-0.5 rounded-md border border-border bg-muted/50 p-0.5">
@@ -112,14 +114,14 @@ export function ReaderPane({ entry }: Props) {
           ) : isError ? (
             <div className="flex h-full items-center justify-center p-8 text-center">
               <div>
-                <p className="text-sm font-medium text-destructive">Failed to load content</p>
+                <p className="text-sm font-medium text-destructive">{t("readerPane.failedToLoad")}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{String(error)}</p>
               </div>
             </div>
           ) : !reader_html ? (
             <div className="flex h-full items-center justify-center p-8 text-center">
               <p className="text-sm text-muted-foreground">
-                Content extraction failed. The article may not be available in reader mode.
+                {t("readerPane.extractionFailed")}
               </p>
             </div>
           ) : (
@@ -127,7 +129,7 @@ export function ReaderPane({ entry }: Props) {
               srcDoc={reader_html}
               className="h-full w-full border-0"
               sandbox="allow-same-origin"
-              title="Reader content"
+              title={t("readerPane.readerContent")}
             />
           )}
         </div>
@@ -136,7 +138,7 @@ export function ReaderPane({ entry }: Props) {
       {/* Side panel */}
       {panel === "notes" && <ReaderNote entry_id={entry.id} />}
       {panel === "summary" && (
-        <ReaderSummary entry_id={entry.id} entry_title={entry.title || "(untitled)"} />
+        <ReaderSummary entry_id={entry.id} entry_title={entry.title || t("entry.untitled")} />
       )}
       {panel === "translation" && <ReaderTranslation entry_id={entry.id} />}
       {panel === "tags" && <ReaderTagging entry_id={entry.id} />}

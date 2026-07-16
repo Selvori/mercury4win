@@ -48,11 +48,14 @@
     "applied": "Applied:",
     "addTag": "Add tag...",
     "noTags": "No tags for this entry",
+    "noTagsYet": "No tags yet",
+    "searchTags": "Search tags...",
     "clickToSuggest": "Click \"Suggest Tags\" to let AI analyze this article, or type a tag manually.",
     "analyzingArticle": "Analyzing article content..."
   },
   "entry": {
     "entries": "entries",
+    "entriesCount": "{{count}} entries",
     "noEntries": "No entries found",
     "selectFeedOrTag": "Select a feed or tag to view entries",
     "selectFeed": "Select a feed to view entries",
@@ -62,7 +65,8 @@
   },
   "readerPane": {
     "failedToLoad": "Failed to load content",
-    "extractionFailed": "Content extraction failed. The article may not be available in reader mode."
+    "extractionFailed": "Content extraction failed. The article may not be available in reader mode.",
+    "readerContent": "Reader content"
   },
   "settings": {
     "providers": "Providers",
@@ -101,10 +105,39 @@
   "common": {
     "loading": "Loading...",
     "error": "Error",
-    "noData": "No data"
+    "noData": "No data",
+    "ready": "Ready"
+  },
+  "feed": {
+    "addFeed": "Add feed",
+    "syncAll": "Sync all",
+    "importOpml": "Import OPML",
+    "exportOpml": "Export OPML",
+    "noFeeds": "No feeds yet",
+    "addFirstFeed": "Add your first feed",
+    "deleteConfirm": "Delete this feed and all its entries?",
+    "feedUrlPlaceholder": "https://example.com/feed.xml",
+    "adding": "Adding...",
+    "cancel": "Cancel"
   },
   "app": {
     "welcome": "Mercury",
     "subtitle": "Select a feed and an entry to start reading"
+  },
+  "usage": {
+    "title": "Usage Statistics",
+    "description": "LLM token usage across all AI features.",
+    "window7d": "7 days",
+    "window30d": "30 days",
+    "window90d": "90 days",
+    "promptTokens": "Prompt Tokens",
+    "promptTokensDesc": "Input tokens sent to LLMs",
+    "completionTokens": "Completion Tokens",
+    "completionTokensDesc": "Output tokens from LLMs",
+    "apiRequests": "API Requests",
+    "apiRequestsDesc": "Total LLM API calls",
+    "totalTokens": "Total Tokens",
+    "loadError": "Failed to load usage data",
+    "breakdownNote": "Usage is tracked per LLM API request across Summary, Translation, and Tagging features. Token counts are reported directly by each model provider and reflect actual API consumption within the selected time window."
   }
 }

@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { X, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { list_tags } from "@/lib/tauri_bindings";
 import type { Tag } from "@/types";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function TagInput({ selected_tags, on_add, on_remove }: Props) {
+  const { t } = useTranslation();
   const [input, set_input] = useState("");
   const [show_suggestions, set_show_suggestions] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -99,7 +101,7 @@ export function TagInput({ selected_tags, on_add, on_remove }: Props) {
           }}
           onFocus={() => set_show_suggestions(true)}
           onKeyDown={handle_key_down}
-          placeholder="Add tag..."
+          placeholder={t("tagging.addTag")}
           className="flex-1 h-7 rounded-md border border-border bg-transparent px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
         />
         {input.trim() && (

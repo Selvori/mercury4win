@@ -2,6 +2,7 @@
 // Entry list component with pagination, mark read/star/delete
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Loader2, CheckCheck, Star, Trash2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry }: Props) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
 
   const { data, isLoading, isFetching } = useQuery({
@@ -54,7 +56,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
   if (feed_id === null && (!tag_ids || tag_ids.length === 0)) {
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground">
-        <p className="text-sm">Select a feed or tag to view entries</p>
+        <p className="text-sm">{t("entry.selectFeedOrTag")}</p>
       </div>
     );
   }
@@ -72,7 +74,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
   if (!show_entries.length) {
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground">
-        <p className="text-sm">No entries found</p>
+        <p className="text-sm">{t("entry.noEntries")}</p>
       </div>
     );
   }
@@ -81,7 +83,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-1 border-b border-border p-2">
         <span className="flex-1 text-xs text-muted-foreground">
-          {data?.total ?? 0} entries
+          {t("entry.entriesCount", { count: data?.total ?? 0 })}
         </span>
         <Button
           variant="ghost"
@@ -95,7 +97,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
           }
         >
           <CheckCheck className="mr-1 h-3.5 w-3.5" />
-          Mark all read
+          {t("entry.markAllRead")}
         </Button>
       </div>
 
@@ -119,7 +121,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
                     entry.is_read && "text-muted-foreground",
                   )}
                 >
-                  {entry.title || "(untitled)"}
+                  {entry.title || t("entry.untitled")}
                 </p>
                 <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
                   {entry.author && <span>{entry.author}</span>}
@@ -163,7 +165,7 @@ export function EntryList({ feed_id, tag_ids, selected_entry_id, on_select_entry
             {!entry.is_read && (
               <div className="mt-1.5 flex items-center gap-1 text-[10px] text-primary">
                 <FileText className="h-3 w-3" />
-                Unread
+                {t("entry.unread")}
               </div>
             )}
           </button>

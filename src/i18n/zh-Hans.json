@@ -24,7 +24,7 @@
     "edit": "编辑",
     "addNote": "添加笔记",
     "noNotes": "暂无笔记",
-    "clickToAdd": "点击“添加笔记”记录你的想法",
+    "clickToAdd": "点击添加笔记记录你的想法",
     "placeholder": "用 Markdown 写笔记...",
     "loading": "加载中..."
   },
@@ -48,11 +48,14 @@
     "applied": "已应用：",
     "addTag": "添加标签...",
     "noTags": "暂无标签",
-    "clickToSuggest": "点击“智能推荐”让 AI 分析文章，或手动输入标签",
+    "noTagsYet": "暂无标签",
+    "searchTags": "搜索标签...",
+    "clickToSuggest": "点击智能推荐让 AI 分析文章，或手动输入标签",
     "analyzingArticle": "正在分析文章内容..."
   },
   "entry": {
     "entries": "篇",
+    "entriesCount": "{{count}} 篇",
     "noEntries": "暂无条目",
     "selectFeedOrTag": "选择一个订阅源或标签来查看文章",
     "selectFeed": "选择一个订阅源来查看文章",
@@ -62,7 +65,8 @@
   },
   "readerPane": {
     "failedToLoad": "加载内容失败",
-    "extractionFailed": "内容提取失败，该文章可能不支持阅读模式。"
+    "extractionFailed": "内容提取失败，该文章可能不支持阅读模式。",
+    "readerContent": "阅读内容"
   },
   "settings": {
     "providers": "服务商",
@@ -101,10 +105,39 @@
   "common": {
     "loading": "加载中...",
     "error": "错误",
-    "noData": "暂无数据"
+    "noData": "暂无数据",
+    "ready": "就绪"
+  },
+  "feed": {
+    "addFeed": "添加订阅源",
+    "syncAll": "同步全部",
+    "importOpml": "导入 OPML",
+    "exportOpml": "导出 OPML",
+    "noFeeds": "暂无订阅源",
+    "addFirstFeed": "添加你的第一个订阅源",
+    "deleteConfirm": "确定要删除此订阅源及其所有条目吗？",
+    "feedUrlPlaceholder": "https://example.com/feed.xml",
+    "adding": "添加中...",
+    "cancel": "取消"
   },
   "app": {
     "welcome": "Mercury",
     "subtitle": "选择一个订阅源和文章开始阅读"
+  },
+  "usage": {
+    "title": "用量统计",
+    "description": "所有 AI 功能的 LLM token 用量。",
+    "window7d": "7 天",
+    "window30d": "30 天",
+    "window90d": "90 天",
+    "promptTokens": "输入 Token",
+    "promptTokensDesc": "发送至 LLM 的输入 token",
+    "completionTokens": "输出 Token",
+    "completionTokensDesc": "LLM 返回的输出 token",
+    "apiRequests": "API 请求",
+    "apiRequestsDesc": "LLM API 调用总次数",
+    "totalTokens": "总 Token 数",
+    "loadError": "加载用量数据失败",
+    "breakdownNote": "用量基于每次 LLM API 请求追踪，涵盖摘要、翻译和标签功能。Token 数量由各模型服务商直接报告，反映所选时间窗口内的实际 API 消耗。"
   }
 }
