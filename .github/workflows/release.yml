@@ -47,7 +47,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Install Node dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install Linux system deps
         if: runner.os == 'Linux'
