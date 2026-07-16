@@ -178,6 +178,40 @@ pub async fn cancel_agent_task(
     Ok(())
 }
 
+// ── Custom prompt templates ──
+
+#[tauri::command]
+pub async fn save_custom_template(
+    app_handle: AppHandle,
+    agent_type: String,
+    source_path: String,
+) -> Result<(), String> {
+    use crate::utils::paths;
+    let prompts_dir = paths::prompts_dir(&app_handle);
+    std::fs::create_dir_all(&prompts_dir).map_err(|e| format!("mkdir: {}", e))?;
+
+    let dest = prompts_dir.join(format!("{}.custom.yaml", agent_type));
+    std::fs::copy(&source_path, &dest).map_err(|e| format!("copy: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn load_custom_template(
+    app_handle: AppHandle,
+    agent_type: String,
+) -> Result<Option<String>, String> {
+    use crate::utils::paths;
+    let prompts_dir = paths::prompts_dir(&app_handle);
+    match crate::agent::prompt_templates::load_custom_template(&prompts_dir, &agent_type) {
+        Ok(Some(template)) => {
+            let yaml = serde_yaml::to_string(&template).map_err(|e| e.to_string())?;
+            Ok(Some(yaml))
+        }
+        Ok(None) => Ok(None),
+        Err(e) => Err(e),
+    }
+}
+
 #[tauri::command]
 pub async fn get_agent_status(
     runtime_state: State<'_, SharedAgentRuntime>,

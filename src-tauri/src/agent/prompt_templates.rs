@@ -5,10 +5,10 @@
 
 use std::collections::HashMap;
 use std::path::PathBuf;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// A parsed YAML prompt template.
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PromptTemplate {
     pub version: u32,
     #[serde(default)]

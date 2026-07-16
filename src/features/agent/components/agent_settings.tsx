@@ -2,7 +2,7 @@
 // Agent settings panel — provider/model/profile management
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Cpu, Plus, Trash2, Play, Layers, Settings2, BarChart3 } from "lucide-react";
+import { Cpu, Plus, Trash2, Play, Layers, Settings2, BarChart3, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -17,12 +17,14 @@ import {
   delete_model,
   get_agent_profile,
   update_agent_profile,
+  save_custom_template,
+  load_custom_template,
 } from "@/lib/tauri_bindings";
 import type { ModelProfile, AgentProfile } from "@/types";
 import { useState } from "react";
 import { UsageStats } from "@/features/usage/components/usage_stats";
 
-type Tab = "providers" | "models" | "profiles" | "usage";
+type Tab = "providers" | "models" | "profiles" | "usage" | "prompts";
 
 export function AgentSettings() {
   const [tab, set_tab] = useState<Tab>("providers");
@@ -35,6 +37,7 @@ export function AgentSettings() {
           { value: "models" as Tab, label: "Models", icon: Layers },
           { value: "profiles" as Tab, label: "Profiles", icon: Settings2 },
           { value: "usage" as Tab, label: "Usage", icon: BarChart3 },
+          { value: "prompts" as Tab, label: "Prompts", icon: FileText },
         ]).map((opt) => (
           <Button
             key={opt.value}
@@ -57,6 +60,7 @@ export function AgentSettings() {
         {tab === "models" && <ModelsTab />}
         {tab === "profiles" && <ProfilesTab />}
         {tab === "usage" && <UsageStats />}
+        {tab === "prompts" && <PromptsTab />}
       </div>
     </div>
   );
@@ -444,6 +448,100 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// ── Prompts Tab ──
+
+const PROMPT_TYPES = ["summary", "translation", "tagging"] as const;
+
+function PromptsTab() {
+  const query_client = useQueryClient();
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <h3 className="text-lg font-semibold text-foreground mb-4">Custom Prompts</h3>
+      <p className="text-sm text-muted-foreground mb-6">
+        Upload custom YAML prompt templates for each agent type. Templates use
+        {" {{key}}"} substitution and {" {{#key}}...{{/key}}"} conditional sections.
+        Built-in defaults are used when no custom template is set.
+      </p>
+      <div className="space-y-4">
+        {PROMPT_TYPES.map((agent_type) => (
+          <PromptSection key={agent_type} agent_type={agent_type} query_client={query_client} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PromptSection({
+  agent_type,
+  query_client,
+}: {
+  agent_type: string;
+  query_client: ReturnType<typeof useQueryClient>;
+}) {
+  const { data: template, isLoading } = useQuery({
+    queryKey: ["custom_template", agent_type],
+    queryFn: () => load_custom_template(agent_type),
+  });
+
+  const [status, set_status] = useState<string | null>(null);
+
+  async function handle_upload() {
+    try {
+      const { open } = await import("@tauri-apps/plugin-dialog");
+      const selected = await open({
+        filters: [{ name: "YAML", extensions: ["yaml", "yml"] }],
+        multiple: false,
+      });
+      if (selected) {
+        await save_custom_template(agent_type, selected as string);
+        query_client.invalidateQueries({ queryKey: ["custom_template", agent_type] });
+        set_status("Template uploaded successfully.");
+      }
+    } catch (e) {
+      set_status(`Error: ${e}`);
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-4">
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-sm font-semibold capitalize">{agent_type}</h4>
+        <button
+          onClick={handle_upload}
+          className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-xs hover:bg-accent transition-colors"
+        >
+          <Plus className="h-3 w-3" />
+          Upload YAML
+        </button>
+      </div>
+
+      {isLoading ? (
+        <p className="text-xs text-muted-foreground">Loading...</p>
+      ) : template ? (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] text-green-700 dark:text-green-300">
+              Custom
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground line-clamp-3 font-mono whitespace-pre-wrap">
+            {template}
+          </p>
+        </div>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          Using built-in default template. Upload a .yaml file to customize.
+        </p>
+      )}
+
+      {status && (
+        <p className="mt-2 text-xs text-muted-foreground">{status}</p>
+      )}
     </div>
   );
 }

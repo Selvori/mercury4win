@@ -257,6 +257,27 @@ export async function update_agent_profile(
   });
 }
 
+// ── Custom prompt templates ──
+
+export interface PromptTemplateInfo {
+  version: number;
+  system: string | null;
+  user: string;
+}
+
+export async function save_custom_template(
+  agent_type: string,
+  source_path: string,
+): Promise<void> {
+  return invoke("save_custom_template", { agentType: agent_type, sourcePath: source_path });
+}
+
+export async function load_custom_template(
+  agent_type: string,
+): Promise<string | null> {
+  return invoke("load_custom_template", { agentType: agent_type });
+}
+
 // ── Tags ──
 
 export async function list_tags(search?: string): Promise<Tag[]> {

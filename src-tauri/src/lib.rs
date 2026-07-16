@@ -99,6 +99,8 @@ pub fn run() {
             commands::agent_cmd::delete_model,
             commands::agent_cmd::get_agent_profile,
             commands::agent_cmd::update_agent_profile,
+            commands::agent_cmd::save_custom_template,
+            commands::agent_cmd::load_custom_template,
             // Digest
             commands::digest_cmd::generate_digest,
             commands::digest_cmd::export_digest,
