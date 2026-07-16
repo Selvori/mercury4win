@@ -9,9 +9,14 @@ src-tauri/target/
 **/target/
 
 # --- Tauri ---
-src-tauri/icons/*.png
-src-tauri/icons/*.ico
-src-tauri/icons/*.icns
+# Icon source files — tracked in git (required for build)
+# Generated derivative icons (*.png at various sizes) are gitignored below
+# except the ones explicitly referenced by tauri.conf.json
+
+# Ignore generated icon derivatives
+src-tauri/icons/Square*.png
+src-tauri/icons/StoreLogo.png
+src-tauri/icons/icon.png
 
 # --- OS generated ---
 .DS_Store
