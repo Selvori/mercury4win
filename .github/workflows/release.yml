@@ -61,21 +61,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "Mercury ${{ github.ref_name }}"
+          releaseName: "Release ${{ github.ref_name }}"
           releaseBody: |
-            ## What's new in Mercury ${{ github.ref_name }}
+            ## Mercury ${{ github.ref_name }}
 
             ### Installation
             - **Windows**: Download `Mercury_*_x64-setup.exe` and run it
             - **Linux**: Download `mercury_*.deb` and install with `sudo dpkg -i mercury_*.deb`
             - **macOS**: Download `Mercury_*_aarch64.dmg`
 
-            ### Notes
+            ### Platform Requirements
             - Windows 10/11: WebView2 is pre-installed, no extra setup needed
             - Linux: Requires `libwebkit2gtk-4.1-0` and `libgtk-3-0`
             - macOS: Requires macOS 12.0 or later
 
-            ⚠️ **AI features** (summary, translation, tagging) require an OpenAI-compatible API key configured in app settings.
-
+            ### AI Features
+            AI features (summary, translation, tagging) require an OpenAI-compatible API key configured in app settings.
           releaseDraft: false
           prerelease: false
