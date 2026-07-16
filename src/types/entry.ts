@@ -32,3 +32,9 @@ export interface EntryTagInfo {
   name: string;
   source: string;
 }
+
+export interface EntryNote {
+  entry_id: number;
+  markdown: string;
+  updated_at: string;
+}

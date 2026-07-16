@@ -6,3 +6,4 @@ pub mod tag_cmd;
 pub mod digest_cmd;
 pub mod reader_cmd;
 pub mod settings_cmd;
+pub mod note_cmd;

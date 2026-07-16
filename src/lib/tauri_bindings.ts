@@ -2,6 +2,7 @@
 // Type-safe Tauri invoke wrappers
 
 import { invoke } from "@tauri-apps/api/core";
+import type { Channel } from "@tauri-apps/api/core";
 import type {
   Feed,
   FeedWithCounts,
@@ -9,6 +10,7 @@ import type {
   ImportResult,
   EntryPage,
   EntryDetail,
+  EntryNote,
   Tag,
   BatchTagResult,
   TimeRange,
@@ -155,6 +157,40 @@ export async function get_agent_status(
   return invoke("get_agent_status", { agentType: agent_type });
 }
 
+export async function run_summary(
+  entry_id: number,
+  target_language: string,
+  detail_level: string,
+  on_event: Channel<string>,
+): Promise<void> {
+  return invoke("run_summary", {
+    entryId: entry_id,
+    targetLanguage: target_language,
+    detailLevel: detail_level,
+    onEvent: on_event,
+  });
+}
+
+export async function run_translation(
+  entry_id: number,
+  target_language: string,
+  on_event: Channel<string>,
+): Promise<void> {
+  return invoke("run_translation", {
+    entryId: entry_id,
+    targetLanguage: target_language,
+    onEvent: on_event,
+  });
+}
+
+export async function run_tagging(entry_id: number): Promise<string[]> {
+  return invoke("run_tagging", { entryId: entry_id });
+}
+
+export async function cancel_agent_task(task_type: string): Promise<void> {
+  return invoke("cancel_agent_task", { taskType: task_type });
+}
+
 // ── Tags ──
 
 export async function list_tags(search?: string): Promise<Tag[]> {
@@ -231,4 +267,31 @@ export async function get_setting(key: string): Promise<string | null> {
 
 export async function set_setting(key: string, value: string): Promise<void> {
   return invoke("set_setting", { key, value });
+}
+
+// ── Notes ──
+
+export async function get_note(
+  entry_id: number,
+): Promise<EntryNote | null> {
+  return invoke("get_note", { entryId: entry_id });
+}
+
+export async function save_note(
+  entry_id: number,
+  markdown: string,
+): Promise<void> {
+  return invoke("save_note", { entryId: entry_id, markdown });
+}
+
+export async function delete_note(entry_id: number): Promise<void> {
+  return invoke("delete_note", { entryId: entry_id });
+}
+
+// ── Usage ──
+
+export async function get_usage_report(
+  window: string,
+): Promise<[number, number, number]> {
+  return invoke("get_usage_report", { window });
 }
