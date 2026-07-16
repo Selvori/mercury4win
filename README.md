@@ -455,9 +455,7 @@ mercury4win-linux/
 | P1 | Readability.js 回退接入管道 | use_reader_fallback.ts ✅ |
 | P1 | i18n 国际化 | i18n JSON 文件（骨架就绪） |
 | P1 | Model Profile / Agent Profile 配置 UI | agent_store.rs ✅ |
-| P1 | 翻译并发化 | translation.rs ✅ |
 | P2 | 用量统计前端 UI | usage_store.rs ✅ |
-| P2 | Stronghold 加密 | credential_store.rs（XOR 回退可用） |
 | P2 | 自定义 Prompt 模板 UI | prompt_templates.rs ✅ |
 | P2 | 翻译/标签用量记录 | 参考 summary.rs 模板 |
 | P3 | 日志查看 UI | tauri-plugin-log ✅ |
