@@ -1,4 +1,3 @@
-// mercury4win-linux/src/i18n/en.json
 {
   "sidebar": {
     "feeds": "Feeds",
@@ -72,6 +71,8 @@
     "providers": "Providers",
     "models": "Models",
     "profiles": "Profiles",
+    "usage": "Usage",
+    "prompts": "Prompts",
     "title": "AI Providers",
     "description": "Configure OpenAI-compatible API endpoints for summaries, translations, and tagging.",
     "addProvider": "Add Provider",
@@ -100,13 +101,31 @@
     "promptStrategy": "Prompt Strategy",
     "auto": "Auto (first available)",
     "standard": "Standard",
-    "hyMtOptimized": "HY-MT Optimized (Chinese)"
+    "hyMtOptimized": "HY-MT Optimized (Chinese)",
+    "agentProfiles": "Agent Profiles",
+    "agentTypeSummary": "Summary",
+    "agentTypeTranslation": "Translation",
+    "agentTypeTagging": "Tagging",
+    "customPrompts": "Custom Prompts",
+    "customPromptsDescription": "Upload custom YAML prompt templates for each agent type. Templates use {{key}} substitution and {{#key}}...{{/key}} conditional sections. Built-in defaults are used when no custom template is set.",
+    "uploadYaml": "Upload YAML",
+    "customBadge": "Custom",
+    "usingDefaultTemplate": "Using built-in default template. Upload a .yaml file to customize.",
+    "templateUploaded": "Template uploaded successfully.",
+    "edit": "Edit"
   },
   "common": {
     "loading": "Loading...",
     "error": "Error",
     "noData": "No data",
-    "ready": "Ready"
+    "ready": "Ready",
+    "languageEnglish": "English",
+    "languageChineseSimplified": "Chinese (Simplified)",
+    "languageJapanese": "Japanese",
+    "languageKorean": "Korean",
+    "languageFrench": "French",
+    "languageGerman": "German",
+    "languageSpanish": "Spanish"
   },
   "feed": {
     "addFeed": "Add feed",

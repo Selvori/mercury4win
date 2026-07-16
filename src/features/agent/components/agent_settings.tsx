@@ -22,23 +22,35 @@ import {
 } from "@/lib/tauri_bindings";
 import type { ModelProfile, AgentProfile } from "@/types";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { UsageStats } from "@/features/usage/components/usage_stats";
 
 type Tab = "providers" | "models" | "profiles" | "usage" | "prompts";
 
+// Key lookup for agent type display labels
+const AGENT_TYPE_LABEL_KEYS: Record<string, string> = {
+  summary: "settings.agentTypeSummary",
+  translation: "settings.agentTypeTranslation",
+  tagging: "settings.agentTypeTagging",
+};
+
 export function AgentSettings() {
+  const { t } = useTranslation();
   const [tab, set_tab] = useState<Tab>("providers");
+
+  const tabs = [
+    { value: "providers" as Tab, key: "settings.providers", icon: Cpu },
+    { value: "models" as Tab, key: "settings.models", icon: Layers },
+    { value: "profiles" as Tab, key: "settings.profiles", icon: Settings2 },
+    { value: "usage" as Tab, key: "settings.usage", icon: BarChart3 },
+    { value: "prompts" as Tab, key: "settings.prompts", icon: FileText },
+  ];
+
   return (
     <div className="max-h-[85vh] flex flex-col">
       {/* Tab navigation */}
       <div className="flex gap-1 border-b border-border px-6 pt-4">
-        {([
-          { value: "providers" as Tab, label: "Providers", icon: Cpu },
-          { value: "models" as Tab, label: "Models", icon: Layers },
-          { value: "profiles" as Tab, label: "Profiles", icon: Settings2 },
-          { value: "usage" as Tab, label: "Usage", icon: BarChart3 },
-          { value: "prompts" as Tab, label: "Prompts", icon: FileText },
-        ]).map((opt) => (
+        {tabs.map((opt) => (
           <Button
             key={opt.value}
             variant="ghost"
@@ -50,7 +62,7 @@ export function AgentSettings() {
             onClick={() => set_tab(opt.value)}
           >
             <opt.icon className="mr-1.5 h-4 w-4" />
-            {opt.label}
+            {t(opt.key)}
           </Button>
         ))}
       </div>
@@ -69,6 +81,7 @@ export function AgentSettings() {
 // ── Providers Tab ──
 
 function ProvidersTab() {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
   const [show_add, set_show_add] = useState(false);
   const [new_name, set_new_name] = useState("");
@@ -106,35 +119,35 @@ function ProvidersTab() {
     <div className="max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Providers</h3>
-          <p className="text-sm text-muted-foreground mt-1">Configure OpenAI-compatible API endpoints.</p>
+          <h3 className="text-lg font-semibold text-foreground">{t("settings.providers")}</h3>
+          <p className="text-sm text-muted-foreground mt-1">{t("settings.description")}</p>
         </div>
         <Button size="sm" onClick={() => set_show_add(!show_add)}>
-          <Plus className="mr-1 h-4 w-4" />Add Provider
+          <Plus className="mr-1 h-4 w-4" />{t("settings.addProvider")}
         </Button>
       </div>
 
       {show_add && (
         <div className="mb-6 rounded-lg border border-border bg-card p-4 space-y-3">
-          <Input placeholder="Provider name (e.g., OpenAI)" value={new_name} onChange={(e) => set_new_name(e.target.value)} />
-          <Input placeholder="Base URL (e.g., https://api.openai.com/v1)" value={new_url} onChange={(e) => set_new_url(e.target.value)} />
-          <Input type="password" placeholder="API Key" value={new_key} onChange={(e) => set_new_key(e.target.value)} />
+          <Input placeholder={t("settings.providerName")} value={new_name} onChange={(e) => set_new_name(e.target.value)} />
+          <Input placeholder={t("settings.baseUrl")} value={new_url} onChange={(e) => set_new_url(e.target.value)} />
+          <Input type="password" placeholder={t("settings.apiKey")} value={new_key} onChange={(e) => set_new_key(e.target.value)} />
           <div className="flex gap-2">
             <Button size="sm" onClick={() => add_mutation.mutate()} disabled={add_mutation.isPending || !new_name || !new_url}>
-              {add_mutation.isPending ? "Saving..." : "Save"}
+              {add_mutation.isPending ? t("settings.saving") : t("settings.save")}
             </Button>
-            <Button size="sm" variant="outline" onClick={() => set_show_add(false)}>Cancel</Button>
+            <Button size="sm" variant="outline" onClick={() => set_show_add(false)}>{t("settings.cancel")}</Button>
           </div>
         </div>
       )}
 
       {isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading...</p>
+        <p className="text-sm text-muted-foreground">{t("settings.loading")}</p>
       ) : !providers?.length ? (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <Cpu className="mx-auto h-8 w-8 text-muted-foreground/50" />
-          <p className="mt-2 text-sm text-muted-foreground">No AI providers configured</p>
-          <p className="text-xs text-muted-foreground mt-1">Add a provider like OpenAI, Anthropic, or any OpenAI-compatible API.</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("settings.noProviders")}</p>
+          <p className="text-xs text-muted-foreground mt-1">{t("settings.noProvidersHint")}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -145,7 +158,7 @@ function ProvidersTab() {
                 <p className="text-sm font-medium">{p.display_name || p.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{p.base_url}</p>
               </div>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => test_mutation.mutate({ id: p.id, model: "gpt-4o-mini" })} title="Test connection">
+              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => test_mutation.mutate({ id: p.id, model: "gpt-4o-mini" })} title={t("settings.testConnection")}>
                 <Play className="h-3.5 w-3.5" />
               </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => delete_mutation.mutate(p.id)}>
@@ -158,7 +171,7 @@ function ProvidersTab() {
 
       {test_result !== null && (
         <div className="mt-4 rounded-lg border border-border bg-card p-3">
-          <p className="text-xs font-medium text-foreground">Connection test result:</p>
+          <p className="text-xs font-medium text-foreground">{t("settings.connectionResult")}</p>
           <p className="text-xs text-muted-foreground mt-1">{test_result}</p>
         </div>
       )}
@@ -169,6 +182,7 @@ function ProvidersTab() {
 // ── Models Tab ──
 
 function ModelsTab() {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
   const { data: providers } = useQuery({ queryKey: ["providers"], queryFn: list_providers });
   const [selected_provider, set_selected_provider] = useState<string | null>(null);
@@ -231,13 +245,13 @@ function ModelsTab() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-foreground">Models</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t("settings.models")}</h3>
         <select
           className="h-8 rounded-md border border-border bg-background px-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
           value={selected_provider ?? ""}
           onChange={(e) => { set_selected_provider(e.target.value || null); reset_form(); }}
         >
-          <option value="">Select a provider...</option>
+          <option value="">{t("settings.selectProvider")}</option>
           {(providers ?? []).map((p) => <option key={p.id} value={p.id}>{p.display_name || p.name}</option>)}
         </select>
       </div>
@@ -245,48 +259,48 @@ function ModelsTab() {
       {!selected_provider ? (
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <Layers className="mx-auto h-8 w-8 text-muted-foreground/50" />
-          <p className="mt-2 text-sm text-muted-foreground">Select a provider to manage models</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("settings.selectProviderToManage")}</p>
         </div>
       ) : (
         <>
           <div className="mb-4 flex justify-end">
             <Button size="sm" onClick={() => set_show_add(true)} disabled={show_add}>
-              <Plus className="mr-1 h-3.5 w-3.5" />Add Model
+              <Plus className="mr-1 h-3.5 w-3.5" />{t("settings.addModel")}
             </Button>
           </div>
 
           {show_add && (
             <div className="mb-4 rounded-lg border border-border bg-card p-4 space-y-3">
-              <Input placeholder="Display name" value={form_name} onChange={(e) => set_form_name(e.target.value)} />
-              <Input placeholder="Model ID (e.g., gpt-4o-mini)" value={form_model} onChange={(e) => set_form_model(e.target.value)} />
+              <Input placeholder={t("settings.displayName")} value={form_name} onChange={(e) => set_form_name(e.target.value)} />
+              <Input placeholder={t("settings.modelId")} value={form_model} onChange={(e) => set_form_model(e.target.value)} />
               <div className="flex flex-wrap gap-4 text-xs">
                 <label className="flex items-center gap-1.5">
                   <input type="checkbox" checked={form_supports_summary} onChange={(e) => set_form_supports_summary(e.target.checked)} />
-                  Summary
+                  {t("settings.agentTypeSummary")}
                 </label>
                 <label className="flex items-center gap-1.5">
                   <input type="checkbox" checked={form_supports_translation} onChange={(e) => set_form_supports_translation(e.target.checked)} />
-                  Translation
+                  {t("settings.agentTypeTranslation")}
                 </label>
                 <label className="flex items-center gap-1.5">
                   <input type="checkbox" checked={form_supports_tagging} onChange={(e) => set_form_supports_tagging(e.target.checked)} />
-                  Tagging
+                  {t("settings.agentTypeTagging")}
                 </label>
               </div>
               <div className="flex gap-2">
                 <Button size="sm" onClick={() => editing ? update_mutation.mutate(editing) : add_mutation.mutate()} disabled={add_mutation.isPending || !form_name || !form_model}>
-                  {add_mutation.isPending ? "Saving..." : editing ? "Update" : "Save"}
+                  {add_mutation.isPending ? t("settings.saving") : editing ? t("settings.update") : t("settings.save")}
                 </Button>
-                <Button size="sm" variant="outline" onClick={reset_form}>Cancel</Button>
+                <Button size="sm" variant="outline" onClick={reset_form}>{t("settings.cancel")}</Button>
               </div>
             </div>
           )}
 
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Loading...</p>
+            <p className="text-sm text-muted-foreground">{t("settings.loading")}</p>
           ) : !models?.length ? (
             <div className="rounded-lg border border-border bg-card p-8 text-center">
-              <p className="text-sm text-muted-foreground">No models for this provider</p>
+              <p className="text-sm text-muted-foreground">{t("settings.noModels")}</p>
             </div>
           ) : (
             <div className="space-y-1.5">
@@ -296,12 +310,12 @@ function ModelsTab() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium">{m.name}</p>
                     <div className="flex flex-wrap gap-1 mt-0.5">
-                      {m.supports_summary && <span className="text-[10px] rounded bg-blue-100 dark:bg-blue-900/30 px-1 py-0.5 text-blue-700 dark:text-blue-300">Summary</span>}
-                      {m.supports_translation && <span className="text-[10px] rounded bg-green-100 dark:bg-green-900/30 px-1 py-0.5 text-green-700 dark:text-green-300">Translation</span>}
-                      {m.supports_tagging && <span className="text-[10px] rounded bg-purple-100 dark:bg-purple-900/30 px-1 py-0.5 text-purple-700 dark:text-purple-300">Tagging</span>}
+                      {m.supports_summary && <span className="text-[10px] rounded bg-blue-100 dark:bg-blue-900/30 px-1 py-0.5 text-blue-700 dark:text-blue-300">{t("settings.agentTypeSummary")}</span>}
+                      {m.supports_translation && <span className="text-[10px] rounded bg-green-100 dark:bg-green-900/30 px-1 py-0.5 text-green-700 dark:text-green-300">{t("settings.agentTypeTranslation")}</span>}
+                      {m.supports_tagging && <span className="text-[10px] rounded bg-purple-100 dark:bg-purple-900/30 px-1 py-0.5 text-purple-700 dark:text-purple-300">{t("settings.agentTypeTagging")}</span>}
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => start_edit(m)} title="Edit">
+                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => start_edit(m)} title={t("settings.edit")}>
                     <Play className="h-3.5 w-3.5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => delete_mutation.mutate(m.id)}>
@@ -322,10 +336,11 @@ function ModelsTab() {
 const AGENT_TYPES = ["summary", "translation", "tagging"] as const;
 
 function ProfilesTab() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-2xl mx-auto">
-      <h3 className="text-lg font-semibold text-foreground mb-4">Agent Profiles</h3>
-      <p className="text-sm text-muted-foreground mb-6">Configure which model each agent type uses, along with default options.</p>
+      <h3 className="text-lg font-semibold text-foreground mb-4">{t("settings.agentProfiles")}</h3>
+      <p className="text-sm text-muted-foreground mb-6">{t("settings.profilesDescription")}</p>
       <div className="space-y-4">
         {AGENT_TYPES.map((agent_type) => (
           <ProfileSection key={agent_type} agent_type={agent_type} />
@@ -336,6 +351,7 @@ function ProfilesTab() {
 }
 
 function ProfileSection({ agent_type }: { agent_type: string }) {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
   const { data: providers } = useQuery({ queryKey: ["providers"], queryFn: list_providers });
 
@@ -376,12 +392,33 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
     set_primary(profile.primary_model_id);
   }
 
+  const detail_level_options: Record<string, string> = {
+    brief: "summary.brief",
+    medium: "summary.medium",
+    detailed: "summary.detailed",
+  };
+
+  const prompt_strategy_options: Record<string, string> = {
+    default: "settings.standard",
+    "hy-mt-optimized": "settings.hyMtOptimized",
+  };
+
+  const language_options = [
+    { value: "en", key: "common.languageEnglish" },
+    { value: "zh-Hans", key: "common.languageChineseSimplified" },
+    { value: "ja", key: "common.languageJapanese" },
+    { value: "ko", key: "common.languageKorean" },
+    { value: "fr", key: "common.languageFrench" },
+    { value: "de", key: "common.languageGerman" },
+    { value: "es", key: "common.languageSpanish" },
+  ];
+
   return (
     <div className="rounded-lg border border-border bg-card p-4">
-      <h4 className="text-sm font-semibold capitalize mb-3">{agent_type}</h4>
+      <h4 className="text-sm font-semibold mb-3">{t(AGENT_TYPE_LABEL_KEYS[agent_type] ?? agent_type)}</h4>
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
-          <label className="text-xs text-muted-foreground block mb-1">Primary Model</label>
+          <label className="text-xs text-muted-foreground block mb-1">{t("settings.primaryModel")}</label>
           <select
             className="w-full h-8 rounded-md border border-border bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
             value={primary}
@@ -390,7 +427,7 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
               update_mutation.mutate({ primary_model_id: e.target.value || null });
             }}
           >
-            <option value="">Auto (first available)</option>
+            <option value="">{t("settings.auto")}</option>
             {(models ?? []).map((m) => (
               <option key={m.id} value={m.id}>{m.name} ({m.model_name})</option>
             ))}
@@ -398,7 +435,7 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
         </div>
         {agent_type !== "tagging" && (
           <div>
-            <label className="text-xs text-muted-foreground block mb-1">Target Language</label>
+            <label className="text-xs text-muted-foreground block mb-1">{t("settings.targetLanguage")}</label>
             <select
               className="w-full h-8 rounded-md border border-border bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
               value={target_lang}
@@ -407,19 +444,15 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
                 update_mutation.mutate({ target_language: e.target.value });
               }}
             >
-              <option value="en">English</option>
-              <option value="zh-Hans">Chinese (Simplified)</option>
-              <option value="ja">Japanese</option>
-              <option value="ko">Korean</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-              <option value="es">Spanish</option>
+              {language_options.map((opt) => (
+                <option key={opt.value} value={opt.value}>{t(opt.key)}</option>
+              ))}
             </select>
           </div>
         )}
         {agent_type === "summary" && (
           <div>
-            <label className="text-xs text-muted-foreground block mb-1">Detail Level</label>
+            <label className="text-xs text-muted-foreground block mb-1">{t("settings.detailLevel")}</label>
             <select
               className="w-full h-8 rounded-md border border-border bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
               value={detail_level}
@@ -428,22 +461,23 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
                 update_mutation.mutate({ detail_level: e.target.value });
               }}
             >
-              <option value="brief">Brief</option>
-              <option value="medium">Medium</option>
-              <option value="detailed">Detailed</option>
+              {Object.entries(detail_level_options).map(([value, key]) => (
+                <option key={value} value={value}>{t(key)}</option>
+              ))}
             </select>
           </div>
         )}
         {agent_type === "translation" && (
           <div>
-            <label className="text-xs text-muted-foreground block mb-1">Prompt Strategy</label>
+            <label className="text-xs text-muted-foreground block mb-1">{t("settings.promptStrategy")}</label>
             <select
               className="w-full h-8 rounded-md border border-border bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
               value={profile?.prompt_strategy ?? "default"}
               onChange={(e) => update_mutation.mutate({ prompt_strategy: e.target.value })}
             >
-              <option value="default">Standard</option>
-              <option value="hy-mt-optimized">HY-MT Optimized (Chinese)</option>
+              {Object.entries(prompt_strategy_options).map(([value, key]) => (
+                <option key={value} value={value}>{t(key)}</option>
+              ))}
             </select>
           </div>
         )}
@@ -457,15 +491,14 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
 const PROMPT_TYPES = ["summary", "translation", "tagging"] as const;
 
 function PromptsTab() {
+  const { t } = useTranslation();
   const query_client = useQueryClient();
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h3 className="text-lg font-semibold text-foreground mb-4">Custom Prompts</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-4">{t("settings.customPrompts")}</h3>
       <p className="text-sm text-muted-foreground mb-6">
-        Upload custom YAML prompt templates for each agent type. Templates use
-        {" {{key}}"} substitution and {" {{#key}}...{{/key}}"} conditional sections.
-        Built-in defaults are used when no custom template is set.
+        {t("settings.customPromptsDescription")}
       </p>
       <div className="space-y-4">
         {PROMPT_TYPES.map((agent_type) => (
@@ -483,6 +516,8 @@ function PromptSection({
   agent_type: string;
   query_client: ReturnType<typeof useQueryClient>;
 }) {
+  const { t } = useTranslation();
+
   const { data: template, isLoading } = useQuery({
     queryKey: ["custom_template", agent_type],
     queryFn: () => load_custom_template(agent_type),
@@ -500,33 +535,33 @@ function PromptSection({
       if (selected) {
         await save_custom_template(agent_type, selected as string);
         query_client.invalidateQueries({ queryKey: ["custom_template", agent_type] });
-        set_status("Template uploaded successfully.");
+        set_status(t("settings.templateUploaded"));
       }
     } catch (e) {
-      set_status(`Error: ${e}`);
+      set_status(`${t("common.error")}: ${e}`);
     }
   }
 
   return (
     <div className="rounded-lg border border-border bg-card p-4">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-sm font-semibold capitalize">{agent_type}</h4>
+        <h4 className="text-sm font-semibold">{t(AGENT_TYPE_LABEL_KEYS[agent_type] ?? agent_type)}</h4>
         <button
           onClick={handle_upload}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1 text-xs hover:bg-accent transition-colors"
         >
           <Plus className="h-3 w-3" />
-          Upload YAML
+          {t("settings.uploadYaml")}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-xs text-muted-foreground">Loading...</p>
+        <p className="text-xs text-muted-foreground">{t("settings.loading")}</p>
       ) : template ? (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-[10px] text-green-700 dark:text-green-300">
-              Custom
+              {t("settings.customBadge")}
             </span>
           </div>
           <p className="text-xs text-muted-foreground line-clamp-3 font-mono whitespace-pre-wrap">
@@ -535,7 +570,7 @@ function PromptSection({
         </div>
       ) : (
         <p className="text-xs text-muted-foreground">
-          Using built-in default template. Upload a .yaml file to customize.
+          {t("settings.usingDefaultTemplate")}
         </p>
       )}
 
