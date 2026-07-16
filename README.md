@@ -24,8 +24,6 @@
 | Provider 管理 | OpenAI 兼容 API，多 Provider + 多 Model，Agent Profile 独立配置 |
 | Prompt 模板 | YAML 模板 + `{{key}}` 替换 + `{{#cond}}` 条件渲染，支持自定义上传 |
 | 用量统计 | 7d/30d/90d Token 用量展示 |
-| 国际化 | 英语 / 简体中文，i18next + react-i18next |
-| 暗色模式 | light/dark/auto 三种模式，跟随系统 |
 
 ---
 
@@ -40,10 +38,10 @@
 │  Tauri v2 IPC Bridge (40+ Commands)            │
 ├────────────────────────────────────────────────┤
 │  Rust Backend                                  │
-│  ┌──────────┬──────────┬──────────┬─────────┐ │
-│  │ Feed Sync│ Reader   │ AI Agent │ Digest  │ │
-│  │ Parser   │ Pipeline │ Runtime  │ Export  │ │
-│  └──────────┴──────────┴──────────┴─────────┘ │
+│  ┌──────────┬──────────┬──────────┬─────────┐  │
+│  │ Feed Sync│ Reader   │ AI Agent │ Digest  │  │
+│  │ Parser   │ Pipeline │ Runtime  │ Export  │  │
+│  └──────────┴──────────┴──────────┴─────────┘  │
 ├────────────────────────────────────────────────┤
 │  SQLite (WAL · deadpool-sqlite · 17 tables)    │
 └────────────────────────────────────────────────┘
@@ -51,7 +49,7 @@
 
 ### 大模型中立的 AI 架构
 
-Mercury **不绑定任何特定 LLM 服务商**，所有 AI 功能通过统一的 OpenAI 兼容 API 协议调用，天然支持：
+所有 AI 功能通过统一的 OpenAI 兼容 API 协议调用，天然支持：
 
 - **云端服务**：OpenAI、Anthropic、Groq、Together AI、DeepSeek 等
 - **本地模型**：Ollama、LM Studio、vLLM、LocalAI 等任何提供 `/v1/chat/completions` 端点的服务
