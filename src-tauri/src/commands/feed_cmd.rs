@@ -85,14 +85,21 @@ pub async fn import_opml(
         )
         .await
         {
-            Ok(feed) => {
-                // Try initial sync
-                if let Err(e) = use_cases::refresh_single(&pool, &client.0, feed.id).await {
-                    errors.push(format!("{}: {}", entry.feed_url, e));
+            Ok((feed, was_inserted)) => {
+                if was_inserted {
+                    // New feed: try initial sync
+                    if let Err(e) = use_cases::refresh_single(&pool, &client.0, feed.id).await {
+                        errors.push(format!("{}: {}", entry.feed_url, e));
+                    }
+                    added += 1;
+                } else {
+                    // Duplicate feed: skip
+                    skipped += 1;
                 }
-                added += 1;
             }
-            Err(_) => {
+            Err(e) => {
+                // Database error
+                errors.push(format!("{}: {}", entry.feed_url, e));
                 skipped += 1;
             }
         }

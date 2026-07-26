@@ -14,7 +14,8 @@
     "light": "Light",
     "dark": "Dark",
     "paperLight": "Paper Light",
-    "paperDark": "Paper Dark"
+    "paperDark": "Paper Dark",
+    "openInBrowser": "Open in browser"
   },
   "note": {
     "save": "Save",
@@ -177,5 +178,18 @@
     "totalTokens": "Total Tokens",
     "loadError": "Failed to load usage data",
     "breakdownNote": "Usage is tracked per LLM API request across Summary, Translation, and Tagging features. Token counts are reported directly by each model provider and reflect actual API consumption within the selected time window."
+  },
+  "fontSettings": {
+    "title": "Font Settings",
+    "fontFamily": "Font Family",
+    "fontSize": "Font Size",
+    "sansSerif": "Sans-serif",
+    "serif": "Serif",
+    "system": "System",
+    "preview": "Preview",
+    "previewText": "The quick brown fox jumps over the lazy dog.",
+    "increase": "Increase font size",
+    "decrease": "Decrease font size",
+    "close": "Close"
   }
 }

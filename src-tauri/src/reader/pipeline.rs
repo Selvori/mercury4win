@@ -6,6 +6,7 @@ use reqwest::Client;
 use crate::db::{content_store, entry_store};
 use crate::db::models::Content;
 use crate::reader::{extraction, html_to_md, md_to_html, theme};
+use crate::reader::theme::FontConfig;
 
 /// Pipeline version constants.
 pub const READABILITY_VERSION: i32 = 1;
@@ -18,28 +19,32 @@ pub async fn build_reader_content(
     client: &Client,
     entry_id: i64,
     theme_id: &str,
+    font_config: &FontConfig,
 ) -> Result<String, String> {
+    // Cache key includes theme + font family + font size to avoid serving wrong font.
+    let cache_key = format!("{}:{}:{}", theme_id, font_config.family, font_config.size);
+
     let content = content_store::get_content(pool, entry_id).await?;
 
     match content {
         Some(ref c) if c.markdown.is_some() => {
             // Step 1: render from existing markdown
             let md = c.markdown.as_ref().unwrap();
-            let html = md_to_html::render_markdown(md, theme_id);
-            save_rendered_cache(pool, entry_id, theme_id, &html).await?;
+            let html = md_to_html::render_markdown_with_font(md, theme_id, font_config);
+            save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
             Ok(html)
         }
         Some(ref c) if c.cleaned_html.is_some() => {
             // Step 2: convert cleaned HTML to markdown then render
             let cleaned = c.cleaned_html.as_ref().unwrap();
             let md = html_to_md::convert_html_to_markdown(cleaned)?;
-            let html = md_to_html::render_markdown(&md, theme_id);
-            save_rendered_cache(pool, entry_id, theme_id, &html).await?;
+            let html = md_to_html::render_markdown_with_font(&md, theme_id, font_config);
+            save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
             Ok(html)
         }
         Some(ref c) if c.html.is_some() => {
             // Step 3: source HTML stored but not yet processed
-            run_full_pipeline(pool, entry_id, c.html.as_ref().unwrap(), theme_id).await
+            run_full_pipeline(pool, entry_id, c.html.as_ref().unwrap(), theme_id, font_config, &cache_key).await
         }
         _ => {
             // Step 4: fetch fresh content — try article URL first, fall back to RSS summary
@@ -63,7 +68,7 @@ pub async fn build_reader_content(
                 return Err("No content available for this entry".into());
             }
 
-            run_full_pipeline(pool, entry_id, &source_html, theme_id).await
+            run_full_pipeline(pool, entry_id, &source_html, theme_id, font_config, &cache_key).await
         }
     }
 }
@@ -100,6 +105,8 @@ async fn run_full_pipeline(
     entry_id: i64,
     source_html: &str,
     theme_id: &str,
+    font_config: &FontConfig,
+    cache_key: &str,
 ) -> Result<String, String> {
     // Try decruft extraction first
     let decruft_output = extraction::extract_content(source_html, None)?;
@@ -153,8 +160,8 @@ async fn run_full_pipeline(
             ));
         }
 
-        let html = md_to_html::render_markdown(&body, theme_id);
-        save_rendered_cache(pool, entry_id, theme_id, &html).await?;
+        let html = md_to_html::render_markdown_with_font(&body, theme_id, font_config);
+        save_rendered_cache(pool, entry_id, cache_key, &html).await?;
 
         // Persist empty marker so we don't keep re-fetching
         let content = Content {
@@ -203,13 +210,14 @@ async fn run_full_pipeline(
     content_store::upsert_content(pool, &content).await?;
 
     // Markdown → Reader HTML
-    let html = md_to_html::render_markdown(
+    let html = md_to_html::render_markdown_with_font(
         content.markdown.as_ref().unwrap(),
         theme_id,
+        font_config,
     );
 
     // Cache rendered HTML
-    save_rendered_cache(pool, entry_id, theme_id, &html).await?;
+    save_rendered_cache(pool, entry_id, cache_key, &html).await?;
 
     Ok(html)
 }
@@ -217,10 +225,10 @@ async fn run_full_pipeline(
 async fn save_rendered_cache(
     pool: &Pool,
     entry_id: i64,
-    theme_id: &str,
+    cache_key: &str,
     html: &str,
 ) -> Result<(), String> {
-    let theme_id = theme_id.to_string();
+    let cache_key = cache_key.to_string();
     let html = html.to_string();
     let pool = pool.clone();
 
@@ -232,7 +240,7 @@ async fn save_rendered_cache(
                 "INSERT OR REPLACE INTO content_html_cache
                  (theme_id, entry_id, html, reader_render_version, updated_at)
                  VALUES (?1, ?2, ?3, ?4, datetime('now'))",
-                rusqlite::params![theme_id, entry_id, html, READER_RENDER_VERSION],
+                rusqlite::params![cache_key, entry_id, html, READER_RENDER_VERSION],
             )
             .map_err(|e| e.to_string())
         })
@@ -259,10 +267,10 @@ fn strip_html_tags(html: &str) -> String {
 pub async fn get_cached_reader_html(
     pool: &Pool,
     entry_id: i64,
-    theme_id: &str,
+    cache_key: &str,
 ) -> Result<Option<String>, String> {
     let entry_id_val = entry_id;
-    let theme_id_val = theme_id.to_string();
+    let theme_id_val = cache_key.to_string();
     let pool = pool.clone();
 
     pool.get()

@@ -533,7 +533,10 @@ function PromptSection({
         multiple: false,
       });
       if (selected) {
-        await save_custom_template(agent_type, selected as string);
+        // Handle both string (expected) and string[] (defensive)
+        const path = Array.isArray(selected) ? selected[0] : selected;
+        if (!path) return;
+        await save_custom_template(agent_type, path);
         query_client.invalidateQueries({ queryKey: ["custom_template", agent_type] });
         set_status(t("settings.templateUploaded"));
       }

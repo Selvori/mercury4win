@@ -125,14 +125,30 @@ export interface ReaderContent {
 
 export async function build_reader_content(
   entry_id: number,
+  theme_id?: string,
+  font_family?: string,
+  font_size?: number,
 ): Promise<string> {
-  return invoke("build_reader_content", { entryId: entry_id });
+  return invoke("build_reader_content", {
+    entryId: entry_id,
+    themeId: theme_id ?? null,
+    fontFamily: font_family ?? null,
+    fontSize: font_size ?? null,
+  });
 }
 
 export async function get_cached_reader_content(
   entry_id: number,
+  theme_id?: string,
+  font_family?: string,
+  font_size?: number,
 ): Promise<ReaderContent | null> {
-  return invoke("get_cached_reader_content", { entryId: entry_id });
+  return invoke("get_cached_reader_content", {
+    entryId: entry_id,
+    themeId: theme_id ?? null,
+    fontFamily: font_family ?? null,
+    fontSize: font_size ?? null,
+  });
 }
 
 // ── Agent ──

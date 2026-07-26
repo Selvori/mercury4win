@@ -81,7 +81,9 @@ pub async fn get_feed(pool: &Pool, feed_id: i64) -> Result<Option<Feed>, String>
     }
 }
 
-pub async fn insert_feed(pool: &Pool, feed_url: &str, title: Option<&str>, site_url: Option<&str>) -> Result<Feed, String> {
+/// Insert a feed, returning the feed and whether it was newly inserted.
+/// Uses INSERT OR IGNORE, so an existing feed_url yields `(existing_feed, false)`.
+pub async fn insert_feed(pool: &Pool, feed_url: &str, title: Option<&str>, site_url: Option<&str>) -> Result<(Feed, bool), String> {
     let feed_url = feed_url.to_string();
     let title = title.map(|s| s.to_string());
     let site_url = site_url.map(|s| s.to_string());
@@ -92,11 +94,12 @@ pub async fn insert_feed(pool: &Pool, feed_url: &str, title: Option<&str>, site_
         .await
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
-            conn.execute(
+            let affected = conn.execute(
                 "INSERT OR IGNORE INTO feed (title, feed_url, site_url) VALUES (?1, ?2, ?3)",
                 params![title, feed_url, site_url],
             )
             .map_err(|e| e.to_string())?;
+            let was_inserted = affected > 0;
 
             conn.query_row(
                 "SELECT id, title, feed_url, site_url, feed_parser_version, last_fetched_at, created_at
@@ -114,6 +117,7 @@ pub async fn insert_feed(pool: &Pool, feed_url: &str, title: Option<&str>, site_
                     })
                 },
             )
+            .map(|feed| (feed, was_inserted))
             .map_err(|e| e.to_string())
         })
         .await

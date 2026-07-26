@@ -3,15 +3,36 @@
 
 use crate::db::models::Content;
 
+/// Font configuration for reader content
+#[derive(Debug, Clone)]
+pub struct FontConfig {
+    pub family: String,
+    pub size: u32,
+}
+
+impl Default for FontConfig {
+    fn default() -> Self {
+        Self {
+            family: "sans-serif".to_string(),
+            size: 16,
+        }
+    }
+}
+
 /// Wrap rendered HTML body with article wrapper and theme CSS.
 pub fn wrap_with_theme(body_html: &str, theme_id: &str) -> String {
+    wrap_with_theme_and_font(body_html, theme_id, &FontConfig::default())
+}
+
+/// Wrap rendered HTML body with article wrapper, theme CSS, and custom font settings.
+pub fn wrap_with_theme_and_font(body_html: &str, theme_id: &str, font_config: &FontConfig) -> String {
     let parts: Vec<&str> = theme_id.split('-').collect();
     let (style, color_scheme) = match parts.as_slice() {
         [style, color] => (*style, *color),
         _ => ("classic", "light"),
     };
 
-    let css = css_for_theme(style, color_scheme);
+    let css = css_for_theme(style, color_scheme, font_config);
 
     format!(
         r#"<!DOCTYPE html>
@@ -26,20 +47,31 @@ pub fn wrap_with_theme(body_html: &str, theme_id: &str) -> String {
     )
 }
 
-fn css_for_theme(style: &str, color_scheme: &str) -> String {
+fn css_for_theme(style: &str, color_scheme: &str, font_config: &FontConfig) -> String {
     let (bg, text, muted, accent) = match color_scheme {
         "dark" => ("#1a1a2e", "#e0e0e0", "#888", "#6ca0ff"),
         _ => ("#ffffff", "#1a1a1a", "#666", "#2563eb"),
     };
 
-    let font = match style {
-        "paper" => "\"Georgia\", \"Times New Roman\", serif",
-        _ => "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    // User's explicit font family choice takes precedence over theme style default.
+    let font = match font_config.family.as_str() {
+        "serif" => "\"Georgia\", \"Times New Roman\", serif",
+        "system" => "-apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Noto Sans\", sans-serif",
+        "sans-serif" => "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        // Fall back to the theme style's default when family is unset/unknown.
+        _ => match style {
+            "paper" => "\"Georgia\", \"Times New Roman\", serif",
+            _ => "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        },
     };
+
+    // Clamp base font size to a sane range (12–24px).
+    let base_size = font_config.size.clamp(12, 24);
 
     format!(
         r#"
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+html {{ font-size: {base_size}px; }}
 body {{
     background: {bg};
     color: {text};

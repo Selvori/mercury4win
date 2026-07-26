@@ -41,7 +41,9 @@ export function OpmlImport({ open, on_close }: Props) {
         multiple: false,
       });
       if (!selected) return null;
-      const path = selected as string;
+      // Handle both string (expected) and string[] (defensive)
+      const path = Array.isArray(selected) ? selected[0] : selected;
+      if (!path) return null;
       set_file_path(path);
       return await import_opml(path);
     },

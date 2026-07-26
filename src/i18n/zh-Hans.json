@@ -14,7 +14,8 @@
     "light": "亮色",
     "dark": "暗色",
     "paperLight": "纸白",
-    "paperDark": "纸黑"
+    "paperDark": "纸黑",
+    "openInBrowser": "在浏览器中打开"
   },
   "note": {
     "save": "保存",
@@ -177,5 +178,18 @@
     "totalTokens": "总 Token 数",
     "loadError": "加载用量数据失败",
     "breakdownNote": "用量基于每次 LLM API 请求追踪，涵盖摘要、翻译和标签功能。Token 数量由各模型服务商直接报告，反映所选时间窗口内的实际 API 消耗。"
+  },
+  "fontSettings": {
+    "title": "字体设置",
+    "fontFamily": "字体类型",
+    "fontSize": "字体大小",
+    "sansSerif": "无衬线体",
+    "serif": "衬线体",
+    "system": "系统字体",
+    "preview": "预览",
+    "previewText": "轻松阅读，随心调整字体。The quick brown fox jumps over the lazy dog.",
+    "increase": "增大字体",
+    "decrease": "减小字体",
+    "close": "关闭"
   }
 }

@@ -248,6 +248,9 @@ pub async fn cancel_agent_task(
 
 // ── Custom prompt templates ──
 
+/// Max size for an uploaded custom template file (1 MiB).
+const MAX_TEMPLATE_SIZE: u64 = 1_048_576;
+
 #[tauri::command]
 pub async fn save_custom_template(
     app_handle: AppHandle,
@@ -255,11 +258,36 @@ pub async fn save_custom_template(
     source_path: String,
 ) -> Result<(), String> {
     use crate::utils::paths;
+    use crate::agent::prompt_templates::PromptTemplate;
+
+    // Validate agent_type to prevent path traversal via the filename.
+    if !matches!(agent_type.as_str(), "summary" | "translation" | "tagging") {
+        return Err(format!("Unknown agent type: {}", agent_type));
+    }
+
+    // Reject oversized files before reading them into memory.
+    let metadata = std::fs::metadata(&source_path)
+        .map_err(|e| format!("Failed to read file: {}", e))?;
+    if metadata.len() > MAX_TEMPLATE_SIZE {
+        return Err(format!(
+            "File too large: {} bytes (max {} bytes)",
+            metadata.len(),
+            MAX_TEMPLATE_SIZE
+        ));
+    }
+
+    // Read and validate the YAML structure so failures surface at upload time,
+    // not later when the template is loaded for a request.
+    let content = std::fs::read_to_string(&source_path)
+        .map_err(|e| format!("Failed to read file: {}", e))?;
+    let _: PromptTemplate = serde_yaml::from_str(&content)
+        .map_err(|e| format!("Invalid YAML template: {}", e))?;
+
     let prompts_dir = paths::prompts_dir(&app_handle);
     std::fs::create_dir_all(&prompts_dir).map_err(|e| format!("mkdir: {}", e))?;
 
     let dest = prompts_dir.join(format!("{}.custom.yaml", agent_type));
-    std::fs::copy(&source_path, &dest).map_err(|e| format!("copy: {}", e))?;
+    std::fs::write(&dest, content).map_err(|e| format!("write: {}", e))?;
     Ok(())
 }
 

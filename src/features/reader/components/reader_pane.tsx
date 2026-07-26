@@ -9,10 +9,13 @@ import {
   Languages,
   Tag,
   BookOpen,
+  Type,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { build_reader_content } from "@/lib/tauri_bindings";
+import { useAppStore } from "@/stores/app_store";
 import type { Entry } from "@/types";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,6 +23,7 @@ import { ReaderNote } from "./reader_note";
 import { ReaderSummary } from "./reader_summary";
 import { ReaderTranslation } from "./reader_translation";
 import { ReaderTagging } from "./reader_tagging";
+import { FontSettingsDialog } from "./font_settings_dialog";
 
 interface Props {
   entry: Entry;
@@ -30,8 +34,17 @@ type Panel = "reader" | "notes" | "summary" | "translation" | "tags";
 export function ReaderPane({ entry }: Props) {
   const { t } = useTranslation();
   const [panel, set_panel] = useState<Panel>("reader");
+  const [font_dialog_open, set_font_dialog_open] = useState(false);
   const [side_panel_width, set_side_panel_width] = useState(320);
   const [dragging_side, set_dragging_side] = useState(false);
+
+  const font_family = useAppStore((s) => s.font_family);
+  const font_size = useAppStore((s) => s.font_size);
+  const effective_theme = useAppStore((s) => s.effective_theme());
+
+  // Compute reader theme ID (classic/paper + light/dark)
+  const reader_theme_id = `classic-${effective_theme}`;
+
   const drag_ref = useRef<{ start_x: number; start_w: number } | null>(null);
 
   // Global mouse handlers for side panel resize
@@ -63,8 +76,8 @@ export function ReaderPane({ entry }: Props) {
   }, [side_panel_width]);
 
   const { data: reader_html, isLoading, isFetching, isError, error } = useQuery({
-    queryKey: ["reader", entry.id],
-    queryFn: () => build_reader_content(entry.id),
+    queryKey: ["reader", entry.id, reader_theme_id, font_family, font_size],
+    queryFn: () => build_reader_content(entry.id, reader_theme_id, font_family, font_size),
     staleTime: 0,
   });
 
@@ -107,6 +120,29 @@ export function ReaderPane({ entry }: Props) {
               {entry.title || t("entry.untitled")}
             </h2>
           </div>
+          {/* Open in browser button */}
+          {entry.url && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={async () => {
+                const { openUrl } = await import("@tauri-apps/plugin-opener");
+                await openUrl(entry.url!);
+              }}
+              title={t("reader.openInBrowser")}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          )}
+          {/* Font settings button */}
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => set_font_dialog_open(true)}
+            title={t("fontSettings.title")}
+          >
+            <Type className="h-4 w-4" />
+          </Button>
         </div>
 
         {/* Content */}
@@ -134,6 +170,21 @@ export function ReaderPane({ entry }: Props) {
               className="h-full w-full border-0"
               sandbox="allow-same-origin"
               title={t("readerPane.readerContent")}
+              onLoad={(e) => {
+                const doc = e.currentTarget.contentDocument;
+                if (!doc) return;
+                // Route in-article link clicks to the system browser
+                doc.addEventListener("click", async (ev) => {
+                  const anchor = (ev.target as HTMLElement)?.closest("a");
+                  const href = anchor?.getAttribute("href");
+                  if (!href) return;
+                  if (/^https?:\/\//i.test(href)) {
+                    ev.preventDefault();
+                    const { openUrl } = await import("@tauri-apps/plugin-opener");
+                    await openUrl(href);
+                  }
+                });
+              }}
             />
           )}
         </div>
@@ -163,6 +214,12 @@ export function ReaderPane({ entry }: Props) {
           </div>
         </>
       )}
+
+      {/* Font settings dialog */}
+      <FontSettingsDialog
+        open={font_dialog_open}
+        on_close={() => set_font_dialog_open(false)}
+      />
     </div>
   );
 }

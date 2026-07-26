@@ -27,7 +27,7 @@ pub async fn subscribe(
 
     let parsed = crate::feed::parser::parse_feed_bytes(&bytes, Some(url))?;
 
-    let feed = feed_store::insert_feed(
+    let (feed, _was_inserted) = feed_store::insert_feed(
         pool,
         url,
         parsed.title.as_deref(),

@@ -266,13 +266,15 @@ pub async fn bulk_upsert_entries(
                     .map_err(|e| e.to_string())?;
                     updated_count += 1;
                 } else {
-                    tx.execute(
-                        "INSERT INTO entry (feed_id, guid, url, title, author, published_at, summary)
+                    let affected = tx.execute(
+                        "INSERT OR IGNORE INTO entry (feed_id, guid, url, title, author, published_at, summary)
                          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
                         params![feed_id, e.guid, e.url, e.title, e.author, e.published_at, e.summary],
                     )
                     .map_err(|e| e.to_string())?;
-                    new_count += 1;
+                    if affected > 0 {
+                        new_count += 1;
+                    }
                 }
             }
 

@@ -119,9 +119,13 @@ export function FeedList({ selected_id, on_select, on_add, on_import, on_export 
                 variant="ghost"
                 size="icon"
                 className="h-5 w-5 opacity-0 group-hover:opacity-100"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  if (confirm(t("feed.deleteConfirm"))) {
+                  const { ask } = await import("@tauri-apps/plugin-dialog");
+                  const confirmed = await ask(t("feed.deleteConfirm"), {
+                    kind: "warning",
+                  });
+                  if (confirmed) {
                     delete_mutation.mutate(feed.id);
                   }
                 }}

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Rss, Library, Tags, Settings } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
 import { TagLibrary } from "@/features/tags/components/tag_library";
+import { ThemeToggle } from "./theme_toggle";
 
 interface Props {
   selected_feed_id: number | null;
@@ -83,13 +84,16 @@ export function Sidebar({
       </div>
 
       <div className="border-t border-border p-2">
-        <button
-          onClick={on_open_settings}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm text-sidebar-foreground hover:bg-accent"
-        >
-          <Settings className="h-4 w-4" />
-          {t("sidebar.settings")}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={on_open_settings}
+            className="flex flex-1 items-center gap-2 rounded-md px-3 py-1.5 text-sm text-sidebar-foreground hover:bg-accent"
+          >
+            <Settings className="h-4 w-4" />
+            {t("sidebar.settings")}
+          </button>
+          <ThemeToggle />
+        </div>
       </div>
     </aside>
   );

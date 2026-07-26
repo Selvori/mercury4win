@@ -3,11 +3,17 @@
 
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 use crate::reader::theme;
+use crate::reader::theme::FontConfig;
 
-/// Render Markdown to reader-ready HTML with theme CSS.
+/// Render Markdown to reader-ready HTML with theme CSS (default font).
 pub fn render_markdown(md: &str, theme_id: &str) -> String {
+    render_markdown_with_font(md, theme_id, &FontConfig::default())
+}
+
+/// Render Markdown to reader-ready HTML with theme CSS and custom font settings.
+pub fn render_markdown_with_font(md: &str, theme_id: &str, font_config: &FontConfig) -> String {
     let body_html = markdown_to_html(md);
-    theme::wrap_with_theme(&body_html, theme_id)
+    theme::wrap_with_theme_and_font(&body_html, theme_id, font_config)
 }
 
 /// Convert Markdown to HTML body content (no wrapper).
