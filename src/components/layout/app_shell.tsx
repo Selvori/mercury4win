@@ -12,12 +12,13 @@ import { OpmlImport } from "@/features/feed/components/opml_import";
 import { OpmlExport } from "@/features/feed/components/opml_export";
 import { ReaderPane } from "@/features/reader/components/reader_pane";
 import { AgentSettings } from "@/features/agent/components/agent_settings";
+import { Dialog } from "@/components/ui/dialog";
 import { useKeyboardShortcuts } from "@/hooks/use_keyboard_shortcuts";
 import type { Entry } from "@/types";
 
 export function AppShell() {
   const { t } = useTranslation();
-  const [selected_feed_id, set_selected_feed_id] = useState<number | null>(null);
+  const [selected_feed_id, set_selected_feed_id] = useState<number | null | undefined>(undefined);
   const [selected_entry, set_selected_entry] = useState<Entry | null>(null);
   const [show_feed_editor, set_show_feed_editor] = useState(false);
   const [show_opml_import, set_show_opml_import] = useState(false);
@@ -30,7 +31,7 @@ export function AppShell() {
   const [sidebar_width, set_sidebar_width] = useState(240);
   const [entry_list_width, set_entry_list_width] = useState(320);
   const [dragging_splitter, set_dragging_splitter] = useState<"sidebar" | "entry_list" | null>(null);
-  const drag_ref = useRef<{ start_x: number; start_s: number; start_e: number } | null>(null);
+  const drag_ref = useRef<{ kind: "sidebar" | "entry_list"; start_x: number; start_s: number; start_e: number } | null>(null);
 
   // Global mouse handlers for drag-resize
   useEffect(() => {
@@ -39,7 +40,7 @@ export function AppShell() {
       const { start_x, start_s, start_e } = drag_ref.current;
       const delta = e.clientX - start_x;
 
-      if (dragging_splitter === "sidebar") {
+      if (drag_ref.current.kind === "sidebar") {
         const min_s = 160;
         const max_s = Math.min(480, start_s + start_e - 200);
         const new_s = Math.min(max_s, Math.max(min_s, start_s + delta));
@@ -51,6 +52,10 @@ export function AppShell() {
       }
     };
     const on_up = () => {
+      // A window-level mouseup also fires for ordinary clicks. Only run the
+      // drag cleanup when a splitter drag was actually started; otherwise the
+      // selection cleanup can interfere with input focus in WebView2.
+      if (!drag_ref.current) return;
       drag_ref.current = null;
       set_dragging_splitter(null);
       // Clear any text selection that may have occurred during drag
@@ -58,21 +63,25 @@ export function AppShell() {
     };
     window.addEventListener("mousemove", on_move);
     window.addEventListener("mouseup", on_up);
+    window.addEventListener("blur", on_up);
+    document.addEventListener("mouseleave", on_up);
     return () => {
       window.removeEventListener("mousemove", on_move);
       window.removeEventListener("mouseup", on_up);
+      window.removeEventListener("blur", on_up);
+      document.removeEventListener("mouseleave", on_up);
     };
-  }, [dragging_splitter]);
+  }, []);
 
   const start_sidebar_resize = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    drag_ref.current = { start_x: e.clientX, start_s: sidebar_width, start_e: entry_list_width };
+    drag_ref.current = { kind: "sidebar", start_x: e.clientX, start_s: sidebar_width, start_e: entry_list_width };
     set_dragging_splitter("sidebar");
   }, [sidebar_width, entry_list_width]);
 
   const start_entry_resize = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    drag_ref.current = { start_x: e.clientX, start_s: entry_list_width, start_e: 0 };
+    drag_ref.current = { kind: "entry_list", start_x: e.clientX, start_s: entry_list_width, start_e: 0 };
     set_dragging_splitter("entry_list");
   }, [entry_list_width]);
 
@@ -80,7 +89,7 @@ export function AppShell() {
     set_selected_tag_id(tag_id === selected_tag_id ? null : tag_id);
     set_selected_entry(null);
     if (tag_id !== selected_tag_id) {
-      set_selected_feed_id(null);
+      set_selected_feed_id(undefined);
     }
   }, [selected_tag_id]);
 
@@ -88,7 +97,7 @@ export function AppShell() {
     set_selected_entry(entry);
   }, []);
 
-  const handle_select_feed = useCallback((id: number) => {
+  const handle_select_feed = useCallback((id: number | null) => {
     if (id !== selected_feed_id) {
       set_selected_entry(null);
       set_selected_feed_id(id);
@@ -98,7 +107,10 @@ export function AppShell() {
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
-    on_add_feed: useCallback(() => set_show_feed_editor(true), []),
+    on_add_feed: useCallback(() => {
+      set_show_settings(false);
+      set_show_feed_editor(true);
+    }, []),
     on_toggle_read: useCallback(() => {
       if (selected_entry) {
         // mark_read would go here
@@ -119,14 +131,22 @@ export function AppShell() {
           <Sidebar
             selected_feed_id={selected_feed_id}
             on_select_feed={handle_select_feed}
-            on_add_feed={() => set_show_feed_editor(true)}
-            on_import_opml={() => set_show_opml_import(true)}
-            on_export_opml={() => set_show_opml_export(true)}
-            on_open_settings={() => set_show_settings(true)}
+            on_add_feed={() => { set_show_settings(false); set_show_feed_editor(true); }}
+            on_import_opml={() => { set_show_settings(false); set_show_opml_import(true); }}
+            on_export_opml={() => { set_show_settings(false); set_show_opml_export(true); }}
+            on_open_settings={() => {
+              // Close any modal <dialog> first — a modal dialog locks focus to
+              // itself, so an open feed/OPML dialog would steal focus from the
+              // Settings overlay's inputs (click-to-focus loses to the dialog).
+              set_show_feed_editor(false);
+              set_show_opml_import(false);
+              set_show_opml_export(false);
+              set_show_settings(true);
+            }}
             view={sidebar_view}
             on_change_view={(v) => {
               if (v === "feeds") { set_selected_tag_id(null); set_selected_entry(null); }
-              if (v === "tags") { set_selected_feed_id(null); set_selected_entry(null); }
+              if (v === "tags") { set_selected_feed_id(undefined); set_selected_entry(null); }
               set_sidebar_view(v);
             }}
             selected_tag_id={selected_tag_id}
@@ -178,11 +198,13 @@ export function AppShell() {
       <OpmlExport open={show_opml_export} on_close={() => set_show_opml_export(false)} />
 
       {show_settings && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => set_show_settings(false)}>
-          <div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-border bg-popover shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <AgentSettings />
-          </div>
-        </div>
+        <Dialog
+          open={show_settings}
+          onOpenChange={(o) => !o && set_show_settings(false)}
+          className="max-w-2xl"
+        >
+          <AgentSettings />
+        </Dialog>
       )}
     </div>
   );

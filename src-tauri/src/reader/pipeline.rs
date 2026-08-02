@@ -11,7 +11,7 @@ use crate::reader::theme::FontConfig;
 /// Pipeline version constants.
 pub const READABILITY_VERSION: i32 = 1;
 pub const MARKDOWN_VERSION: i32 = 1;
-pub const READER_RENDER_VERSION: i32 = 1;
+pub const READER_RENDER_VERSION: i32 = 2;
 
 /// Build reader content for an entry. Implements the layered rebuild strategy.
 pub async fn build_reader_content(
@@ -44,7 +44,7 @@ pub async fn build_reader_content(
         }
         Some(ref c) if c.html.is_some() => {
             // Step 3: source HTML stored but not yet processed
-            run_full_pipeline(pool, entry_id, c.html.as_ref().unwrap(), theme_id, font_config, &cache_key).await
+            run_full_pipeline(pool, entry_id, c.html.as_ref().unwrap(), theme_id, font_config, &cache_key, false).await
         }
         _ => {
             // Step 4: fetch fresh content — try article URL first, fall back to RSS summary
@@ -53,22 +53,29 @@ pub async fn build_reader_content(
                 .ok_or("Entry not found")?;
 
             // Try fetching from article URL for full content with images
-            let fetched = if let Some(ref url) = entry_detail.entry.url {
-                fetch_article_html(client, url).await.ok()
+            // Feed entries such as Daring Fireball contain the complete article
+            // HTML in the Atom content field. Render that content directly;
+            // fetching the linked external article is both slower and often
+            // impossible (paywalls, hotlink protection, or a different site).
+            let feed_content = entry_detail
+                .entry
+                .summary
+                .filter(|html| !html.trim().is_empty());
+            let from_feed_content = feed_content.is_some();
+            let source_html = if let Some(content) = feed_content {
+                content
+            } else if let Some(ref url) = entry_detail.entry.url {
+                let fetched = fetch_article_html(client, url).await?;
+                if fetched.trim().is_empty() { String::new() } else { fetched }
             } else {
-                None
+                String::new()
             };
-
-            // Use fetched HTML if available, otherwise fall back to RSS summary
-            let source_html = fetched
-                .or(entry_detail.entry.summary)
-                .unwrap_or_default();
 
             if source_html.is_empty() {
                 return Err("No content available for this entry".into());
             }
 
-            run_full_pipeline(pool, entry_id, &source_html, theme_id, font_config, &cache_key).await
+            run_full_pipeline(pool, entry_id, &source_html, theme_id, font_config, &cache_key, from_feed_content).await
         }
     }
 }
@@ -107,6 +114,7 @@ async fn run_full_pipeline(
     theme_id: &str,
     font_config: &FontConfig,
     cache_key: &str,
+    from_feed_content: bool,
 ) -> Result<String, String> {
     // Try decruft extraction first
     let decruft_output = extraction::extract_content(source_html, None)?;
@@ -114,7 +122,7 @@ async fn run_full_pipeline(
     let needs_fallback = decruft_output.needs_fallback();
     let is_rss_metadata = source_html.len() < 500 || source_html.contains("Article URL:");
 
-    if needs_fallback || is_rss_metadata {
+    if !from_feed_content && (needs_fallback || is_rss_metadata) {
         // decruft could not extract meaningful article text.  Load the entry
         // detail so we can build a per-entry fallback page that shows the entry
         // metadata plus whatever plain-text we can scrape from the source.
@@ -187,7 +195,11 @@ async fn run_full_pipeline(
     }
 
     // Use the better of: decruft output or source HTML
-    let cleaned = decruft_output.content;
+    let cleaned = if from_feed_content {
+        source_html.to_string()
+    } else {
+        decruft_output.content
+    };
 
     // HTML → Markdown
     let md = html_to_md::convert_html_to_markdown(&cleaned)?;

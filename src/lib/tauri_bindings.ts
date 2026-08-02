@@ -8,6 +8,7 @@ import type {
   FeedWithCounts,
   SyncResult,
   ImportResult,
+  ImportProgress,
   EntryPage,
   EntryDetail,
   EntryNote,
@@ -50,6 +51,12 @@ export async function sync_all_feeds(): Promise<SyncResult[]> {
   return invoke("sync_all_feeds");
 }
 
+export async function sync_all_feeds_stream(
+  on_progress: Channel<ImportProgress>,
+): Promise<void> {
+  return invoke("sync_all_feeds_stream", { onProgress: on_progress });
+}
+
 // ── Entry ──
 
 export interface LoadEntriesParams {
@@ -83,6 +90,16 @@ export async function mark_read(
   return invoke("mark_read", { entryIds: entry_ids, isRead: is_read });
 }
 
+export async function mark_all_read_in_scope(
+  feed_id?: number | null,
+  tag_ids?: number[],
+): Promise<void> {
+  return invoke("mark_all_read_in_scope", {
+    feedId: feed_id ?? null,
+    tagIds: tag_ids ?? null,
+  });
+}
+
 export async function mark_starred(
   entry_id: number,
   is_starred: boolean,
@@ -104,6 +121,13 @@ export async function load_entry_detail(
 
 export async function import_opml(file_path: string): Promise<ImportResult> {
   return invoke("import_opml", { filePath: file_path });
+}
+
+export async function import_opml_stream(
+  file_path: string,
+  on_progress: Channel<ImportProgress>,
+): Promise<void> {
+  return invoke("import_opml_stream", { filePath: file_path, onProgress: on_progress });
 }
 
 export async function export_opml(
@@ -174,12 +198,44 @@ export async function delete_provider(id: string): Promise<void> {
   return invoke("delete_provider", { id });
 }
 
+export async function update_provider(
+  id: string,
+  config: ProviderConfig,
+): Promise<void> {
+  return invoke("update_provider", {
+    id,
+    config: {
+      name: config.name,
+      baseUrl: config.base_url,
+      displayName: config.display_name ?? null,
+      apiKey: config.api_key ?? null,
+    },
+  });
+}
+
 export async function test_provider_connection(
   provider_id: string,
   model_name: string,
 ): Promise<string> {
   return invoke("test_provider_connection", {
     providerId: provider_id,
+    modelName: model_name,
+  });
+}
+
+export async function test_provider_config(
+  provider_id: string | null,
+  config: ProviderConfig,
+  model_name: string,
+): Promise<string> {
+  return invoke("test_provider_config", {
+    providerId: provider_id,
+    config: {
+      name: config.name,
+      baseUrl: config.base_url,
+      displayName: config.display_name ?? null,
+      apiKey: config.api_key ?? null,
+    },
     modelName: model_name,
   });
 }

@@ -27,3 +27,12 @@ export interface ImportResult {
   feeds_skipped: number;
   errors: string[];
 }
+
+export interface ImportProgress {
+  status: "start" | "processing" | "completed" | "added" | "skipped" | "error" | "done";
+  feed_url: string;
+  title: string | null;
+  error: string | null;
+  current: number;
+  total: number;
+}

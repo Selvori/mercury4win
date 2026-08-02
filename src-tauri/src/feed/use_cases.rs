@@ -20,6 +20,10 @@ pub async fn subscribe(
         .await
         .map_err(|e| format!("HTTP error: {}", e))?;
 
+    if !response.status().is_success() {
+        return Err(format!("Feed HTTP error: {}", response.status()));
+    }
+
     let bytes = response
         .bytes()
         .await

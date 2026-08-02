@@ -55,6 +55,9 @@ export function ReaderPane({ entry }: Props) {
     set_side_panel_width(Math.max(200, Math.min(560, start_w + delta)));
   }, []);
   const on_mouse_up = useCallback(() => {
+    // Ignore mouseups from regular controls. This handler is registered on
+    // window for resizing, but input clicks also reach it in WebView2.
+    if (!drag_ref.current) return;
     drag_ref.current = null;
     set_dragging_side(false);
     window.getSelection()?.removeAllRanges();
@@ -63,9 +66,13 @@ export function ReaderPane({ entry }: Props) {
   useEffect(() => {
     window.addEventListener("mousemove", on_mouse_move);
     window.addEventListener("mouseup", on_mouse_up);
+    window.addEventListener("blur", on_mouse_up);
+    document.addEventListener("mouseleave", on_mouse_up);
     return () => {
       window.removeEventListener("mousemove", on_mouse_move);
       window.removeEventListener("mouseup", on_mouse_up);
+      window.removeEventListener("blur", on_mouse_up);
+      document.removeEventListener("mouseleave", on_mouse_up);
     };
   }, [on_mouse_move, on_mouse_up]);
 

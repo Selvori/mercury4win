@@ -24,6 +24,7 @@ pub async fn add_provider(
     app_handle: AppHandle,
     config: ProviderConfig,
 ) -> Result<AgentProviderProfile, String> {
+    validate_provider_config(&config)?;
     let id = uuid::Uuid::new_v4().to_string();
     log::info!("[add_provider] id={id}, name={}, base_url={}, has_key={}",
         config.name, config.base_url, config.api_key.is_some());
@@ -45,6 +46,25 @@ pub async fn delete_provider(pool: State<'_, Pool>, app_handle: AppHandle, id: S
 }
 
 #[tauri::command]
+pub async fn update_provider(
+    pool: State<'_, Pool>,
+    app_handle: AppHandle,
+    id: String,
+    config: ProviderConfig,
+) -> Result<(), String> {
+    validate_provider_config(&config)?;
+    log::info!("[update_provider] id={}, name={}, base_url={}, has_key={}",
+        id, config.name, config.base_url, config.api_key.is_some());
+
+    // Update API key if provided
+    if let Some(ref api_key) = config.api_key {
+        credential_store::store_api_key(&app_handle, &id, api_key).await?;
+    }
+
+    agent_store::update_provider(&pool, &id, &config.name, &config.base_url, config.display_name.as_deref()).await
+}
+
+#[tauri::command]
 pub async fn test_provider_connection(
     pool: State<'_, Pool>,
     client: State<'_, AppClient>,
@@ -59,6 +79,48 @@ pub async fn test_provider_connection(
     log::info!("[test_provider_connection] provider_id={}, base_url={}, key_len={}, model={}",
         provider_id, provider.base_url, api_key.len(), model_name);
     provider::test_connection(&client.0, &provider.base_url, &api_key, &model_name).await
+}
+
+/// Test the values currently shown in the Settings form. When editing an
+/// existing provider, an omitted API key intentionally reuses its saved key.
+#[tauri::command]
+pub async fn test_provider_config(
+    client: State<'_, AppClient>,
+    app_handle: AppHandle,
+    provider_id: Option<String>,
+    config: ProviderConfig,
+    model_name: String,
+) -> Result<String, String> {
+    validate_provider_config(&config)?;
+    let model_name = model_name.trim();
+    if model_name.is_empty() {
+        return Err("Model name is required".into());
+    }
+
+    let api_key = match config.api_key.as_deref() {
+        Some(key) if !key.is_empty() => key.to_string(),
+        _ => match provider_id.as_deref() {
+            Some(id) => credential_store::get_api_key(&app_handle, id).await?.unwrap_or_default(),
+            None => String::new(),
+        },
+    };
+
+    provider::test_connection(&client.0, &config.base_url, &api_key, model_name).await
+}
+
+fn validate_provider_config(config: &ProviderConfig) -> Result<(), String> {
+    if config.name.trim().is_empty() {
+        return Err("Provider name is required".into());
+    }
+    let url = config.base_url.trim();
+    if url.is_empty() {
+        return Err("Base URL is required".into());
+    }
+    let parsed = url::Url::parse(url).map_err(|_| "Base URL must be a valid URL".to_string())?;
+    if parsed.scheme() != "http" && parsed.scheme() != "https" {
+        return Err("Base URL must use http or https".into());
+    }
+    Ok(())
 }
 
 // ── Resolve model for agent ──

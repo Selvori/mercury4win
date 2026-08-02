@@ -80,6 +80,35 @@ pub async fn mark_all_read_in_feed(
 }
 
 #[tauri::command]
+pub async fn mark_all_read_in_scope(
+    pool: State<'_, Pool>,
+    feed_id: Option<i64>,
+    tag_ids: Option<Vec<i64>>,
+) -> Result<(), String> {
+    let tag_ids = tag_ids.unwrap_or_default();
+    pool.get().await.map_err(|e| e.to_string())?.interact(move |conn| {
+        let mut conditions = vec!["is_deleted = 0".to_string()];
+        let mut values: Vec<i64> = Vec::new();
+        if let Some(id) = feed_id {
+            conditions.push(format!("feed_id = ?{}", values.len() + 1));
+            values.push(id);
+        }
+        if !tag_ids.is_empty() {
+            let placeholders = (0..tag_ids.len())
+                .map(|i| format!("?{}", values.len() + i + 1))
+                .collect::<Vec<_>>()
+                .join(",");
+            conditions.push(format!("id IN (SELECT entry_id FROM entry_tag WHERE tag_id IN ({}))", placeholders));
+            values.extend(tag_ids);
+        }
+        let sql = format!("UPDATE entry SET is_read = 1 WHERE {}", conditions.join(" AND "));
+        let params = rusqlite::params_from_iter(values);
+        conn.execute(&sql, params).map_err(|e| e.to_string())?;
+        Ok::<(), String>(())
+    }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub async fn load_entry_detail(
     pool: State<'_, Pool>,
     entry_id: i64,

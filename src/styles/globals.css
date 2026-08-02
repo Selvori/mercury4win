@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configure dark mode to use .dark class instead of prefers-color-scheme */
+@custom-variant dark (.dark &);
+
 @theme {
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.145 0 0);
@@ -51,6 +54,31 @@
   --color-sidebar-foreground: oklch(0.985 0 0);
 }
 
+/* Keep native scrollbars aligned with the active light/dark theme. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-background);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border: 2px solid var(--color-background);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
 /* Linux backdrop-blur fallback */
 @supports not (backdrop-filter: blur(8px)) {
   .backdrop-blur,
@@ -62,11 +90,15 @@
   }
 }
 
-/* Ensure dialogs/popups use solid backgrounds on Linux */
-@supports not (backdrop-filter: blur(8px)) {
-  dialog::backdrop {
-    background: rgba(0, 0, 0, 0.5) !important;
-  }
+/* Ensure all form controls accept text selection and pointer input.
+   Applies globally (not just inside <dialog>) because some surfaces —
+   e.g. the Settings overlay — use custom div overlays instead of <dialog>. */
+input,
+textarea,
+select {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
 }
 
 /* Focus visible for keyboard navigation */

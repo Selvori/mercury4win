@@ -81,6 +81,18 @@ body {{
     max-width: 720px;
     margin: 0 auto;
 }}
+html {{
+    scrollbar-color: {border_color} {bg};
+    scrollbar-width: thin;
+}}
+::-webkit-scrollbar {{ width: 10px; height: 10px; }}
+::-webkit-scrollbar-track {{ background: {bg}; }}
+::-webkit-scrollbar-thumb {{
+    background: {border_color};
+    border: 2px solid {bg};
+    border-radius: 999px;
+}}
+::-webkit-scrollbar-thumb:hover {{ background: {muted}; }}
 h1 {{ font-size: 2rem; font-weight: 700; margin: 2rem 0 1rem; }}
 h2 {{ font-size: 1.5rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }}
 h3 {{ font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }}
@@ -106,10 +118,13 @@ pre {{
     background: {code_bg};
     padding: 1rem;
     border-radius: 0.5rem;
-    overflow-x: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     margin: 1rem 0;
 }}
-pre code {{ background: none; padding: 0; }}
+pre code {{ background: none; padding: 0; white-space: inherit; }}
 ul, ol {{ margin: 0.75rem 0; padding-left: 1.5rem; }}
 li {{ margin: 0.25rem 0; }}
 table {{ width: 100%; border-collapse: collapse; margin: 1rem 0; }}

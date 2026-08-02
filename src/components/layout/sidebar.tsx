@@ -8,8 +8,8 @@ import { TagLibrary } from "@/features/tags/components/tag_library";
 import { ThemeToggle } from "./theme_toggle";
 
 interface Props {
-  selected_feed_id: number | null;
-  on_select_feed: (id: number) => void;
+  selected_feed_id: number | null | undefined;
+  on_select_feed: (id: number | null) => void;
   on_add_feed: () => void;
   on_import_opml: () => void;
   on_export_opml: () => void;

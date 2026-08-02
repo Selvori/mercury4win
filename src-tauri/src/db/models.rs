@@ -283,6 +283,21 @@ pub struct ImportResult {
     pub errors: Vec<String>,
 }
 
+/// Streaming per-feed import progress event.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportProgress {
+    /// "start" | "processing" | "added" | "skipped" | "error" | "done"
+    pub status: String,
+    pub feed_url: String,
+    pub title: Option<String>,
+    /// Detailed error reason, present when status == "error"
+    pub error: Option<String>,
+    /// 1-based index of the feed currently being processed
+    pub current: usize,
+    /// Total number of feeds in the OPML file
+    pub total: usize,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AgentStatus {
     pub agent_type: String,

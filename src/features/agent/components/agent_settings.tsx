@@ -2,15 +2,16 @@
 // Agent settings panel — provider/model/profile management
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Cpu, Plus, Trash2, Play, Layers, Settings2, BarChart3, FileText } from "lucide-react";
+import { Cpu, Plus, Trash2, Layers, Settings2, Pencil, BarChart3, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   list_providers,
   add_provider,
+  update_provider,
   delete_provider,
-  test_provider_connection,
+  test_provider_config,
   list_models,
   add_model,
   update_model,
@@ -20,8 +21,8 @@ import {
   save_custom_template,
   load_custom_template,
 } from "@/lib/tauri_bindings";
-import type { ModelProfile, AgentProfile } from "@/types";
-import { useState } from "react";
+import type { ModelProfile, AgentProfile, ProviderProfile, ProviderConfig } from "@/types";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { UsageStats } from "@/features/usage/components/usage_stats";
 
@@ -47,7 +48,7 @@ export function AgentSettings() {
   ];
 
   return (
-    <div className="max-h-[85vh] flex flex-col">
+    <div className="flex min-h-0 flex-col">
       {/* Tab navigation */}
       <div className="flex gap-1 border-b border-border px-6 pt-4">
         {tabs.map((opt) => (
@@ -67,7 +68,7 @@ export function AgentSettings() {
         ))}
       </div>
 
-      <div className="overflow-y-auto p-6">
+      <div className="min-h-0 flex-1 overflow-y-auto p-6">
         {tab === "providers" && <ProvidersTab />}
         {tab === "models" && <ModelsTab />}
         {tab === "profiles" && <ProfilesTab />}
@@ -84,10 +85,12 @@ function ProvidersTab() {
   const { t } = useTranslation();
   const query_client = useQueryClient();
   const [show_add, set_show_add] = useState(false);
+  const [editing_provider, set_editing_provider] = useState<ProviderProfile | null>(null);
   const [new_name, set_new_name] = useState("");
   const [new_url, set_new_url] = useState("");
   const [new_key, set_new_key] = useState("");
-  const [test_result, set_test_result] = useState<string | null>(null);
+  const [test_model, set_test_model] = useState("gpt-4o-mini");
+  const [feedback, set_feedback] = useState<{ kind: "success" | "error"; message: string } | null>(null);
 
   const { data: providers, isLoading } = useQuery({
     queryKey: ["providers"],
@@ -98,22 +101,82 @@ function ProvidersTab() {
     mutationFn: () => add_provider({ name: new_name, base_url: new_url, api_key: new_key || undefined }),
     onSuccess: () => {
       query_client.invalidateQueries({ queryKey: ["providers"] });
-      set_show_add(false);
-      set_new_name("");
-      set_new_url("");
-      set_new_key("");
+      reset_form();
     },
+    onError: (error) => set_feedback({ kind: "error", message: String(error) }),
+  });
+
+  const update_mutation = useMutation({
+    mutationFn: ({ id, config }: { id: string; config: ProviderConfig }) =>
+      update_provider(id, config),
+    onSuccess: () => {
+      query_client.invalidateQueries({ queryKey: ["providers"] });
+      reset_form();
+    },
+    onError: (error) => set_feedback({ kind: "error", message: String(error) }),
   });
 
   const delete_mutation = useMutation({
     mutationFn: (id: string) => delete_provider(id),
     onSuccess: () => query_client.invalidateQueries({ queryKey: ["providers"] }),
+    onError: (error) => set_feedback({ kind: "error", message: String(error) }),
   });
 
   const test_mutation = useMutation({
-    mutationFn: ({ id, model }: { id: string; model: string }) => test_provider_connection(id, model),
-    onSuccess: (result) => set_test_result(result),
+    mutationFn: ({ provider_id, config, model }: { provider_id: string | null; config: ProviderConfig; model: string }) =>
+      test_provider_config(provider_id, config, model),
+    onMutate: () => set_feedback(null),
+    onSuccess: (result) => set_feedback({ kind: "success", message: result || t("settings.connectionSuccess") }),
+    onError: (error) => set_feedback({ kind: "error", message: `${t("settings.connectionFailed")}: ${String(error)}` }),
   });
+
+  function reset_form() {
+    set_show_add(false);
+    set_editing_provider(null);
+    set_new_name("");
+    set_new_url("");
+    set_new_key("");
+    set_test_model("gpt-4o-mini");
+    set_feedback(null);
+  }
+
+  function start_edit(provider: ProviderProfile) {
+    set_editing_provider(provider);
+    set_new_name(provider.display_name || provider.name);
+    set_new_url(provider.base_url);
+    set_new_key(""); // Don't show existing key
+    set_test_model("gpt-4o-mini");
+    set_feedback(null);
+    set_show_add(true);
+  }
+
+  function handle_save() {
+    const name = new_name.trim();
+    const base_url = new_url.trim();
+    if (editing_provider) {
+      update_mutation.mutate({
+        id: editing_provider.id,
+        config: {
+          name,
+          base_url,
+          display_name: editing_provider.display_name ? name : undefined,
+          api_key: new_key || undefined,
+        },
+      });
+    } else {
+      add_mutation.mutate();
+    }
+  }
+
+  function handle_test() {
+    const name = new_name.trim();
+    const base_url = new_url.trim();
+    test_mutation.mutate({
+      provider_id: editing_provider?.id ?? null,
+      config: { name, base_url, api_key: new_key || undefined },
+      model: test_model.trim(),
+    });
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -122,22 +185,40 @@ function ProvidersTab() {
           <h3 className="text-lg font-semibold text-foreground">{t("settings.providers")}</h3>
           <p className="text-sm text-muted-foreground mt-1">{t("settings.description")}</p>
         </div>
-        <Button size="sm" onClick={() => set_show_add(!show_add)}>
+        <Button size="sm" onClick={() => { set_feedback(null); set_show_add(!show_add); }}>
           <Plus className="mr-1 h-4 w-4" />{t("settings.addProvider")}
         </Button>
       </div>
 
       {show_add && (
         <div className="mb-6 rounded-lg border border-border bg-card p-4 space-y-3">
-          <Input placeholder={t("settings.providerName")} value={new_name} onChange={(e) => set_new_name(e.target.value)} />
+          <Input placeholder={t("settings.providerName")} value={new_name} onChange={(e) => set_new_name(e.target.value)} autoFocus />
           <Input placeholder={t("settings.baseUrl")} value={new_url} onChange={(e) => set_new_url(e.target.value)} />
-          <Input type="password" placeholder={t("settings.apiKey")} value={new_key} onChange={(e) => set_new_key(e.target.value)} />
+          <Input
+            type="password"
+            placeholder={editing_provider ? t("settings.apiKeyKeepEmpty") : t("settings.apiKey")}
+            value={new_key}
+            onChange={(e) => set_new_key(e.target.value)}
+          />
+          <Input
+            placeholder={t("settings.testModel")}
+            value={test_model}
+            onChange={(e) => set_test_model(e.target.value)}
+          />
           <div className="flex gap-2">
-            <Button size="sm" onClick={() => add_mutation.mutate()} disabled={add_mutation.isPending || !new_name || !new_url}>
-              {add_mutation.isPending ? t("settings.saving") : t("settings.save")}
+            <Button size="sm" onClick={handle_save} disabled={add_mutation.isPending || update_mutation.isPending || !new_name.trim() || !new_url.trim()}>
+              {(add_mutation.isPending || update_mutation.isPending) ? t("settings.saving") : editing_provider ? t("settings.update") : t("settings.save")}
             </Button>
-            <Button size="sm" variant="outline" onClick={() => set_show_add(false)}>{t("settings.cancel")}</Button>
+            <Button size="sm" variant="outline" onClick={handle_test} disabled={test_mutation.isPending || !new_name.trim() || !new_url.trim() || !test_model.trim()}>
+              {test_mutation.isPending ? t("settings.testing") : t("settings.testConnection")}
+            </Button>
+            <Button size="sm" variant="outline" onClick={reset_form}>{t("settings.cancel")}</Button>
           </div>
+          {feedback && (
+            <p className={cn("text-xs", feedback.kind === "error" ? "text-destructive" : "text-green-600 dark:text-green-400")} role="status">
+              {feedback.message}
+            </p>
+          )}
         </div>
       )}
 
@@ -158,8 +239,14 @@ function ProvidersTab() {
                 <p className="text-sm font-medium">{p.display_name || p.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{p.base_url}</p>
               </div>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => test_mutation.mutate({ id: p.id, model: "gpt-4o-mini" })} title={t("settings.testConnection")}>
-                <Play className="h-3.5 w-3.5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => start_edit(p)}
+                title={t("settings.edit")}
+              >
+                <Settings2 className="h-3.5 w-3.5" />
               </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => delete_mutation.mutate(p.id)}>
                 <Trash2 className="h-3.5 w-3.5 text-destructive" />
@@ -169,12 +256,6 @@ function ProvidersTab() {
         </div>
       )}
 
-      {test_result !== null && (
-        <div className="mt-4 rounded-lg border border-border bg-card p-3">
-          <p className="text-xs font-medium text-foreground">{t("settings.connectionResult")}</p>
-          <p className="text-xs text-muted-foreground mt-1">{test_result}</p>
-        </div>
-      )}
     </div>
   );
 }
@@ -271,7 +352,7 @@ function ModelsTab() {
 
           {show_add && (
             <div className="mb-4 rounded-lg border border-border bg-card p-4 space-y-3">
-              <Input placeholder={t("settings.displayName")} value={form_name} onChange={(e) => set_form_name(e.target.value)} />
+              <Input placeholder={t("settings.displayName")} value={form_name} onChange={(e) => set_form_name(e.target.value)} autoFocus />
               <Input placeholder={t("settings.modelId")} value={form_model} onChange={(e) => set_form_model(e.target.value)} />
               <div className="flex flex-wrap gap-4 text-xs">
                 <label className="flex items-center gap-1.5">
@@ -316,7 +397,7 @@ function ModelsTab() {
                     </div>
                   </div>
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => start_edit(m)} title={t("settings.edit")}>
-                    <Play className="h-3.5 w-3.5" />
+                    <Pencil className="h-3.5 w-3.5" />
                   </Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => delete_mutation.mutate(m.id)}>
                     <Trash2 className="h-3.5 w-3.5 text-destructive" />
@@ -373,12 +454,12 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
     mutationFn: (data: Partial<AgentProfile>) =>
       update_agent_profile(
         agent_type,
-        data.primary_model_id ?? profile?.primary_model_id ?? null,
-        data.fallback_model_id ?? profile?.fallback_model_id ?? null,
-        data.target_language ?? profile?.target_language ?? null,
-        data.detail_level ?? profile?.detail_level ?? null,
-        data.prompt_strategy ?? profile?.prompt_strategy ?? null,
-        data.concurrency_degree ?? profile?.concurrency_degree ?? null,
+        data.primary_model_id !== undefined ? data.primary_model_id : primary || null,
+        data.fallback_model_id !== undefined ? data.fallback_model_id : profile?.fallback_model_id ?? null,
+        data.target_language !== undefined ? data.target_language : target_lang,
+        data.detail_level !== undefined ? data.detail_level : detail_level,
+        data.prompt_strategy !== undefined ? data.prompt_strategy : profile?.prompt_strategy ?? "default",
+        data.concurrency_degree !== undefined ? data.concurrency_degree : profile?.concurrency_degree ?? null,
       ),
     onSuccess: () => query_client.invalidateQueries({ queryKey: ["agent_profile", agent_type] }),
   });
@@ -387,10 +468,12 @@ function ProfileSection({ agent_type }: { agent_type: string }) {
   const [target_lang, set_target_lang] = useState(profile?.target_language ?? "en");
   const [detail_level, set_detail_level] = useState(profile?.detail_level ?? "medium");
 
-  // Sync state from query
-  if (profile && primary === "" && profile.primary_model_id) {
-    set_primary(profile.primary_model_id);
-  }
+  useEffect(() => {
+    if (!profile) return;
+    set_primary(profile.primary_model_id ?? "");
+    set_target_lang(profile.target_language ?? "en");
+    set_detail_level(profile.detail_level ?? "medium");
+  }, [profile]);
 
   const detail_level_options: Record<string, string> = {
     brief: "summary.brief",

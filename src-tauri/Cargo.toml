@@ -34,6 +34,7 @@ deadpool-sqlite = "0.13"
 # Feed parsing
 feed-rs = "2"
 opml = "1"
+url = "2"
 
 # Content extraction
 decruft = "0.2"

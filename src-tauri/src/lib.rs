@@ -62,7 +62,9 @@ pub fn run() {
             commands::feed_cmd::delete_feed,
             commands::feed_cmd::sync_feed,
             commands::feed_cmd::sync_all_feeds,
+            commands::feed_cmd::sync_all_feeds_stream,
             commands::feed_cmd::import_opml,
+            commands::feed_cmd::import_opml_stream,
             commands::feed_cmd::export_opml,
             // Entry
             commands::entry_cmd::load_entries,
@@ -70,6 +72,7 @@ pub fn run() {
             commands::entry_cmd::mark_starred,
             commands::entry_cmd::delete_entry,
             commands::entry_cmd::mark_all_read_in_feed,
+            commands::entry_cmd::mark_all_read_in_scope,
             commands::entry_cmd::load_entry_detail,
             // Tags
             commands::tag_cmd::list_tags,
@@ -86,8 +89,10 @@ pub fn run() {
             // Agent
             commands::agent_cmd::list_providers,
             commands::agent_cmd::add_provider,
+            commands::agent_cmd::update_provider,
             commands::agent_cmd::delete_provider,
             commands::agent_cmd::test_provider_connection,
+            commands::agent_cmd::test_provider_config,
             commands::agent_cmd::run_summary,
             commands::agent_cmd::run_translation,
             commands::agent_cmd::run_tagging,

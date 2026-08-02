@@ -56,6 +56,22 @@ pub async fn delete_provider(pool: &Pool, id: &str) -> Result<(), String> {
     Ok(())
 }
 
+pub async fn update_provider(pool: &Pool, id: &str, name: &str, base_url: &str, display_name: Option<&str>) -> Result<(), String> {
+    let id = id.to_string();
+    let name = name.to_string();
+    let base_url = base_url.to_string();
+    let display = display_name.map(|s| s.to_string());
+    let pool = pool.clone();
+    pool.get().await.map_err(|e| e.to_string())?
+        .interact(move |conn| {
+            conn.execute(
+                "UPDATE agent_provider_profile SET name = ?2, base_url = ?3, display_name = ?4 WHERE id = ?1",
+                params![id, name, base_url, display],
+            )
+        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 // ── Model CRUD ──
 
 pub async fn list_models(pool: &Pool, provider_id: &str) -> Result<Vec<AgentModelProfile>, String> {
