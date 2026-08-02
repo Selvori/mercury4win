@@ -2,7 +2,7 @@
 
 **本地优先、开源、跨平台 RSS 阅读器** — 基于 Tauri v2（Rust + React 19），所有数据 100% 本地 SQLite 存储，集成 OpenAI 兼容 API 实现 AI 摘要、翻译与智能标签。
 
-> v0.2.0 · MIT License · Windows / macOS / Linux
+> v0.3.1 · MIT License · Windows / macOS / Linux
 
 ---
 
