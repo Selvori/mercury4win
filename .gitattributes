@@ -1,0 +1,2 @@
+# Preserve the exact bytes and SHA-256 of the user-provided OPML fixture.
+tests/fixtures/opml/hn-popular10+1.opml -text

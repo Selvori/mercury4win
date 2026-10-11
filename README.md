@@ -1,8 +1,12 @@
-# Mercury
+# mercury4win
 
 **本地优先、开源、跨平台 RSS 阅读器** — 基于 Tauri v2（Rust + React 19），所有数据 100% 本地 SQLite 存储，集成 OpenAI 兼容 API 实现 AI 摘要、翻译与智能标签。
 
+本项目基于仅支持 macOS 的 [Mercury](https://github.com/neolee/mercury) 开发，以 Tauri v2、Rust 和 React 实现 Windows、Linux 与 macOS 多平台支持。原始 Mercury 采用 Swift / SwiftUI，其功能设计、业务逻辑及文档是本项目的开发参考；本项目的功能实现情况以当前代码为准。
+
 > v0.2.0 · MIT License · Windows / macOS / Linux
+
+开发记录从 [docs/README.md](docs/README.md) 进入；当前实现与验证状态见 [项目状态](docs/STATUS.md)，已知差异见 [问题台账](docs/ISSUES.md)。下方功能概览不代表所有用户流程已验收。固定 RSS 导入样例及验证方法见 [测试约定](docs/TESTING.md)。
 
 ---
 
@@ -74,8 +78,8 @@ Windows 和 macOS 无需额外安装。
 ### 运行
 
 ```bash
-git clone git@github.com:Selvori/mercury4win-linux.git
-cd mercury4win-linux
+git clone git@github.com:Selvori/mercury4win.git
+cd mercury4win
 npm install
 npx tauri dev
 ```
