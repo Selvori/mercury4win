@@ -1,7 +1,14 @@
-// mercury4win-linux/src-tauri/agent/credential_store.rs
+// mercury4win/src-tauri/agent/credential_store.rs
 // API Key secure storage — stronghold plugin integration with fallback
 
 use std::path::PathBuf;
+
+// Stable bytes for the existing credential file format; independent of the project name.
+const CREDENTIAL_OBFUSCATION_KEY: &[u8] = &[
+    0x6d, 0x65, 0x72, 0x63, 0x75, 0x72, 0x79, 0x34, 0x77, 0x69, 0x6e, 0x2d, 0x6c, 0x69, 0x6e, 0x75,
+    0x78, 0x2d, 0x61, 0x70, 0x69, 0x6b, 0x65, 0x79, 0x2d, 0x6f, 0x62, 0x66, 0x75, 0x73, 0x63, 0x61,
+    0x74, 0x69, 0x6f, 0x6e, 0x2d, 0x76, 0x31,
+];
 
 /// Store an API key for a provider. Uses stronghold when available,
 /// falls back to encrypted file storage.
@@ -73,7 +80,7 @@ fn credential_path(app_handle: &tauri::AppHandle, provider_id: &str) -> PathBuf 
 // In production, this should be replaced with stronghold or OS keychain.
 
 fn simple_encrypt(input: &str) -> String {
-    let key: &[u8] = b"mercury4win-linux-apikey-obfuscation-v1";
+    let key = CREDENTIAL_OBFUSCATION_KEY;
     let encrypted: Vec<u8> = input
         .bytes()
         .enumerate()
@@ -83,7 +90,7 @@ fn simple_encrypt(input: &str) -> String {
 }
 
 fn simple_decrypt(hex_str: &str) -> String {
-    let key: &[u8] = b"mercury4win-linux-apikey-obfuscation-v1";
+    let key = CREDENTIAL_OBFUSCATION_KEY;
     match hex::decode(hex_str) {
         Ok(bytes) => {
             let decrypted: Vec<u8> = bytes
@@ -94,5 +101,40 @@ fn simple_decrypt(hex_str: &str) -> String {
             String::from_utf8_lossy(&decrypted).to_string()
         }
         Err(_) => String::new(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{simple_decrypt, simple_encrypt};
+
+    // Fixed synthetic fixtures written by the previous version, including key wraparound.
+    const LEGACY_ASCII_CIPHERTEXT: &str =
+        "1e0e5f1710010d191211075e18000012555d131f1f02011c5f42525747405754425e57574c1452090014";
+    const LEGACY_UNICODE_CIPHERTEXT: &str =
+        "1e0e5f1710010d1993d1c3cbfaee43050a4217190d0e17541d5e5055414655564c500e0c4e12540b55435146464c02405157";
+
+    #[test]
+    fn existing_credentials_remain_readable() {
+        assert_eq!(
+            simple_decrypt(LEGACY_ASCII_CIPHERTEXT),
+            "sk-test-existing-provider-0123456789abcdef",
+        );
+        assert_eq!(
+            simple_decrypt(LEGACY_UNICODE_CIPHERTEXT),
+            "sk-test-中文-provider-0123456789abcdef0123456789",
+        );
+    }
+
+    #[test]
+    fn credential_file_format_remains_unchanged() {
+        assert_eq!(
+            simple_encrypt("sk-test-existing-provider-0123456789abcdef"),
+            LEGACY_ASCII_CIPHERTEXT,
+        );
+        assert_eq!(
+            simple_encrypt("sk-test-中文-provider-0123456789abcdef0123456789"),
+            LEGACY_UNICODE_CIPHERTEXT,
+        );
     }
 }

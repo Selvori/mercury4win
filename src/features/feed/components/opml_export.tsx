@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/feed/components/opml_export.tsx
+// mercury4win/src/features/feed/components/opml_export.tsx
 // OPML export dialog — select feeds, choose save path, export
 
 import { useState, useMemo } from "react";

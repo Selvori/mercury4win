@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/digest/templates.rs
+// mercury4win/src-tauri/digest/templates.rs
 // Digest template rendering via Handlebars
 
 use handlebars::Handlebars;

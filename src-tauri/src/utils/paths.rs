@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/utils/paths.rs
+// mercury4win/src-tauri/utils/paths.rs
 // Tauri Path API wrapper - no hardcoded paths anywhere
 
 use std::path::PathBuf;

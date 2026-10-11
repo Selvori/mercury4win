@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/reader/theme.rs
+// mercury4win/src-tauri/reader/theme.rs
 // Theme CSS generation for reader content (classic/paper, light/dark)
 
 use crate::db::models::Content;

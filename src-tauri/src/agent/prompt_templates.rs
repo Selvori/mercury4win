@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/prompt_templates.rs
+// mercury4win/src-tauri/agent/prompt_templates.rs
 // YAML prompt template loading with conditional section rendering
 // Mirrors Mercury's prompt governance: template owns final message text,
 // executors only choose parameter values.

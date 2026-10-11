@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/runtime.rs
+// mercury4win/src-tauri/agent/runtime.rs
 // Agent task queue + state machine — mirrors Swift Actor pattern
 // Design: 1 active slot + 1 waiting slot per task type, latest-only replacement
 

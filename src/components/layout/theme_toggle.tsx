@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/layout/theme_toggle.tsx
+// mercury4win/src/components/layout/theme_toggle.tsx
 // Theme toggle button (light/dark/auto)
 
 import { Sun, Moon, Monitor } from "lucide-react";

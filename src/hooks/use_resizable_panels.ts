@@ -1,4 +1,4 @@
-// mercury4win-linux/src/hooks/use_resizable_panels.ts
+// mercury4win/src/hooks/use_resizable_panels.ts
 // Draggable panel splitter hook for resizable layouts
 
 import { useState, useCallback, useRef } from "react";

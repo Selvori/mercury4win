@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/index.ts
+// mercury4win/src/types/index.ts
 
 export type { Feed, FeedWithCounts, SyncResult, ImportResult, ImportProgress } from "./feed";
 export type { Entry, EntryPage, EntryDetail, EntryTagInfo, EntryNote } from "./entry";

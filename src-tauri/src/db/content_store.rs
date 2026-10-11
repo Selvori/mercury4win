@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/content_store.rs
+// mercury4win/src-tauri/db/content_store.rs
 // Content pipeline persistence
 
 use deadpool_sqlite::Pool;

@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/commands/note_cmd.rs
+// mercury4win/src-tauri/commands/note_cmd.rs
 // Entry notes Tauri commands
 
 use deadpool_sqlite::Pool;

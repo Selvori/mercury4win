@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/feed/components/opml_import.tsx
+// mercury4win/src/features/feed/components/opml_import.tsx
 // OPML import dialog — select file, import feeds with live progress
 
 import { useState } from "react";

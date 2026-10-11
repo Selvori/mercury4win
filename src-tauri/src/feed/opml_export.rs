@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/feed/opml_export.rs
+// mercury4win/src-tauri/feed/opml_export.rs
 // OPML export pipeline
 
 use std::path::Path;

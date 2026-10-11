@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/tag.ts
+// mercury4win/src/types/tag.ts
 
 export interface Tag {
   id: number;

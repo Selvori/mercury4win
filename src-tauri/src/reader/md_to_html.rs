@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/reader/md_to_html.rs
+// mercury4win/src-tauri/reader/md_to_html.rs
 // Markdown to Reader HTML via comrak (GFM-compatible renderer)
 
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};

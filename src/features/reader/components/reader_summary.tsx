@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/reader_summary.tsx
+// mercury4win/src/features/reader/components/reader_summary.tsx
 // Summary panel — streaming display with detail level control
 
 import { useState, useRef, useCallback, useEffect } from "react";

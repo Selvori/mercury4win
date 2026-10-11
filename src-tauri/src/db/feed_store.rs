@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/feed_store.rs
+// mercury4win/src-tauri/db/feed_store.rs
 // Feed persistence — CRUD + sync status updates
 
 use deadpool_sqlite::Pool;

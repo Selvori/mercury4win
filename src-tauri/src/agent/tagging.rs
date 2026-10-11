@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/tagging.rs
+// mercury4win/src-tauri/agent/tagging.rs
 // Tagging agent — non-streaming LLM completion for tag suggestions
 
 use std::collections::HashMap;

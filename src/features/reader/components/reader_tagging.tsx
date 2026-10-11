@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/reader_tagging.tsx
+// mercury4win/src/features/reader/components/reader_tagging.tsx
 // Tagging panel — AI tag suggestions + manual tag input
 
 import { useState, useEffect } from "react";

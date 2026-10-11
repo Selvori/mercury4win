@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/usage/components/usage_stats.tsx
+// mercury4win/src/features/usage/components/usage_stats.tsx
 // LLM usage statistics display — 7d/30d/90d token counts
 
 import { useQuery } from "@tanstack/react-query";

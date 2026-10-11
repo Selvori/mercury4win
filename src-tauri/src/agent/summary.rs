@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/summary.rs
+// mercury4win/src-tauri/agent/summary.rs
 // Summary agent — streaming LLM completion with 3 detail levels
 
 use std::collections::HashMap;

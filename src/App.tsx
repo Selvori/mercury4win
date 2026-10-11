@@ -1,4 +1,4 @@
-// mercury4win-linux/src/App.tsx
+// mercury4win/src/App.tsx
 import { useEffect } from "react";
 import { AppShell } from "@/components/layout/app_shell";
 import { useAppStore } from "@/stores/app_store";

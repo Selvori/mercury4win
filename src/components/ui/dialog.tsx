@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/dialog.tsx
+// mercury4win/src/components/ui/dialog.tsx
 // React-controlled modal overlay (replaces native <dialog> showModal).
 //
 // Native <dialog>'s modal focus-lock can misbehave inside Tauri/WebView2:

@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/entry_store.rs
+// mercury4win/src-tauri/db/entry_store.rs
 // Entry persistence — paginated queries, read/star/delete, batch operations
 
 use deadpool_sqlite::Pool;

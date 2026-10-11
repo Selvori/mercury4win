@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/font_settings_dialog.tsx
+// mercury4win/src/features/reader/components/font_settings_dialog.tsx
 // Font settings dialog for reader customization
 
 import { useTranslation } from "react-i18next";

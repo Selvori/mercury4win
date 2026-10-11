@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/reader_translation.tsx
+// mercury4win/src/features/reader/components/reader_translation.tsx
 // Translation panel — bilingual side-by-side display
 
 import { useState, useCallback } from "react";

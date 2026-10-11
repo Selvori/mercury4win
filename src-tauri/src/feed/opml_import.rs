@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/feed/opml_import.rs
+// mercury4win/src-tauri/feed/opml_import.rs
 // OPML import pipeline
 
 use opml::{OPML, Outline};

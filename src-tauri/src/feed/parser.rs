@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/feed/parser.rs
+// mercury4win/src-tauri/feed/parser.rs
 // feed-rs wrapper for RSS/Atom/JSON Feed parsing
 
 use feed_rs::parser;

@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/reader/html_to_md.rs
+// mercury4win/src-tauri/reader/html_to_md.rs
 // HTML to Markdown conversion via htmd (Turndown.js Rust port)
 
 /// Convert cleaned HTML to canonical Markdown.

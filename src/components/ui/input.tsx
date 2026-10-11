@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/input.tsx
+// mercury4win/src/components/ui/input.tsx
 // simplified shadcn/ui input (no base-ui dependency)
 
 import { type InputHTMLAttributes, forwardRef } from "react";

@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/reader/pipeline.rs
+// mercury4win/src-tauri/reader/pipeline.rs
 // Reader build pipeline with layered rebuild and version caching
 
 use deadpool_sqlite::Pool;

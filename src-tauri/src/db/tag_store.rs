@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/tag_store.rs
+// mercury4win/src-tauri/db/tag_store.rs
 // Tag persistence — CRUD, merge, alias management, batch tagging
 
 use deadpool_sqlite::Pool;

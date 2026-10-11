@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/commands/reader_cmd.rs
+// mercury4win/src-tauri/commands/reader_cmd.rs
 // Reader pipeline Tauri commands
 
 use deadpool_sqlite::Pool;

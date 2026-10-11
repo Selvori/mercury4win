@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/usage_store.rs
+// mercury4win/src-tauri/db/usage_store.rs
 // LLM usage event persistence
 
 use deadpool_sqlite::Pool;

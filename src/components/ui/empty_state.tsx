@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/empty_state.tsx
+// mercury4win/src/components/ui/empty_state.tsx
 // Reusable empty state component (standardized across app)
 
 import { type ReactNode } from "react";

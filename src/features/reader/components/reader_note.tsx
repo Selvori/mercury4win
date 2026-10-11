@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/reader_note.tsx
+// mercury4win/src/features/reader/components/reader_note.tsx
 // Note editor for entries — Markdown editing with save
 
 import { useState } from "react";

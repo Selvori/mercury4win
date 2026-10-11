@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/layout/app_shell.tsx
+// mercury4win/src/components/layout/app_shell.tsx
 // Three-column resizable layout: sidebar | entry list | reader
 
 import { useState, useCallback, useEffect, useRef } from "react";

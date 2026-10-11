@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/reader/components/reader_pane.tsx
+// mercury4win/src/features/reader/components/reader_pane.tsx
 // Reader main panel — renders article HTML with resizable side panels
 
 import { useQuery } from "@tanstack/react-query";

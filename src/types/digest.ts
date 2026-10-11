@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/digest.ts
+// mercury4win/src/types/digest.ts
 
 export interface DigestTemplate {
   name: string;

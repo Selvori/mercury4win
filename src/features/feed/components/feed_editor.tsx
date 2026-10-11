@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/feed/components/feed_editor.tsx
+// mercury4win/src/features/feed/components/feed_editor.tsx
 // Add/edit feed dialog
 
 import { useState } from "react";

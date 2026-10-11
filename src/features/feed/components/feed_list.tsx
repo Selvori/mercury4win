@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/feed/components/feed_list.tsx
+// mercury4win/src/features/feed/components/feed_list.tsx
 // Feed list sidebar component with add/import/export functionality
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

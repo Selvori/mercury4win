@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/layout/resize_handle.tsx
+// mercury4win/src/components/layout/resize_handle.tsx
 // Draggable resize handle — highlighted only while actively dragging
 
 import { cn } from "@/lib/utils";

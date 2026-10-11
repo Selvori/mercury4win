@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/lib.rs
+// mercury4win/src-tauri/lib.rs
 
 use tauri::Manager;
 

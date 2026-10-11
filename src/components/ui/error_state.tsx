@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/error_state.tsx
+// mercury4win/src/components/ui/error_state.tsx
 // Reusable error state with retry action
 
 import { type ReactNode } from "react";

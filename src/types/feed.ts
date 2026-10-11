@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/feed.ts
+// mercury4win/src/types/feed.ts
 
 export interface Feed {
   id: number;

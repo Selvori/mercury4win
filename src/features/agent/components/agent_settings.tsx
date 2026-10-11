@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/agent/components/agent_settings.tsx
+// mercury4win/src/features/agent/components/agent_settings.tsx
 // Agent settings panel — provider/model/profile management
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

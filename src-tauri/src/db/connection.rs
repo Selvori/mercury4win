@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/connection.rs
+// mercury4win/src-tauri/db/connection.rs
 // SQLite connection pool (deadpool-sqlite, WAL mode)
 
 use deadpool_sqlite::{Config, Pool, Runtime};

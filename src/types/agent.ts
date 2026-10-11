@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/agent.ts
+// mercury4win/src/types/agent.ts
 
 export interface ProviderProfile {
   id: string;

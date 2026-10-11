@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/button.tsx
+// mercury4win/src/components/ui/button.tsx
 // simplified shadcn/ui button (no base-ui dependency)
 
 import { type ButtonHTMLAttributes, forwardRef } from "react";

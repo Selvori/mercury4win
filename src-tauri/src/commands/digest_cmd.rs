@@ -1,4 +1,4 @@
-// mercury4win-linux/src/commands/digest_cmd.rs
+// mercury4win/src/commands/digest_cmd.rs
 // Digest export Tauri commands
 
 use deadpool_sqlite::Pool;

@@ -1,4 +1,4 @@
-// mercury4win-linux/src/lib/constants.ts
+// mercury4win/src/lib/constants.ts
 
 export const APP_NAME = "Mercury";
 export const APP_VERSION = "0.1.0";

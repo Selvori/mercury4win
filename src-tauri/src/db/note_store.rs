@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/note_store.rs
+// mercury4win/src-tauri/db/note_store.rs
 // Entry notes persistence
 
 use deadpool_sqlite::Pool;

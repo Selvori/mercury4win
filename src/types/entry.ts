@@ -1,4 +1,4 @@
-// mercury4win-linux/src/types/entry.ts
+// mercury4win/src/types/entry.ts
 
 export interface Entry {
   id: number;

@@ -1,4 +1,4 @@
-// mercury4win-linux/src/hooks/use_keyboard_shortcuts.ts
+// mercury4win/src/hooks/use_keyboard_shortcuts.ts
 // Keyboard shortcuts for Mercury
 
 import { useEffect } from "react";

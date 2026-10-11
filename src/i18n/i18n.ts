@@ -1,4 +1,4 @@
-// mercury4win-linux/src/i18n/i18n.ts
+// mercury4win/src/i18n/i18n.ts
 // i18next configuration
 
 import i18n from "i18next";

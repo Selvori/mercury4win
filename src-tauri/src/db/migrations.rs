@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/migrations.rs
+// mercury4win/src-tauri/db/migrations.rs
 // Database migration that mirrors the original Mercury schema
 
 use rusqlite::Connection;

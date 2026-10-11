@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/commands/feed_cmd.rs
+// mercury4win/src-tauri/commands/feed_cmd.rs
 // Feed CRUD Tauri commands
 
 use deadpool_sqlite::Pool;

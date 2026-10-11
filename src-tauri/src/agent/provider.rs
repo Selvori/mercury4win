@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/provider.rs
+// mercury4win/src-tauri/agent/provider.rs
 // OpenAI-compatible LLM client with SSE streaming
 
 use reqwest::Client;

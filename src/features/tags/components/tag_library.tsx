@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/tags/components/tag_library.tsx
+// mercury4win/src/features/tags/components/tag_library.tsx
 // Tag library management — edit, merge, delete tags
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

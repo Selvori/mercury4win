@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/layout/sidebar.tsx
+// mercury4win/src/components/layout/sidebar.tsx
 // Left sidebar with feed list and navigation
 
 import { useTranslation } from "react-i18next";

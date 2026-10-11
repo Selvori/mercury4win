@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/reader/extraction.rs
+// mercury4win/src-tauri/reader/extraction.rs
 // Article content extraction via decruft
 
 use decruft::{DecruftOptions, DecruftResult};

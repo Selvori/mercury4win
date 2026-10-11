@@ -1,4 +1,4 @@
-// mercury4win-linux/src/stores/app_store.ts
+// mercury4win/src/stores/app_store.ts
 import { create } from "zustand";
 
 export type Theme = "light" | "dark" | "auto";

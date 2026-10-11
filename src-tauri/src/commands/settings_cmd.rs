@@ -1,4 +1,4 @@
-// mercury4win-linux/src/commands/settings_cmd.rs
+// mercury4win/src/commands/settings_cmd.rs
 // Settings and usage Tauri commands
 
 use deadpool_sqlite::Pool;

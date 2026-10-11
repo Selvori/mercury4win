@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/feed/sync_service.rs
+// mercury4win/src-tauri/feed/sync_service.rs
 // Feed sync service with rate limiting
 
 use deadpool_sqlite::Pool;

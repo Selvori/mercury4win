@@ -1,4 +1,4 @@
-// mercury4win-linux/src/lib/tauri_bindings.ts
+// mercury4win/src/lib/tauri_bindings.ts
 // Type-safe Tauri invoke wrappers
 
 import { invoke } from "@tauri-apps/api/core";

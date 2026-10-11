@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/agent_store.rs
+// mercury4win/src-tauri/db/agent_store.rs
 // Agent provider/model/profile persistence
 
 use deadpool_sqlite::Pool;

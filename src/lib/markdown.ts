@@ -1,4 +1,4 @@
-// mercury4win-linux/src/lib/markdown.ts
+// mercury4win/src/lib/markdown.ts
 // Frontend Markdown rendering (optional - reader uses Rust-rendered HTML)
 
 import { marked } from "marked";

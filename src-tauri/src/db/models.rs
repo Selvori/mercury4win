@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/db/models.rs
+// mercury4win/src-tauri/db/models.rs
 // Rust structs mirroring the original Mercury database schema
 
 use serde::{Deserialize, Serialize};

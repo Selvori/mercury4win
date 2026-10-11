@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/feed/use_cases.rs
+// mercury4win/src-tauri/feed/use_cases.rs
 // Feed CRUD use cases — thin wrappers around db stores
 
 use deadpool_sqlite::Pool;

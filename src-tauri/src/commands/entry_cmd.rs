@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/commands/entry_cmd.rs
+// mercury4win/src-tauri/commands/entry_cmd.rs
 // Entry query and mark Tauri commands
 
 use deadpool_sqlite::Pool;

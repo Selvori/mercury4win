@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/commands/agent_cmd.rs
+// mercury4win/src-tauri/commands/agent_cmd.rs
 // AI agent control Tauri commands
 
 use deadpool_sqlite::Pool;

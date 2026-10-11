@@ -1,4 +1,4 @@
-// mercury4win-linux/src/components/ui/loading_state.tsx
+// mercury4win/src/components/ui/loading_state.tsx
 // Reusable loading spinner component
 
 import { Loader2 } from "lucide-react";

@@ -1,4 +1,4 @@
-// mercury4win-linux/src-tauri/agent/translation.rs
+// mercury4win/src-tauri/agent/translation.rs
 // Translation agent — per-segment concurrency, hash-based cache invalidation
 // Mirrors original Mercury Translation segmentation + hash contract
 

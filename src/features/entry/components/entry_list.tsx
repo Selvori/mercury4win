@@ -1,4 +1,4 @@
-// mercury4win-linux/src/features/entry/components/entry_list.tsx
+// mercury4win/src/features/entry/components/entry_list.tsx
 // Entry list component with pagination, mark read/star/delete
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
