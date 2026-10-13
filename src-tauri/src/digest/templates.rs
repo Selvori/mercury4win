@@ -1,180 +1,253 @@
-// mercury4win/src-tauri/digest/templates.rs
-// Digest template rendering via Handlebars
-
+//! Read-only digest composition: never fetch articles or generate AI results.
+use crate::db::{agent_result_store, content_store, entry_store, note_store};
+use deadpool_sqlite::Pool;
 use handlebars::Handlebars;
-use serde::Serialize;
+use markup5ever_rcdom::NodeData;
+use serde::{Deserialize, Serialize};
+use std::rc::Rc;
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct DigestOptions {
+    pub include_body: bool,
+    pub include_note: bool,
+    pub include_summary: bool,
+}
+
+#[derive(Debug, Serialize)]
+pub struct DigestMissing {
+    pub entry_id: i64,
+    pub title: String,
+    pub field: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct DigestPreview {
+    pub content: String,
+    pub format: String,
+    pub missing: Vec<DigestMissing>,
+}
 
 #[derive(Debug, Clone, Serialize)]
 pub struct DigestEntryData {
     pub title: String,
-    pub byline: Option<String>,
-    pub content: String,
-    pub published_at: Option<String>,
-    pub url: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct DigestTemplateData {
-    pub digest_title: Option<String>,
-    pub generated_at: String,
-    pub entry_count: usize,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub byline: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    pub byline: String,
+    pub url: String,
     pub content: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub url: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub published_at: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub entries: Option<Vec<DigestEntryData>>,
+    pub note: Option<String>,
+    pub summary: Option<String>,
+    pub summary_attribution: Option<String>,
 }
 
-/// Built-in template names and their display info.
-pub const BUILTIN_TEMPLATES: &[(&str, &str, &str)] = &[
-    ("single_text", "Single Entry (HTML)", "Single entry as HTML with embedded CSS"),
-    ("single_markdown", "Single Entry (Markdown)", "Single entry as clean Markdown"),
-    ("multiple_markdown", "Multiple Entries (Markdown)", "Multi-entry digest with separators"),
-];
+pub fn output_format(name: &str, count: usize) -> Result<&'static str, String> {
+    match (name, count) {
+        (_, 0) => Err("Select at least one entry".into()),
+        ("single_markdown", 1) | ("multiple_markdown", _) => Ok("markdown"),
+        ("single_text", 1) => Ok("text"),
+        _ => Err("Unknown digest template or invalid entry count".into()),
+    }
+}
 
-/// Render a digest using one of the built-in templates.
-pub fn render_digest(
-    template_name: &str,
-    data: &DigestTemplateData,
-) -> Result<String, String> {
-    let mut handlebars = Handlebars::new();
+fn optional(value: Option<String>) -> Option<String> {
+    value.filter(|s| !s.trim().is_empty())
+}
 
-    let template_str = match template_name {
-        "single_markdown" => {
-            include_str!("../../resources/digest_templates/single_markdown.hbs")
+/// Metadata is one line and literal in Markdown; optional Markdown stays Markdown.
+fn metadata(value: &str, markdown: bool) -> String {
+    let value = value.split_whitespace().collect::<Vec<_>>().join(" ");
+    if !markdown {
+        return value;
+    }
+    let mut escaped = String::new();
+    for ch in value.chars() {
+        if "\\`*_{}[]()#+-.!|>".contains(ch) {
+            escaped.push('\\');
         }
+        match ch {
+            '<' => escaped.push_str("&lt;"),
+            '&' => escaped.push_str("&amp;"),
+            _ => escaped.push(ch),
+        }
+    }
+    escaped
+}
+
+/// Render Markdown safely, then extract DOM text, preserving paragraphs and URLs.
+pub fn plain_text(markdown: &str) -> String {
+    let html = comrak::markdown_to_html(markdown, &comrak::Options::default());
+    fn text(node: &Rc<htmd::Node>) -> String {
+        if let NodeData::Text { contents } = &node.data {
+            return contents.borrow().to_string();
+        }
+        let tag = match &node.data {
+            NodeData::Element { name, .. } => name.local.as_ref(),
+            _ => "",
+        };
+        if matches!(tag, "script" | "style") {
+            return String::new();
+        }
+        let mut body = node.children.borrow().iter().map(text).collect::<String>();
+        if tag == "a" {
+            if let NodeData::Element { attrs, .. } = &node.data {
+                if let Some(href) = attrs
+                    .borrow()
+                    .iter()
+                    .find(|a| a.name.local.as_ref() == "href")
+                {
+                    if body != href.value.as_ref() {
+                        body.push_str(&format!(" ({})", href.value));
+                    }
+                }
+            }
+        }
+        if matches!(tag, "p" | "li" | "br" | "pre" | "h1" | "h2" | "h3" | "tr") {
+            body.push('\n');
+        }
+        body
+    }
+    htmd::HtmlToMarkdown::new()
+        .html_to_tree(&html)
+        .map(|tree| text(&tree).trim().to_string())
+        .unwrap_or_default()
+}
+
+pub fn render_digest(name: &str, entries: Vec<DigestEntryData>) -> Result<String, String> {
+    output_format(name, entries.len())?;
+    let template = match name {
+        "single_text" => include_str!("../../resources/digest_templates/single_text.hbs"),
+        "single_markdown" => include_str!("../../resources/digest_templates/single_markdown.hbs"),
         "multiple_markdown" => {
             include_str!("../../resources/digest_templates/multiple_markdown.hbs")
         }
-        _ => {
-            include_str!("../../resources/digest_templates/single_text.hbs")
+        _ => unreachable!(),
+    };
+    let mut engine = Handlebars::new();
+    engine.register_escape_fn(handlebars::no_escape);
+    engine.set_strict_mode(true);
+    engine
+        .register_template_string("digest", template)
+        .map_err(|e| format!("Template error: {e}"))?;
+    engine
+        .render(
+            "digest",
+            &serde_json::json!({"digest_title":"Mercury Digest", "entries": entries}),
+        )
+        .map_err(|e| format!("Render error: {e}"))
+}
+
+pub async fn generate_preview(
+    pool: &Pool,
+    ids: &[i64],
+    name: &str,
+    options: &DigestOptions,
+) -> Result<DigestPreview, String> {
+    let format = output_format(name, ids.len())?;
+    let markdown = format == "markdown";
+    let mut entries = Vec::new();
+    let mut missing = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    for &id in ids {
+        if !seen.insert(id) {
+            return Err("Duplicate digest entry".into());
         }
-    };
-
-    handlebars
-        .register_template_string("digest", template_str)
-        .map_err(|e| format!("Template register error: {}", e))?;
-
-    // Enable strict mode and HTML escaping
-    handlebars.register_escape_fn(handlebars::no_escape);
-
-    handlebars
-        .render("digest", data)
-        .map_err(|e| format!("Render error: {}", e))
+        let detail = entry_store::get_entry_detail(pool, id)
+            .await?
+            .ok_or_else(|| format!("Entry {id} not found"))?;
+        let content = content_store::get_content(pool, id).await?;
+        let title =
+            optional(detail.entry.title).ok_or_else(|| format!("Entry {id} has no title"))?;
+        let url =
+            optional(detail.entry.url).ok_or_else(|| format!("Entry {id} has no original URL"))?;
+        let byline = optional(detail.entry.author)
+            .or_else(|| {
+                content
+                    .as_ref()
+                    .and_then(|c| optional(c.readability_byline.clone()))
+            })
+            .or_else(|| optional(detail.feed_title))
+            .unwrap_or_default();
+        let body = if options.include_body {
+            content
+                .as_ref()
+                .filter(|c| {
+                    c.display_mode != "empty" && crate::reader::pipeline::has_current_markdown(c)
+                })
+                .and_then(|c| optional(c.markdown.clone()))
+        } else {
+            None
+        };
+        let note = if options.include_note {
+            note_store::get_note(pool, id)
+                .await?
+                .and_then(|n| optional(Some(n.markdown)))
+        } else {
+            None
+        };
+        let summary_record = if options.include_summary {
+            agent_result_store::latest_summary(pool, id).await?
+        } else {
+            None
+        };
+        let summary = summary_record
+            .as_ref()
+            .filter(|r| r.result.complete)
+            .and_then(|r| optional(r.result.text.clone()));
+        for (wanted, present, field) in [
+            (options.include_body, body.is_some(), "body"),
+            (options.include_note, note.is_some(), "note"),
+            (options.include_summary, summary.is_some(), "summary"),
+        ] {
+            if wanted && !present {
+                missing.push(DigestMissing {
+                    entry_id: id,
+                    title: title.clone(),
+                    field: field.into(),
+                });
+            }
+        }
+        let transform = |s: String| if markdown { s } else { plain_text(&s) };
+        entries.push(DigestEntryData {
+            title: metadata(&title, markdown),
+            byline: metadata(&byline, markdown),
+            url: metadata(&url, markdown),
+            content: body.map(transform),
+            note: note.map(transform),
+            summary: summary.map(transform),
+            summary_attribution: summary_record.map(|r| {
+                metadata(
+                    &format!(
+                        "Generated by {} in {} ({})",
+                        r.result.model_name, r.target_language, r.detail_level
+                    ),
+                    markdown,
+                )
+            }),
+        });
+    }
+    Ok(DigestPreview {
+        content: render_digest(name, entries)?,
+        format: format.into(),
+        missing,
+    })
 }
 
-/// Generate a digest for a single entry.
-pub async fn generate_entry_digest(
-    template_name: &str,
-    entry_title: &str,
-    entry_byline: Option<&str>,
-    entry_content: &str,
-    entry_url: Option<&str>,
-) -> Result<String, String> {
-    let data = DigestTemplateData {
-        digest_title: Some(format!("Digest: {}", entry_title)),
-        generated_at: chrono::Local::now().format("%Y-%m-%d %H:%M").to_string(),
-        entry_count: 1,
-        title: Some(entry_title.to_string()),
-        byline: entry_byline.map(|s| s.to_string()),
-        content: Some(entry_content.to_string()),
-        url: entry_url.map(|s| s.to_string()),
-        published_at: None,
-        entries: None,
-    };
-
-    render_digest(template_name, &data)
-}
-
-/// Generate a multi-entry digest.
-pub async fn generate_multi_digest(
-    template_name: &str,
-    digest_title: Option<&str>,
-    entries: Vec<DigestEntryData>,
-) -> Result<String, String> {
-    let count = entries.len();
-    let data = DigestTemplateData {
-        digest_title: digest_title.map(|s| s.to_string()),
-        generated_at: chrono::Local::now().format("%Y-%m-%d %H:%M").to_string(),
-        entry_count: count,
-        title: None,
-        byline: None,
-        content: None,
-        url: None,
-        published_at: None,
-        entries: Some(entries),
-    };
-
-    render_digest(template_name, &data)
+/// Refuse stale previews so database changes cannot silently alter the export.
+pub async fn export_preview(
+    pool: &Pool,
+    ids: &[i64],
+    name: &str,
+    options: &DigestOptions,
+    path: &str,
+    expected: Option<&str>,
+) -> Result<(), String> {
+    let preview = generate_preview(pool, ids, name, options).await?;
+    if expected.is_some_and(|text| text != preview.content) {
+        return Err("Digest changed; refresh the preview before exporting".into());
+    }
+    tokio::fs::write(path, preview.content.as_bytes())
+        .await
+        .map_err(|e| format!("Write error: {e}"))
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_single_markdown_template() {
-        let result = render_digest(
-            "single_markdown",
-            &DigestTemplateData {
-                digest_title: None,
-                generated_at: "2026-01-01".into(),
-                entry_count: 1,
-                title: Some("Test Article".into()),
-                byline: Some("Author".into()),
-                content: Some("Article content here.".into()),
-                url: None,
-                published_at: None,
-                entries: None,
-            },
-        )
-        .unwrap();
-        assert!(result.contains("Test Article"));
-        assert!(result.contains("Article content here."));
-    }
-
-    #[test]
-    fn test_multiple_markdown_template() {
-        let entries = vec![
-            DigestEntryData {
-                title: "First".into(),
-                byline: None,
-                content: "Content 1".into(),
-                published_at: None,
-                url: None,
-            },
-            DigestEntryData {
-                title: "Second".into(),
-                byline: None,
-                content: "Content 2".into(),
-                published_at: None,
-                url: None,
-            },
-        ];
-        let result = render_digest(
-            "multiple_markdown",
-            &DigestTemplateData {
-                digest_title: Some("My Digest".into()),
-                generated_at: "2026-01-01".into(),
-                entry_count: 2,
-                title: None,
-                byline: None,
-                content: None,
-                url: None,
-                published_at: None,
-                entries: Some(entries),
-            },
-        )
-        .unwrap();
-        assert!(result.contains("My Digest"));
-        assert!(result.contains("First"));
-        assert!(result.contains("Second"));
-    }
-}
+#[path = "m4w_007_tests.rs"]
+mod tests;

@@ -1,17 +1,13 @@
 // mercury4win/src-tauri/feed/use_cases.rs
 // Feed CRUD use cases — thin wrappers around db stores
 
-use deadpool_sqlite::Pool;
-use crate::db::{feed_store, entry_store};
-use crate::db::models::{Feed, FeedWithCounts, SyncResult};
+use crate::db::models::{Feed, SyncResult};
+use crate::db::{entry_store, feed_store};
 use crate::feed::sync_service;
+use deadpool_sqlite::Pool;
 
 /// Add a new feed, fetch its metadata, and return the feed.
-pub async fn subscribe(
-    pool: &Pool,
-    client: &reqwest::Client,
-    url: &str,
-) -> Result<Feed, String> {
+pub async fn subscribe(pool: &Pool, client: &reqwest::Client, url: &str) -> Result<Feed, String> {
     // Fetch the feed first to validate and get title
     let response = client
         .get(url)
@@ -49,10 +45,7 @@ pub async fn subscribe(
 /// Refresh all feeds.
 pub async fn refresh_all(pool: &Pool, client: &reqwest::Client) -> Result<Vec<SyncResult>, String> {
     let feeds = feed_store::list_feeds(pool).await?;
-    let feed_urls: Vec<(i64, String)> = feeds
-        .into_iter()
-        .map(|f| (f.id, f.feed_url))
-        .collect();
+    let feed_urls: Vec<(i64, String)> = feeds.into_iter().map(|f| (f.id, f.feed_url)).collect();
 
     Ok(sync_service::sync_all_feeds(pool, client, feed_urls).await)
 }

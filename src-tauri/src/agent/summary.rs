@@ -1,21 +1,19 @@
 // mercury4win/src-tauri/agent/summary.rs
 // Summary agent — streaming LLM completion with 3 detail levels
 
-use std::collections::HashMap;
 use reqwest::Client;
+use std::collections::HashMap;
 use tauri::ipc::Channel;
 
-use crate::agent::prompt_templates;
-use crate::agent::provider::{self, ChatMessage, ChatCompletionRequest};
+use crate::agent::provider::{self, ChatCompletionRequest, ChatMessage};
 use crate::agent::runtime::SharedAgentRuntime;
-use crate::db::{entry_store, content_store, usage_store};
-use crate::db::models::LlmUsageEvent;
+use crate::db::agent_result_store::{self, AgentResult, ResultSlot};
 
 /// Run a streaming summary task. Pushes chunks through the Channel.
 pub async fn run_summary(
     pool: &deadpool_sqlite::Pool,
     client: &Client,
-    runtime: &SharedAgentRuntime,
+    _runtime: &SharedAgentRuntime,
     entry_id: i64,
     target_language: &str,
     detail_level: &str,
@@ -24,26 +22,57 @@ pub async fn run_summary(
     model_name: &str,
     on_event: Channel<String>,
 ) -> Result<(), String> {
-    // Load entry detail
-    let detail = entry_store::get_entry_detail(pool, entry_id)
-        .await?
-        .ok_or("Entry not found")?;
+    crate::agent::usage::scope(
+        pool,
+        entry_id,
+        "summary",
+        run_summary_inner(
+            pool,
+            client,
+            _runtime,
+            entry_id,
+            target_language,
+            detail_level,
+            provider_base_url,
+            api_key,
+            model_name,
+            on_event,
+        ),
+    )
+    .await
+}
 
-    let content = content_store::get_content(pool, entry_id).await?;
-    let markdown = content
-        .as_ref()
-        .and_then(|c| c.markdown.as_deref())
-        .unwrap_or("");
+async fn run_summary_inner(
+    pool: &deadpool_sqlite::Pool,
+    client: &Client,
+    _runtime: &SharedAgentRuntime,
+    entry_id: i64,
+    target_language: &str,
+    detail_level: &str,
+    provider_base_url: &str,
+    api_key: &str,
+    model_name: &str,
+    on_event: Channel<String>,
+) -> Result<(), String> {
+    let source = agent_result_store::source_snapshot(pool, entry_id).await?;
+    if source.markdown.trim().is_empty() {
+        return Err("No summarizable content found".into());
+    }
+    let slot = ResultSlot::new(
+        entry_id,
+        "summary",
+        target_language,
+        detail_level,
+        &source.hash,
+    );
+    let markdown = &source.markdown;
 
     // Load and render prompt template
-    let template = prompt_templates::load_builtin_template("summary", None)?;
+    let template = crate::agent::configuration::template("summary", None)?;
 
     let mut params = HashMap::new();
-    params.insert("title".into(), detail.entry.title.unwrap_or_default());
-    params.insert(
-        "byline".into(),
-        detail.entry.author.unwrap_or_default(),
-    );
+    params.insert("title".into(), source.title);
+    params.insert("byline".into(), source.author);
     params.insert("content".into(), markdown.to_string());
     // Map locale codes to readable language names for the LLM
     let lang_name = match target_language {
@@ -84,43 +113,52 @@ pub async fn run_summary(
     let request = ChatCompletionRequest {
         model: model_name.to_string(),
         messages,
-        temperature: Some(0.5),
+        temperature: Some(crate::agent::configuration::request_parameters("summary").temperature),
         top_p: None,
-        max_tokens: Some(1024),
+        max_tokens: Some(crate::agent::configuration::request_parameters("summary").max_tokens),
         stream: None,
     };
 
     // Stream via provider
-    match provider::chat_completion_stream(
-        client, provider_base_url, api_key, request, on_event.clone(),
+    match provider::chat_completion_stream_with_content(
+        client,
+        provider_base_url,
+        api_key,
+        request,
+        on_event.clone(),
     )
     .await
     {
-        Ok(usage) => {
-            // Signal completion to the frontend
-            let _ = on_event.send(r#"{"type":"done"}"#.to_string());
-
-            // Log usage
-            let _ = usage_store::insert_usage_event(
+        Ok((usage, text)) => {
+            if text.trim().is_empty() {
+                return Err("Empty summary response".into());
+            }
+            let actual_model = usage
+                .route
+                .as_ref()
+                .map(|r| r.model_name.as_str())
+                .unwrap_or(model_name);
+            slot.save(
                 pool,
-                &LlmUsageEvent {
-                    id: 0,
-                    task_run_id: None,
-                    provider_name: Some("default".into()),
-                    model_name: Some(model_name.into()),
-                    agent_type: Some("summary".into()),
-                    prompt_tokens: Some(usage.prompt_tokens as i64),
-                    completion_tokens: Some(usage.completion_tokens as i64),
-                    total_tokens: Some(usage.total_tokens as i64),
-                    request_status: Some("success".into()),
-                    created_at: String::new(),
+                &AgentResult {
+                    request_route: usage.route.clone(),
+                    segment_routes: Vec::new(),
+                    segment_ids: Vec::new(),
+                    segment_errors: Vec::new(),
+                    source_hash: source.hash,
+                    text: Some(text),
+                    segments: vec![],
+                    complete: true,
+                    model_name: actual_model.into(),
                 },
             )
-            .await;
+            .await?;
+            // No more awaits after the terminal Channel event.
+            let _ = on_event.send(r#"{"type":"done"}"#.to_string());
             Ok(())
         }
         Err(e) => {
-            let _ = on_event.send(format!(r#"{{"type":"error","message":"{}"}}"#, e));
+            let _ = on_event.send(provider::summary_error_event(&e));
             Err(e)
         }
     }

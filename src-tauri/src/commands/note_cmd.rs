@@ -1,15 +1,12 @@
 // mercury4win/src-tauri/commands/note_cmd.rs
 // Entry notes Tauri commands
 
+use crate::db::{models::EntryNote, note_store};
 use deadpool_sqlite::Pool;
 use tauri::State;
-use crate::db::{note_store, models::EntryNote};
 
 #[tauri::command]
-pub async fn get_note(
-    pool: State<'_, Pool>,
-    entry_id: i64,
-) -> Result<Option<EntryNote>, String> {
+pub async fn get_note(pool: State<'_, Pool>, entry_id: i64) -> Result<Option<EntryNote>, String> {
     note_store::get_note(&pool, entry_id).await
 }
 
@@ -23,9 +20,6 @@ pub async fn save_note(
 }
 
 #[tauri::command]
-pub async fn delete_note(
-    pool: State<'_, Pool>,
-    entry_id: i64,
-) -> Result<(), String> {
+pub async fn delete_note(pool: State<'_, Pool>, entry_id: i64) -> Result<(), String> {
     note_store::delete_note(&pool, entry_id).await
 }

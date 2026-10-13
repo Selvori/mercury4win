@@ -2772,6 +2772,7 @@ dependencies = [
  "htmd",
  "html-escape",
  "log",
+ "markup5ever_rcdom",
  "opml",
  "reqwest 0.12.28",
  "rusqlite",

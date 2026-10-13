@@ -1,14 +1,12 @@
 // mercury4win/src-tauri/commands/feed_cmd.rs
 // Feed CRUD Tauri commands
 
-use deadpool_sqlite::Pool;
-use std::sync::Arc;
-use tauri::{State, ipc::Channel};
-use tokio::sync::Mutex;
-use crate::db::{feed_store, entry_store};
-use crate::db::models::{Feed, FeedWithCounts, SyncResult, ImportResult, ImportProgress};
-use crate::feed::use_cases;
+use crate::db::feed_store;
+use crate::db::models::{Feed, FeedWithCounts, ImportProgress, ImportResult, SyncResult};
 use crate::feed::opml_import;
+use crate::feed::use_cases;
+use deadpool_sqlite::Pool;
+use tauri::{ipc::Channel, State};
 
 pub struct AppClient(pub reqwest::Client);
 
@@ -73,42 +71,66 @@ pub async fn sync_all_feeds_stream(
     let feeds = feed_store::list_feeds(&pool).await?;
     let total = feeds.len();
     let _ = on_progress.send(ImportProgress {
-        status: "start".into(), feed_url: String::new(), title: None,
-        error: None, current: 0, total,
+        status: "start".into(),
+        feed_url: String::new(),
+        title: None,
+        error: None,
+        current: 0,
+        total,
     });
 
     for (idx, feed) in feeds.iter().enumerate() {
         let current = idx + 1;
         let _ = on_progress.send(ImportProgress {
-            status: "processing".into(), feed_url: feed.feed_url.clone(),
-            title: feed.title.clone(), error: None, current, total,
+            status: "processing".into(),
+            feed_url: feed.feed_url.clone(),
+            title: feed.title.clone(),
+            error: None,
+            current,
+            total,
         });
 
         match use_cases::refresh_single(&pool, &client.0, feed.id).await {
             Ok(result) if result.error.is_none() => {
                 let _ = on_progress.send(ImportProgress {
-                    status: "completed".into(), feed_url: feed.feed_url.clone(),
-                    title: feed.title.clone(), error: None, current, total,
+                    status: "completed".into(),
+                    feed_url: feed.feed_url.clone(),
+                    title: feed.title.clone(),
+                    error: None,
+                    current,
+                    total,
                 });
             }
             Ok(result) => {
                 let _ = on_progress.send(ImportProgress {
-                    status: "error".into(), feed_url: feed.feed_url.clone(),
-                    title: feed.title.clone(), error: result.error, current, total,
+                    status: "error".into(),
+                    feed_url: feed.feed_url.clone(),
+                    title: feed.title.clone(),
+                    error: result.error,
+                    current,
+                    total,
                 });
             }
             Err(error) => {
                 let _ = on_progress.send(ImportProgress {
-                    status: "error".into(), feed_url: feed.feed_url.clone(),
-                    title: feed.title.clone(), error: Some(error), current, total,
+                    status: "error".into(),
+                    feed_url: feed.feed_url.clone(),
+                    title: feed.title.clone(),
+                    error: Some(error),
+                    current,
+                    total,
                 });
             }
         }
     }
 
     let _ = on_progress.send(ImportProgress {
-        status: "done".into(), feed_url: String::new(), title: None,
-        error: None, current: total, total,
+        status: "done".into(),
+        feed_url: String::new(),
+        title: None,
+        error: None,
+        current: total,
+        total,
     });
     Ok(())
 }

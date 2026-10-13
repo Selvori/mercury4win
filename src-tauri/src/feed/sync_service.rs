@@ -1,10 +1,10 @@
 // mercury4win/src-tauri/feed/sync_service.rs
 // Feed sync service with rate limiting
 
-use deadpool_sqlite::Pool;
-use crate::db::{feed_store, entry_store};
 use crate::db::models::SyncResult;
+use crate::db::{entry_store, feed_store};
 use crate::feed::parser::parse_feed_bytes;
+use deadpool_sqlite::Pool;
 
 /// Sync a single feed: fetch, parse, upsert entries.
 pub async fn sync_feed(

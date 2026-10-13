@@ -1,10 +1,9 @@
 // mercury4win/src-tauri/feed/parser.rs
 // feed-rs wrapper for RSS/Atom/JSON Feed parsing
 
+use crate::db::entry_store::RawEntryData;
 use feed_rs::parser;
 use url::Url;
-use crate::db::models::Feed;
-use crate::db::entry_store::RawEntryData;
 
 /// Parsed feed with metadata and entries
 pub struct ParsedFeed {
@@ -42,14 +41,17 @@ pub fn parse_feed_bytes(bytes: &[u8], feed_url: Option<&str>) -> Result<ParsedFe
                 .and_then(|href| resolve_url(&href, base_url.as_ref()));
 
             let title = e.title.as_ref().map(|t| t.content.clone());
-            // Some RSS feeds (including antirez.com) put the useful article
-            // body in content:encoded and omit RSS description. Preserve
-            // either field so the reader can render the feed item directly.
-            let summary = e
-                .content
-                .as_ref()
-                .and_then(|c| c.body.clone())
-                .or_else(|| e.summary.as_ref().map(|s| s.content.clone()));
+            // Preserve the syndication field's meaning. A description/summary
+            // is a teaser even when it contains HTML or happens to be long.
+            let summary = e.summary.as_ref().map(|s| s.content.clone());
+            let content = e.content.as_ref().filter(|c| {
+                matches!(
+                    c.content_type.as_str(),
+                    "text/html" | "application/xhtml+xml" | "text/plain"
+                ) && c.body.as_ref().is_some_and(|b| !b.trim().is_empty())
+            });
+            let feed_content = content.and_then(|c| c.body.clone());
+            let feed_content_type = content.map(|c| c.content_type.to_string());
             let published_at = e.published.or(e.updated).map(|d| d.to_rfc3339());
             let author = e.authors.first().map(|a| a.name.clone());
 
@@ -60,6 +62,8 @@ pub fn parse_feed_bytes(bytes: &[u8], feed_url: Option<&str>) -> Result<ParsedFe
                 author,
                 published_at,
                 summary,
+                feed_content,
+                feed_content_type,
             }
         })
         .collect();

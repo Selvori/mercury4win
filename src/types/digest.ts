@@ -11,3 +11,15 @@ export interface DigestExport {
   content: string;
   format: string;
 }
+
+export interface DigestOptions {
+  include_body: boolean;
+  include_note: boolean;
+  include_summary: boolean;
+}
+
+export interface DigestPreview {
+  content: string;
+  format: "markdown" | "text";
+  missing: { entry_id: number; title: string; field: "body" | "note" | "summary" }[];
+}

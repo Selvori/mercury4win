@@ -1,6 +1,21 @@
+{{#each entries}}
 # {{title}}
-{{#byline}}*{{byline}}*{{/byline}}
+{{#if byline}}
+Author: {{byline}}
+{{/if}}
+Source: {{url}}
+{{#if summary}}
+## Summary
 
----
+{{summary}}
 
-{{{content}}}
+{{summary_attribution}}
+{{/if}}{{#if note}}
+## My Take
+
+{{note}}
+{{/if}}{{#if content}}
+## Article
+
+{{content}}
+{{/if}}{{/each}}

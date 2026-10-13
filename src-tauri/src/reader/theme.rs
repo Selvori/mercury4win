@@ -1,8 +1,6 @@
 // mercury4win/src-tauri/reader/theme.rs
 // Theme CSS generation for reader content (classic/paper, light/dark)
 
-use crate::db::models::Content;
-
 /// Font configuration for reader content
 #[derive(Debug, Clone)]
 pub struct FontConfig {
@@ -25,7 +23,11 @@ pub fn wrap_with_theme(body_html: &str, theme_id: &str) -> String {
 }
 
 /// Wrap rendered HTML body with article wrapper, theme CSS, and custom font settings.
-pub fn wrap_with_theme_and_font(body_html: &str, theme_id: &str, font_config: &FontConfig) -> String {
+pub fn wrap_with_theme_and_font(
+    body_html: &str,
+    theme_id: &str,
+    font_config: &FontConfig,
+) -> String {
     let parts: Vec<&str> = theme_id.split('-').collect();
     let (style, color_scheme) = match parts.as_slice() {
         [style, color] => (*style, *color),
@@ -48,9 +50,19 @@ pub fn wrap_with_theme_and_font(body_html: &str, theme_id: &str, font_config: &F
 }
 
 fn css_for_theme(style: &str, color_scheme: &str, font_config: &FontConfig) -> String {
-    let (bg, text, muted, accent) = match color_scheme {
-        "dark" => ("#1a1a2e", "#e0e0e0", "#888", "#6ca0ff"),
-        _ => ("#ffffff", "#1a1a1a", "#666", "#2563eb"),
+    // Paper colors follow Mercury's existing light/dark preset. Explicit font
+    // preferences continue to override typography for either preset.
+    let (bg, text, muted, accent, code_bg, border_color) = match (style, color_scheme) {
+        ("paper", "dark") => (
+            "#1f1a16", "#e8dccf", "#bfae9a", "#d8b07a", "#2a221c", "#5a4a3c",
+        ),
+        ("paper", _) => (
+            "#f5efe6", "#3b2f24", "#6b5b4b", "#7a4f16", "#efe5d8", "#d3c3b4",
+        ),
+        (_, "dark") => ("#1a1a2e", "#e0e0e0", "#888", "#6ca0ff", "#2a2a3e", "#333"),
+        _ => (
+            "#ffffff", "#1a1a1a", "#666", "#2563eb", "#f3f4f6", "#e5e7eb",
+        ),
     };
 
     // User's explicit font family choice takes precedence over theme style default.
@@ -141,9 +153,9 @@ figcaption {{ font-size: 0.9em; color: {muted}; margin-top: 0.5rem; }}
         font_family = font,
         accent = accent,
         muted = muted,
-        code_bg = if color_scheme == "dark" { "#2a2a3e" } else { "#f3f4f6" },
+        code_bg = code_bg,
         mono_font = "\"JetBrains Mono\", ui-monospace, monospace",
-        border_color = if color_scheme == "dark" { "#333" } else { "#e5e7eb" },
+        border_color = border_color,
     )
 }
 

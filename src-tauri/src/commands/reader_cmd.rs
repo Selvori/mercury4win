@@ -1,12 +1,11 @@
 // mercury4win/src-tauri/commands/reader_cmd.rs
 // Reader pipeline Tauri commands
 
-use deadpool_sqlite::Pool;
-use reqwest::Client;
-use tauri::State;
 use crate::commands::feed_cmd::AppClient;
 use crate::reader::pipeline;
 use crate::reader::theme::FontConfig;
+use deadpool_sqlite::Pool;
+use tauri::State;
 
 /// Build a FontConfig from optional command params, falling back to defaults.
 fn font_config_from(font_family: Option<String>, font_size: Option<u32>) -> FontConfig {

@@ -12,10 +12,7 @@ pub async fn create_pool(db_path: &str) -> Result<Pool, Box<dyn std::error::Erro
     }
 
     let config = Config::new(db_path);
-    let pool = config
-        .builder(Runtime::Tokio1)?
-        .max_size(8)
-        .build()?;
+    let pool = config.builder(Runtime::Tokio1)?.max_size(8).build()?;
 
     // Initialize WAL mode on first connection
     let conn = pool.get().await?;
@@ -24,18 +21,16 @@ pub async fn create_pool(db_path: &str) -> Result<Pool, Box<dyn std::error::Erro
             "PRAGMA journal_mode=WAL;\
              PRAGMA synchronous=NORMAL;\
              PRAGMA foreign_keys=ON;\
-             PRAGMA busy_timeout=5000;"
+             PRAGMA busy_timeout=5000;",
         )
-    }).await??;
+    })
+    .await??;
 
     Ok(pool)
 }
 
 /// Retry wrapper for SQLITE_BUSY errors.
-pub fn with_retry<T, F>(
-    _conn: &rusqlite::Connection,
-    f: F,
-) -> Result<T, rusqlite::Error>
+pub fn with_retry<T, F>(_conn: &rusqlite::Connection, f: F) -> Result<T, rusqlite::Error>
 where
     F: Fn() -> Result<T, rusqlite::Error>,
 {

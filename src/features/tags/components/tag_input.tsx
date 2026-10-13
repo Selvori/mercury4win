@@ -45,11 +45,14 @@ export function TagInput({ selected_tags, on_add, on_remove }: Props) {
   }
 
   function handle_key_down(e: React.KeyboardEvent) {
+    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229 || e.repeat) return;
     if (e.key === "Enter" && input.trim()) {
       e.preventDefault();
       handle_add(input);
     }
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && show_suggestions) {
+      e.preventDefault();
+      e.stopPropagation();
       set_show_suggestions(false);
     }
   }
@@ -81,6 +84,7 @@ export function TagInput({ selected_tags, on_add, on_remove }: Props) {
           >
             {tag.name}
             <button
+              aria-label={t("tagging.remove") + ": " + tag.name}
               onClick={() => on_remove(tag.id)}
               className="ml-0.5 rounded-full p-0.5 hover:bg-black/10 dark:hover:bg-white/10"
             >
@@ -102,10 +106,12 @@ export function TagInput({ selected_tags, on_add, on_remove }: Props) {
           onFocus={() => set_show_suggestions(true)}
           onKeyDown={handle_key_down}
           placeholder={t("tagging.addTag")}
+          aria-label={t("tagging.addTag")}
           className="flex-1 h-7 rounded-md border border-border bg-transparent px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
         />
         {input.trim() && (
           <button
+            aria-label={t("tagging.addTag")}
             onClick={() => handle_add(input)}
             className="h-7 w-7 rounded-md hover:bg-accent flex items-center justify-center"
           >

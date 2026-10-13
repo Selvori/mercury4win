@@ -2,12 +2,16 @@
 // Tagging panel — AI tag suggestions + manual tag input
 
 import { useState, useEffect } from "react";
+import { Channel } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Tag, Sparkles, Loader2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { run_tagging, add_tag, remove_tag, load_entry_detail } from "@/lib/tauri_bindings";
+import { run_tagging, add_tag, remove_tag, load_entry_detail, local_tag_suggestions, list_tags } from "@/lib/tauri_bindings";
+import { invalidate_tag_queries } from "@/features/tags/lib/tag_queries";
 import { cn } from "@/lib/utils";
+import { useReaderRequest } from "../hooks/use_reader_request";
+import { useAgentRequest } from "../hooks/use_agent_request";
 
 interface Props {
   entry_id: number;
@@ -20,6 +24,12 @@ export function ReaderTagging({ entry_id }: Props) {
   const [applied_tags, set_applied_tags] = useState<Set<string>>(new Set());
   const [manual_tag, set_manual_tag] = useState("");
   const [error, set_error] = useState<string | null>(null);
+  const agent = useAgentRequest(entry_id, "tagging");
+  const { begin_request: begin_suggestion } = agent;
+  const begin_tag_change = useReaderRequest(entry_id);
+  const { data: local } = useQuery({ queryKey: ["local_tag_suggestions", entry_id], queryFn: () => local_tag_suggestions(entry_id), retry: false });
+  const { data: existing } = useQuery({ queryKey: ["tags", manual_tag], queryFn: () => list_tags(manual_tag || undefined), retry: false });
+  const visible_suggestions = suggestions.length ? suggestions : local ?? [];
 
   // Load existing tags for this entry
   const { data: entry_detail } = useQuery({
@@ -37,63 +47,72 @@ export function ReaderTagging({ entry_id }: Props) {
     }
   }, [entry_detail]);
 
-  // Clear suggestions and error only when switching to a different entry
-  useEffect(() => {
-    set_suggestions([]);
-    set_error(null);
-  }, [entry_id]);
-
   const suggest_mutation = useMutation({
-    mutationFn: () => run_tagging(entry_id),
-    onSuccess: (tags) => {
+    mutationFn: (request: ReturnType<typeof begin_suggestion>) => {
+      const channel = new Channel<string>();
+      channel.onmessage = (event) => {
+        if (!request.is_current()) return;
+        try { const message = JSON.parse(event); if (!request.handle_event(message) && message.type === "notice") set_error(message.message); } catch { /* Ignore invalid lifecycle messages. */ }
+      };
+      return run_tagging(request.entry_id, channel, request.request_id);
+    },
+    onSuccess: (tags, request) => {
+      if (!request.is_current()) return;
       if (!tags || tags.length === 0) {
-        set_error("AI returned no tags for this article. Try again or add tags manually.");
+        set_error(t("tagging.noAiSuggestions"));
       } else {
         set_suggestions(tags);
         set_error(null);
       }
+      request.finish();
     },
-    onError: (e) => {
+    onError: (e, request) => {
+      if (!request.is_current()) return;
       const msg = String(e);
       // Clean up common error prefixes for readability
-      set_error(msg.replace(/^API error:\s*/, "").replace(/^HTTP error:\s*/, ""));
+      const cancelled = /^(?:Error: )?Agent task cancelled:/.test(msg);
+      if (!cancelled) set_error(msg.replace(/^API error:\s*/, "").replace(/^HTTP error:\s*/, ""));
+      request.finish(cancelled);
     },
   });
 
   const add_tag_mutation = useMutation({
-    mutationFn: (name: string) => add_tag(entry_id, name),
-    onSuccess: (_tag, name) => {
+    mutationFn: (snapshot: { name: string; request: ReturnType<typeof begin_tag_change> }) =>
+      add_tag(snapshot.request.entry_id, snapshot.name),
+    onSuccess: (_tag, { name, request }) => {
       // Remove the added tag from suggestions (don't clear all)
-      set_suggestions((prev) => prev.filter((t) => t !== name));
-      query_client.invalidateQueries({ queryKey: ["tags"] });
-      query_client.invalidateQueries({ queryKey: ["entry_detail", entry_id] });
+      if (request.is_current()) set_suggestions((prev) => prev.filter((t) => t !== name));
+      invalidate_tag_queries(query_client, request.entry_id);
     },
+    onError: (e, { request }) => { if (request.is_current()) set_error(String(e)); },
   });
 
   const remove_tag_mutation = useMutation({
-    mutationFn: (tag_id: number) => remove_tag(entry_id, tag_id),
-    onSuccess: () => {
-      query_client.invalidateQueries({ queryKey: ["entry_detail", entry_id] });
-      query_client.invalidateQueries({ queryKey: ["tags"] });
+    mutationFn: (snapshot: { entry_id: number; tag_id: number }) =>
+      remove_tag(snapshot.entry_id, snapshot.tag_id),
+    onSuccess: (_result, snapshot) => {
+      invalidate_tag_queries(query_client, snapshot.entry_id);
     },
+    onError: (e) => set_error(String(e)),
   });
 
   function handle_remove_from_applied(tag_name: string) {
     const tag_info = entry_detail?.tags.find((t) => t.name === tag_name);
     if (tag_info) {
-      remove_tag_mutation.mutate(tag_info.tag_id);
+      remove_tag_mutation.mutate({ entry_id, tag_id: tag_info.tag_id });
     }
   }
 
   function handle_add_manual() {
     const name = manual_tag.trim();
     if (!name) return;
-    add_tag_mutation.mutate(name);
+    add_tag_mutation.mutate({ name, request: begin_tag_change() });
     set_manual_tag("");
   }
 
   function handle_key_down(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") handle_add_manual();
+    if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229 || e.repeat) return;
+    if (e.key === "Enter") { e.preventDefault(); handle_add_manual(); }
   }
 
   return (
@@ -105,13 +124,21 @@ export function ReaderTagging({ entry_id }: Props) {
           size="sm"
           variant="ghost"
           className="h-6 text-xs"
-          onClick={() => suggest_mutation.mutate()}
-          disabled={suggest_mutation.isPending}
+          onClick={() => suggest_mutation.mutate(begin_suggestion())}
+          disabled={agent.is_pending}
         >
           <Sparkles className="mr-1 h-3 w-3" />
-          {suggest_mutation.isPending ? t("tagging.analyzing") : t("tagging.suggestTags")}
+          {agent.is_pending ? t("tagging.analyzing") : t("tagging.suggestTags")}
         </Button>
       </div>
+
+      {(agent.is_pending || agent.phase === "cancelled") && (
+        <div className="flex items-center gap-2 border-b border-border px-3 py-2 text-xs" role="status">
+          <span className="flex-1">{t(agent.phase === "waiting" ? "agentTask.waiting" : agent.phase === "cancelling" ? "agentTask.cancelling" : agent.phase === "cancelled" ? "agentTask.cancelled" : agent.background_running ? "agentTask.background" : "agentTask.running")}</span>
+          {agent.is_pending && <Button size="sm" variant="ghost" onClick={agent.cancel} disabled={agent.phase === "cancelling"}>{t("agentTask.cancel")}</Button>}
+        </div>
+      )}
+      {agent.cancel_error && <p role="alert" className="px-3 py-2 text-sm text-destructive">{agent.cancel_error}</p>}
 
       <div className="flex-1 overflow-y-auto p-4">
         {/* Manual tag input */}
@@ -122,6 +149,7 @@ export function ReaderTagging({ entry_id }: Props) {
             onChange={(e) => set_manual_tag(e.target.value)}
             onKeyDown={handle_key_down}
             placeholder={t("tagging.addTag")}
+            aria-label={t("tagging.addTag")}
             className="flex-1 h-8 rounded-md border border-border bg-transparent px-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
           />
           <Button
@@ -129,30 +157,31 @@ export function ReaderTagging({ entry_id }: Props) {
             variant="outline"
             className="h-8"
             onClick={handle_add_manual}
-            disabled={!manual_tag.trim()}
+            aria-label={t("tagging.addTag")}
+            disabled={!manual_tag.trim() || add_tag_mutation.isPending}
           >
             <Plus className="h-3.5 w-3.5" />
           </Button>
         </div>
 
         {/* AI suggestions */}
-        {suggest_mutation.isPending && (
+        {agent.is_pending && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
             <Loader2 className="h-4 w-4 animate-spin" />
-            {t("tagging.analyzingArticle")}
+            {t(agent.phase === "waiting" ? "agentTask.waiting" : "tagging.analyzingArticle")}
           </div>
         )}
 
         {error && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 mb-4">
-            <p className="text-sm text-destructive whitespace-pre-wrap break-words">{error}</p>
+            <p role="alert" className="text-sm text-destructive whitespace-pre-wrap break-words">{error}</p>
           </div>
         )}
 
-        {suggestions.length > 0 && (
+        {visible_suggestions.length > 0 && (
           (() => {
             const applied_names = new Set((entry_detail?.tags ?? []).map((t) => t.name));
-            const remaining = suggestions.filter((t) => !applied_names.has(t));
+            const remaining = visible_suggestions.filter((t) => !applied_names.has(t));
             if (!remaining.length) return null;
             return (
           <div className="mb-4">
@@ -161,7 +190,7 @@ export function ReaderTagging({ entry_id }: Props) {
               {remaining.map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => add_tag_mutation.mutate(tag)}
+                  onClick={() => add_tag_mutation.mutate({ name: tag, request: begin_tag_change() })}
                   disabled={add_tag_mutation.isPending}
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs",
@@ -179,6 +208,10 @@ export function ReaderTagging({ entry_id }: Props) {
           })()
         )}
 
+        {(existing ?? []).some((tag) => !tag.is_provisional && !applied_tags.has(tag.name)) && <div className="mb-4">
+          <p className="mb-2 text-xs text-muted-foreground">{t("tagging.existing")}</p>
+          <div className="flex flex-wrap gap-1.5">{(existing ?? []).filter((tag) => !tag.is_provisional && !applied_tags.has(tag.name) && !visible_suggestions.includes(tag.name)).slice(0, 10).map((tag) => <Button key={tag.id} size="sm" variant="outline" disabled={add_tag_mutation.isPending} onClick={() => add_tag_mutation.mutate({ name: tag.name, request: begin_tag_change() })}>{tag.name}</Button>)}</div>
+        </div>}
         {/* Applied tags */}
         {applied_tags.size > 0 && (
           <div>
@@ -192,6 +225,8 @@ export function ReaderTagging({ entry_id }: Props) {
                   <Tag className="h-3 w-3" />
                   {tag}
                   <button
+                    aria-label={t("tagging.remove") + ": " + tag}
+                    disabled={remove_tag_mutation.isPending}
                     onClick={() => handle_remove_from_applied(tag)}
                     className="ml-0.5 rounded-full p-0.5 hover:bg-destructive/20"
                   >
@@ -203,7 +238,7 @@ export function ReaderTagging({ entry_id }: Props) {
           </div>
         )}
 
-        {!suggestions.length && !applied_tags.size && !suggest_mutation.isPending && (
+        {!visible_suggestions.length && !applied_tags.size && !agent.is_pending && (
           <div className="flex h-full flex-col items-center justify-center text-center">
             <Tag className="h-8 w-8 text-muted-foreground/50" />
             <p className="mt-2 text-sm text-muted-foreground">

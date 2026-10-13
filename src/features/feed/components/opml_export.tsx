@@ -130,13 +130,13 @@ export function OpmlExport({ open, on_close }: Props) {
               )}
 
               {export_mutation.isError && (
-                <p className="text-xs text-destructive">
+                <p role="alert" className="text-xs text-destructive">
                   {t("opml.exportError")}: {String(export_mutation.error)}
                 </p>
               )}
             </>
           ) : (
-            <div className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
+            <div role="status" className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
               <CheckCircle2 className="h-4 w-4" />
               {t("opml.exportSuccess", { count: ids_to_export.length })}
             </div>
@@ -159,7 +159,7 @@ export function OpmlExport({ open, on_close }: Props) {
             </>
           ) : (
             <Button type="button" onClick={handle_close}>
-              Done
+              {t("common.done")}
             </Button>
           )}
         </DialogFooter>

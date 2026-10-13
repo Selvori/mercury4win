@@ -2,6 +2,7 @@
 // Font settings dialog for reader customization
 
 import { useTranslation } from "react-i18next";
+import { useId } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useAppStore, type FontFamily } from "@/stores/app_store";
+import { useAppStore, type FontFamily, type ReaderStyle, type Theme } from "@/stores/app_store";
 
 interface Props {
   open: boolean;
@@ -29,6 +30,13 @@ export function FontSettingsDialog({ open, on_close }: Props) {
   const font_size = useAppStore((s) => s.font_size);
   const set_font_family = useAppStore((s) => s.set_font_family);
   const set_font_size = useAppStore((s) => s.set_font_size);
+  const reader_style = useAppStore((s) => s.reader_style);
+  const set_reader_style = useAppStore((s) => s.set_reader_style);
+  const theme = useAppStore((s) => s.theme);
+  const set_theme = useAppStore((s) => s.set_theme);
+  const style_id = useId();
+  const theme_id = useId();
+  const font_size_id = useId();
 
   const font_families: { value: FontFamily; label: string }[] = [
     { value: "sans-serif", label: t("fontSettings.sansSerif") },
@@ -40,10 +48,28 @@ export function FontSettingsDialog({ open, on_close }: Props) {
     <Dialog open={open} onOpenChange={(o) => !o && on_close()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("fontSettings.title")}</DialogTitle>
+          <DialogTitle>{t("readerSettings.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor={style_id} className="mb-2 block text-sm font-medium">{t("readerSettings.style")}</label>
+              <select id={style_id} value={reader_style} onChange={(e) => set_reader_style(e.target.value as ReaderStyle)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
+                <option value="classic">{t("readerSettings.classic")}</option>
+                <option value="paper">{t("readerSettings.paper")}</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor={theme_id} className="mb-2 block text-sm font-medium">{t("readerSettings.mode")}</label>
+              <select id={theme_id} value={theme} onChange={(e) => set_theme(e.target.value as Theme)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
+                <option value="auto">{t("readerSettings.auto")}</option>
+                <option value="light">{t("readerSettings.light")}</option>
+                <option value="dark">{t("readerSettings.dark")}</option>
+              </select>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">{t("readerSettings.modeHint")}</p>
           {/* Font family */}
           <div>
             <label className="mb-2 block text-sm font-medium">
@@ -53,6 +79,7 @@ export function FontSettingsDialog({ open, on_close }: Props) {
               {font_families.map((ff) => (
                 <button
                   key={ff.value}
+                  aria-pressed={font_family === ff.value}
                   onClick={() => set_font_family(ff.value)}
                   style={{ fontFamily: PREVIEW_FONTS[ff.value] }}
                   className={`rounded-md border px-3 py-2 text-sm transition-colors ${
@@ -69,7 +96,7 @@ export function FontSettingsDialog({ open, on_close }: Props) {
 
           {/* Font size */}
           <div>
-            <label className="mb-2 block text-sm font-medium">
+            <label htmlFor={font_size_id} className="mb-2 block text-sm font-medium">
               {t("fontSettings.fontSize")}
               <span className="ml-2 text-muted-foreground">{font_size}px</span>
             </label>
@@ -84,6 +111,7 @@ export function FontSettingsDialog({ open, on_close }: Props) {
                 −
               </Button>
               <input
+                id={font_size_id}
                 type="range"
                 min="12"
                 max="24"

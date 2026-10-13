@@ -202,7 +202,38 @@ CREATE TABLE settings (
 ";
 
 /// Current schema version. Increment when migrations are added.
-pub const SCHEMA_VERSION: i32 = 1;
+pub const SCHEMA_VERSION: i32 = 5;
+
+const MIGRATION_V3: &str = "
+CREATE TABLE agent_result_slot (
+    slot_key TEXT PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES entry(id) ON DELETE CASCADE,
+    task_type TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    parameters TEXT NOT NULL,
+    source_hash TEXT NOT NULL,
+    success_json TEXT,
+    checkpoint_json TEXT,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX agent_result_entry ON agent_result_slot(entry_id, task_type);
+";
+
+const MIGRATION_V2: &str = "
+ALTER TABLE entry ADD COLUMN feed_content TEXT;
+ALTER TABLE entry ADD COLUMN feed_content_type TEXT;
+-- V1 merged explicit bodies and teasers into summary; their origin cannot be
+-- reconstructed. Keep that raw field, but discard only identifiable derived
+-- reader artifacts so an old teaser is not reused as successful full text.
+DELETE FROM content_html_cache WHERE entry_id IN (
+    SELECT c.entry_id FROM content c JOIN entry e ON e.id = c.entry_id
+    WHERE c.html = e.summary AND trim(e.summary) <> ''
+);
+DELETE FROM content WHERE entry_id IN (
+    SELECT c.entry_id FROM content c JOIN entry e ON e.id = c.entry_id
+    WHERE c.html = e.summary AND trim(e.summary) <> ''
+);
+";
 
 /// Run all migrations on a fresh or existing database.
 pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
@@ -216,17 +247,77 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         .unwrap_or(0);
 
     if version < 1 {
-        conn.execute_batch(MIGRATION_V1)?;
-        conn.execute(
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(MIGRATION_V1)?;
+        tx.execute(
             "INSERT OR REPLACE INTO settings (key, value) VALUES ('schema_version', ?1)",
-            [SCHEMA_VERSION.to_string()],
+            ["1"],
         )?;
+        tx.commit()?;
     }
 
-    // Future migrations go here:
-    // if version < 2 { ... }
+    if version < 2 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(MIGRATION_V2)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings (key, value) VALUES ('schema_version', ?1)",
+            ["2"],
+        )?;
+        tx.commit()?;
+    }
 
+    if version < 3 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(MIGRATION_V3)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings (key, value) VALUES ('schema_version', ?1)",
+            ["3"],
+        )?;
+        tx.commit()?;
+    }
+
+    if version < 4 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(crate::db::tag_batch_store::MIGRATION_V4)?;
+        crate::db::tag_store::migrate_normalization(&tx)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings(key,value) VALUES('schema_version','4')",
+            [],
+        )?;
+        tx.commit()?;
+    }
+    if version < 5 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(crate::db::usage_store::MIGRATION_V5)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings(key,value) VALUES('schema_version','5')",
+            [],
+        )?;
+        tx.commit()?;
+    }
     Ok(())
+}
+
+/// Build an actual historical schema, rather than downgrading a current DB's
+/// version marker while leaving later columns/tables in place.
+#[cfg(test)]
+pub(crate) fn historical_fixture(version: i32) -> Connection {
+    assert!((1..=3).contains(&version));
+    let conn = Connection::open_in_memory().unwrap();
+    conn.execute_batch("PRAGMA foreign_keys=ON").unwrap();
+    conn.execute_batch(MIGRATION_V1).unwrap();
+    if version >= 2 {
+        conn.execute_batch(MIGRATION_V2).unwrap();
+    }
+    if version >= 3 {
+        conn.execute_batch(MIGRATION_V3).unwrap();
+    }
+    conn.execute(
+        "INSERT INTO settings(key,value) VALUES('schema_version',?1)",
+        [version.to_string()],
+    )
+    .unwrap();
+    conn
 }
 
 #[cfg(test)]
@@ -283,5 +374,80 @@ mod tests {
         run_migrations(&conn).unwrap();
         // Running again should not error
         run_migrations(&conn).unwrap();
+    }
+
+    #[test]
+    fn v2_preserves_legacy_data_and_invalidates_only_merged_reader_artifacts() {
+        let conn = Connection::open_in_memory().unwrap();
+        conn.execute_batch("PRAGMA foreign_keys=ON;").unwrap();
+        conn.execute_batch(MIGRATION_V1).unwrap();
+        conn.execute_batch(
+            r#"
+            INSERT INTO settings VALUES ('schema_version', '1');
+            INSERT INTO feed(id,feed_url) VALUES(1,'https://example.test/feed');
+            INSERT INTO entry(id,feed_id,guid,summary,is_read,is_starred) VALUES
+                (1,1,'teaser','legacy snippet',1,1),
+                (2,1,'fetched','another snippet',0,0),
+                (3,1,'full','legacy complete Feed body',0,0);
+            INSERT INTO content(entry_id,html,markdown) VALUES
+                (1,'legacy snippet','wrong snippet markdown'),
+                (2,'<article>Downloaded body</article>','Downloaded markdown'),
+                (3,'legacy complete Feed body','legacy full markdown');
+            INSERT INTO content_html_cache(theme_id,entry_id,html,updated_at) VALUES
+                ('light',1,'wrong snippet','now'),('light',2,'full page','now'),
+                ('light',3,'legacy full page','now');
+            INSERT INTO entry_note VALUES(1,'keep note','now');
+            INSERT INTO tag(id,name,normalized_name) VALUES(1,'Keep','keep');
+            INSERT INTO entry_tag(entry_id,tag_id) VALUES(1,1);
+            INSERT INTO summary_result VALUES(1,'zh','brief','saved AI summary','zh','now');
+            INSERT INTO translation_result VALUES(1,'zh','hash','1','completed');
+            INSERT INTO translation_segment(entry_id,target_language,source_segment_id,
+                order_index,source_text_snapshot,translated_text)
+                VALUES(1,'zh','p1',0,'source','saved translation');
+        "#,
+        )
+        .unwrap();
+        run_migrations(&conn).unwrap();
+        run_migrations(&conn).unwrap();
+        let state: (String, bool, bool, Option<String>) = conn
+            .query_row(
+                "SELECT summary,is_read,is_starred,feed_content FROM entry WHERE id=1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!(state, ("legacy snippet".into(), true, true, None));
+        let legacy_body: String = conn
+            .query_row("SELECT summary FROM entry WHERE id=3", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(legacy_body, "legacy complete Feed body");
+        for table in [
+            "feed",
+            "content",
+            "content_html_cache",
+            "entry_note",
+            "tag",
+            "entry_tag",
+            "summary_result",
+            "translation_result",
+            "translation_segment",
+        ] {
+            let count: i64 = conn
+                .query_row(&format!("SELECT COUNT(*) FROM {table}"), [], |r| r.get(0))
+                .unwrap();
+            assert_eq!(count, 1, "{table} must preserve unrelated/user data");
+        }
+        let fetched: String = conn
+            .query_row("SELECT markdown FROM content WHERE entry_id=2", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        assert_eq!(fetched, "Downloaded markdown");
+        let violations: i64 = conn
+            .query_row("SELECT COUNT(*) FROM pragma_foreign_key_check", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        assert_eq!(violations, 0);
     }
 }

@@ -1,15 +1,15 @@
 // mercury4win/src-tauri/commands/agent_cmd.rs
 // AI agent control Tauri commands
 
-use deadpool_sqlite::Pool;
-use tauri::{ipc::Channel, State, AppHandle};
+use crate::agent::runtime::{self, SharedAgentRuntime, TaskType};
+use crate::agent::{credential_store, provider};
 use crate::commands::feed_cmd::AppClient;
-use crate::agent::{provider, credential_store};
-use crate::agent::runtime::{SharedAgentRuntime, TaskType};
-use crate::db::{agent_store, entry_store, content_store};
+use crate::db::agent_store;
 use crate::db::models::{
-    AgentProviderProfile, AgentModelProfile, AgentProfile, ProviderConfig, AgentStatus,
+    AgentModelProfile, AgentProfile, AgentProviderProfile, AgentStatus, ProviderConfig,
 };
+use deadpool_sqlite::Pool;
+use tauri::{ipc::Channel, AppHandle, State};
 
 // ── Provider management ──
 
@@ -25,23 +25,26 @@ pub async fn add_provider(
     config: ProviderConfig,
 ) -> Result<AgentProviderProfile, String> {
     validate_provider_config(&config)?;
-    let id = uuid::Uuid::new_v4().to_string();
-    log::info!("[add_provider] id={id}, name={}, base_url={}, has_key={}",
-        config.name, config.base_url, config.api_key.is_some());
-    if let Some(ref k) = config.api_key {
-        let masked = if k.len() > 8 { format!("{}...{}", &k[..4], &k[k.len()-4..]) } else { "***".into() };
-        log::info!("[add_provider] storing key: {masked} (len={})", k.len());
-    }
+    let id = agent_store::create_provider(
+        &pool,
+        &config.name,
+        &config.base_url,
+        config.display_name.as_deref(),
+    )
+    .await?;
+    // Archive never removes a key. A failed DB operation cannot destroy it.
     if let Some(ref api_key) = config.api_key {
         credential_store::store_api_key(&app_handle, &id, api_key).await?;
     }
-    agent_store::insert_provider(&pool, &id, &config.name, &config.base_url, config.display_name.as_deref()).await?;
-    Ok(AgentProviderProfile { id, name: config.name, base_url: config.base_url, display_name: config.display_name, is_default: false, is_enabled: true, is_archived: false, created_at: chrono::Utc::now().to_rfc3339() })
+    agent_store::list_providers(&pool)
+        .await?
+        .into_iter()
+        .find(|p| p.id == id)
+        .ok_or_else(|| "Provider not found".into())
 }
 
 #[tauri::command]
-pub async fn delete_provider(pool: State<'_, Pool>, app_handle: AppHandle, id: String) -> Result<(), String> {
-    credential_store::delete_api_key(&app_handle, &id).await?;
+pub async fn delete_provider(pool: State<'_, Pool>, id: String) -> Result<(), String> {
     agent_store::delete_provider(&pool, &id).await
 }
 
@@ -53,15 +56,18 @@ pub async fn update_provider(
     config: ProviderConfig,
 ) -> Result<(), String> {
     validate_provider_config(&config)?;
-    log::info!("[update_provider] id={}, name={}, base_url={}, has_key={}",
-        id, config.name, config.base_url, config.api_key.is_some());
-
-    // Update API key if provided
+    agent_store::update_provider(
+        &pool,
+        &id,
+        &config.name,
+        &agent_store::normalize_base_url(&config.base_url)?,
+        config.display_name.as_deref(),
+    )
+    .await?;
     if let Some(ref api_key) = config.api_key {
         credential_store::store_api_key(&app_handle, &id, api_key).await?;
     }
-
-    agent_store::update_provider(&pool, &id, &config.name, &config.base_url, config.display_name.as_deref()).await
+    Ok(())
 }
 
 #[tauri::command]
@@ -73,11 +79,13 @@ pub async fn test_provider_connection(
     model_name: String,
 ) -> Result<String, String> {
     let providers = agent_store::list_providers(&pool).await?;
-    let provider = providers.iter().find(|p| p.id == provider_id)
+    let provider = providers
+        .iter()
+        .find(|p| p.id == provider_id)
         .ok_or("Provider not found")?;
-    let api_key = credential_store::get_api_key(&app_handle, &provider_id).await?.unwrap_or_default();
-    log::info!("[test_provider_connection] provider_id={}, base_url={}, key_len={}, model={}",
-        provider_id, provider.base_url, api_key.len(), model_name);
+    let api_key = credential_store::get_api_key(&app_handle, &provider_id)
+        .await?
+        .unwrap_or_default();
     provider::test_connection(&client.0, &provider.base_url, &api_key, &model_name).await
 }
 
@@ -100,7 +108,9 @@ pub async fn test_provider_config(
     let api_key = match config.api_key.as_deref() {
         Some(key) if !key.is_empty() => key.to_string(),
         _ => match provider_id.as_deref() {
-            Some(id) => credential_store::get_api_key(&app_handle, id).await?.unwrap_or_default(),
+            Some(id) => credential_store::get_api_key(&app_handle, id)
+                .await?
+                .unwrap_or_default(),
             None => String::new(),
         },
     };
@@ -116,86 +126,159 @@ fn validate_provider_config(config: &ProviderConfig) -> Result<(), String> {
     if url.is_empty() {
         return Err("Base URL is required".into());
     }
-    let parsed = url::Url::parse(url).map_err(|_| "Base URL must be a valid URL".to_string())?;
-    if parsed.scheme() != "http" && parsed.scheme() != "https" {
-        return Err("Base URL must use http or https".into());
-    }
+    agent_store::normalize_base_url(url)?;
     Ok(())
 }
 
-// ── Resolve model for agent ──
-// Looks up the agent_profile.primary_model_id first; falls back to first enabled
-// provider with a compatible model. Returns (base_url, api_key, model_name).
-async fn resolve_agent_model(
+// Route checks never load credentials. Resolution errors are configuration
+// failures and do not cause requests to an arbitrary model.
+#[cfg(test)]
+pub(crate) async fn resolve_agent_route(
     pool: &Pool,
-    app_handle: &AppHandle,
     agent_type: &str,
-    capability: impl Fn(&AgentModelProfile) -> bool,
-    default_model: &str,
+    _capability: impl Fn(&AgentModelProfile) -> bool,
+    _default_model: &str,
 ) -> Result<(String, String, String), String> {
-    let agent_profile = agent_store::get_agent_profile(pool, agent_type).await?;
-    let providers = agent_store::list_providers(pool).await?;
+    let config =
+        crate::agent::configuration::load(pool, std::path::Path::new(""), agent_type).await?;
+    let route = config.routes.first().ok_or_else(|| format!("No enabled compatible model configured for {agent_type}. Configure a model in Settings."))?;
+    Ok((
+        route.base_url.clone(),
+        route.provider_id.clone(),
+        route.model_name.clone(),
+    ))
+}
 
-    // 1) Use the profile's primary_model_id if set
-    if let Some(ref profile) = agent_profile {
-        if let Some(ref model_id) = profile.primary_model_id {
-            for provider in &providers {
-                if !provider.is_enabled {
-                    continue;
-                }
-                let models = agent_store::list_models(pool, &provider.id).await?;
-                if let Some(model) = models.iter().find(|m| m.id == *model_id && m.is_enabled) {
-                    let key = credential_store::get_api_key(app_handle, &provider.id)
-                        .await?
-                        .unwrap_or_default();
-                    log::info!(
-                        "[resolve_agent_model] agent={} using profile model: provider={}, model={}",
-                        agent_type, provider.id, model.model_name
-                    );
-                    return Ok((provider.base_url.clone(), key, model.model_name.clone()));
-                }
-            }
-            log::warn!(
-                "[resolve_agent_model] agent={} primary_model_id={} not found, falling back",
-                agent_type, model_id
-            );
-        }
+pub(crate) async fn execution_configuration(
+    pool: &Pool,
+    app: &AppHandle,
+    agent: &str,
+) -> Result<crate::agent::configuration::Configuration, String> {
+    let mut config =
+        crate::agent::configuration::load(pool, &crate::utils::paths::prompts_dir(app), agent)
+            .await?;
+    if config.routes.is_empty() {
+        return Err(format!(
+            "No enabled compatible model configured for {agent}. Configure a model in Settings."
+        ));
     }
-
-    // 2) Fallback: first enabled provider with a compatible model
-    for provider in &providers {
-        if !provider.is_enabled {
-            continue;
-        }
-        let models = agent_store::list_models(pool, &provider.id).await?;
-        if let Some(model) = models.iter().find(|m| m.is_enabled && capability(m)) {
-            let key = credential_store::get_api_key(app_handle, &provider.id)
-                .await?
-                .unwrap_or_default();
-            log::info!(
-                "[resolve_agent_model] agent={} using fallback: provider={}, model={}",
-                agent_type, provider.id, model.model_name
-            );
-            return Ok((provider.base_url.clone(), key, model.model_name.clone()));
-        }
-    }
-
-    // 3) Last resort: first enabled provider + hardcoded model name
-    if let Some(provider) = providers.iter().find(|p| p.is_enabled) {
-        let key = credential_store::get_api_key(app_handle, &provider.id)
+    for route in &mut config.routes {
+        route.api_key = credential_store::get_api_key(app, &route.provider_id)
             .await?
             .unwrap_or_default();
-        log::warn!(
-            "[resolve_agent_model] agent={} no compatible model found, using default={}",
-            agent_type, default_model
-        );
-        return Ok((provider.base_url.clone(), key, default_model.to_string()));
     }
+    Ok(config)
+}
 
-    Err("No enabled AI provider configured. Add a provider in Settings.".into())
+#[tauri::command]
+pub async fn get_agent_fingerprint(
+    pool: State<'_, Pool>,
+    app_handle: AppHandle,
+    agent_type: String,
+) -> Result<String, String> {
+    Ok(crate::agent::configuration::load(
+        &pool,
+        &crate::utils::paths::prompts_dir(&app_handle),
+        &agent_type,
+    )
+    .await?
+    .fingerprint)
+}
+
+#[tauri::command]
+pub async fn load_latest_summary(
+    pool: State<'_, Pool>,
+    entry_id: i64,
+) -> Result<Option<crate::db::agent_result_store::SummaryRecord>, String> {
+    crate::db::agent_result_store::latest_summary(&pool, entry_id).await
 }
 
 // ── Agent runtime commands ──
+
+#[tauri::command]
+pub async fn load_summary_result(
+    pool: State<'_, Pool>,
+    app_handle: AppHandle,
+    entry_id: i64,
+    target_language: String,
+    detail_level: String,
+) -> Result<Option<crate::db::agent_result_store::AgentResult>, String> {
+    let config = crate::agent::configuration::load(
+        &pool,
+        &crate::utils::paths::prompts_dir(&app_handle),
+        "summary",
+    )
+    .await?;
+    crate::agent::configuration::CONFIGURATION
+        .scope(config, async {
+            crate::db::agent_result_store::load_summary(
+                &pool,
+                entry_id,
+                &target_language,
+                &detail_level,
+            )
+            .await
+        })
+        .await
+}
+
+#[tauri::command]
+pub async fn load_translation_result(
+    pool: State<'_, Pool>,
+    app_handle: AppHandle,
+    entry_id: i64,
+    target_language: String,
+) -> Result<Option<crate::db::agent_result_store::AgentResult>, String> {
+    let config = crate::agent::configuration::load(
+        &pool,
+        &crate::utils::paths::prompts_dir(&app_handle),
+        "translation",
+    )
+    .await?;
+    let strategy = config.prompt_strategy.clone();
+    let concurrency = config.concurrency;
+    crate::agent::configuration::CONFIGURATION
+        .scope(config, async {
+            crate::db::agent_result_store::load_translation(
+                &pool,
+                entry_id,
+                &target_language,
+                strategy.as_deref(),
+                concurrency,
+            )
+            .await
+        })
+        .await
+}
+
+#[tauri::command]
+pub async fn load_translation_document(
+    pool: State<'_, Pool>,
+    app_handle: AppHandle,
+    entry_id: i64,
+    target_language: String,
+) -> Result<crate::agent::translation_segments::TranslationDocument, String> {
+    let config = crate::agent::configuration::load(
+        &pool,
+        &crate::utils::paths::prompts_dir(&app_handle),
+        "translation",
+    )
+    .await?;
+    let strategy = config.prompt_strategy.clone();
+    let concurrency = config.concurrency;
+    crate::agent::configuration::CONFIGURATION
+        .scope(config, async {
+            crate::agent::translation_segments::load_document(
+                &pool,
+                entry_id,
+                &target_language,
+                strategy.as_deref(),
+                concurrency,
+            )
+            .await
+        })
+        .await
+}
 
 #[tauri::command]
 pub async fn run_summary(
@@ -205,27 +288,43 @@ pub async fn run_summary(
     app_handle: AppHandle,
     on_event: Channel<String>,
     entry_id: i64,
+    request_id: String,
     target_language: String,
     detail_level: String,
 ) -> Result<(), String> {
-    // Submit to runtime
-    {
-        let mut rt = runtime_state.lock().await;
-        rt.submit(entry_id, TaskType::Summary);
-    }
-
-    let (base_url, api_key, model_name) = resolve_agent_model(
-        &pool, &app_handle, "summary",
-        |m| m.supports_summary,
-        "gpt-4o-mini",
-    ).await?;
-
-    // Run summary agent
-    crate::agent::summary::run_summary(
-        &pool, &client.0, &runtime_state,
-        entry_id, &target_language, &detail_level,
-        &base_url, &api_key, &model_name, on_event,
-    ).await
+    runtime::execute(
+        &runtime_state,
+        TaskType::Summary,
+        entry_id,
+        &request_id,
+        &on_event,
+        || async {
+            let config = execution_configuration(&pool, &app_handle, "summary").await?;
+            let route = config.routes[0].clone();
+            if let Some(notice) = &config.notice {
+                let _ = on_event
+                    .send(serde_json::json!({"type":"notice","message":notice}).to_string());
+            }
+            crate::agent::configuration::CONFIGURATION
+                .scope(config, async {
+                    crate::agent::summary::run_summary(
+                        &pool,
+                        &client.0,
+                        &runtime_state,
+                        entry_id,
+                        &target_language,
+                        &detail_level,
+                        &route.base_url,
+                        &route.api_key,
+                        &route.model_name,
+                        on_event.clone(),
+                    )
+                    .await
+                })
+                .await
+        },
+    )
+    .await
 }
 
 #[tauri::command]
@@ -236,33 +335,46 @@ pub async fn run_translation(
     app_handle: AppHandle,
     on_event: Channel<String>,
     entry_id: i64,
+    request_id: String,
     target_language: String,
+    source_segment_id: Option<String>,
 ) -> Result<(), String> {
-    {
-        let mut rt = runtime_state.lock().await;
-        rt.submit(entry_id, TaskType::Translation);
-    }
-
-    let agent_profile = agent_store::get_agent_profile(&pool, "translation").await?;
-    let prompt_strategy = agent_profile.as_ref().and_then(|p| p.prompt_strategy.clone());
-    let concurrency = agent_profile
-        .as_ref()
-        .and_then(|p| p.concurrency_degree)
-        .map(|c| if c <= 0 { 3 } else { c as usize })
-        .unwrap_or(3);
-
-    let (base_url, api_key, model_name) = resolve_agent_model(
-        &pool, &app_handle, "translation",
-        |m| m.supports_translation,
-        "gpt-4o-mini",
-    ).await?;
-
-    crate::agent::translation::run_translation(
-        &pool, &client.0,
-        entry_id, &target_language,
-        &base_url, &api_key, &model_name,
-        prompt_strategy.as_deref(), concurrency, on_event,
-    ).await
+    runtime::execute(
+        &runtime_state,
+        TaskType::Translation,
+        entry_id,
+        &request_id,
+        &on_event,
+        || async {
+            let config = execution_configuration(&pool, &app_handle, "translation").await?;
+            let route = config.routes[0].clone();
+            let strategy = config.prompt_strategy.clone();
+            let concurrency = config.concurrency;
+            if let Some(notice) = &config.notice {
+                let _ = on_event
+                    .send(serde_json::json!({"type":"notice","message":notice}).to_string());
+            }
+            crate::agent::configuration::CONFIGURATION
+                .scope(config, async {
+                    crate::agent::translation::run_translation_segments(
+                        &pool,
+                        &client.0,
+                        entry_id,
+                        &target_language,
+                        &route.base_url,
+                        &route.api_key,
+                        &route.model_name,
+                        strategy.as_deref(),
+                        concurrency,
+                        source_segment_id.as_deref(),
+                        on_event.clone(),
+                    )
+                    .await
+                })
+                .await
+        },
+    )
+    .await
 }
 
 #[tauri::command]
@@ -271,41 +383,63 @@ pub async fn run_tagging(
     client: State<'_, AppClient>,
     runtime_state: State<'_, SharedAgentRuntime>,
     app_handle: AppHandle,
+    on_event: Channel<String>,
     entry_id: i64,
+    request_id: String,
 ) -> Result<Vec<String>, String> {
-    {
-        let mut rt = runtime_state.lock().await;
-        rt.submit(entry_id, TaskType::Tagging);
-    }
-
-    let (base_url, api_key, model_name) = resolve_agent_model(
-        &pool, &app_handle, "tagging",
-        |m| m.supports_tagging,
-        "gpt-4o-mini",
-    ).await?;
-
-    crate::agent::tagging::run_tagging(
-        &pool, &client.0, entry_id, &base_url, &api_key, &model_name,
-    ).await.map_err(|e| {
-        log::error!("[run_tagging] failed for entry_id={entry_id}: {e}");
-        e
-    })
+    runtime::execute(
+        &runtime_state,
+        TaskType::Tagging,
+        entry_id,
+        &request_id,
+        &on_event,
+        || async {
+            let config = execution_configuration(&pool, &app_handle, "tagging").await?;
+            let route = config.routes[0].clone();
+            if let Some(notice) = &config.notice {
+                let _ = on_event
+                    .send(serde_json::json!({"type":"notice","message":notice}).to_string());
+            }
+            crate::agent::configuration::CONFIGURATION
+                .scope(config, async {
+                    crate::agent::tagging::run_tagging(
+                        &pool,
+                        &client.0,
+                        entry_id,
+                        &route.base_url,
+                        &route.api_key,
+                        &route.model_name,
+                    )
+                    .await
+                })
+                .await
+        },
+    )
+    .await
 }
 
 #[tauri::command]
 pub async fn cancel_agent_task(
     runtime_state: State<'_, SharedAgentRuntime>,
     task_type: String,
+    request_id: String,
 ) -> Result<(), String> {
-    let tt = match task_type.as_str() {
-        "summary" => TaskType::Summary,
-        "translation" => TaskType::Translation,
-        "tagging" => TaskType::Tagging,
-        _ => return Err("Unknown task type".into()),
-    };
-    let mut rt = runtime_state.lock().await;
-    rt.complete(tt);
-    Ok(())
+    runtime_state
+        .lock()
+        .unwrap()
+        .cancel(TaskType::parse(&task_type)?, &request_id, false)
+}
+
+#[tauri::command]
+pub async fn abandon_agent_waiting(
+    runtime_state: State<'_, SharedAgentRuntime>,
+    task_type: String,
+    request_id: String,
+) -> Result<(), String> {
+    runtime_state
+        .lock()
+        .unwrap()
+        .cancel(TaskType::parse(&task_type)?, &request_id, true)
 }
 
 // ── Custom prompt templates ──
@@ -320,7 +454,6 @@ pub async fn save_custom_template(
     source_path: String,
 ) -> Result<(), String> {
     use crate::utils::paths;
-    use crate::agent::prompt_templates::PromptTemplate;
 
     // Validate agent_type to prevent path traversal via the filename.
     if !matches!(agent_type.as_str(), "summary" | "translation" | "tagging") {
@@ -328,8 +461,8 @@ pub async fn save_custom_template(
     }
 
     // Reject oversized files before reading them into memory.
-    let metadata = std::fs::metadata(&source_path)
-        .map_err(|e| format!("Failed to read file: {}", e))?;
+    let metadata =
+        std::fs::metadata(&source_path).map_err(|e| format!("Failed to read file: {}", e))?;
     if metadata.len() > MAX_TEMPLATE_SIZE {
         return Err(format!(
             "File too large: {} bytes (max {} bytes)",
@@ -338,19 +471,13 @@ pub async fn save_custom_template(
         ));
     }
 
-    // Read and validate the YAML structure so failures surface at upload time,
-    // not later when the template is loaded for a request.
-    let content = std::fs::read_to_string(&source_path)
-        .map_err(|e| format!("Failed to read file: {}", e))?;
-    let _: PromptTemplate = serde_yaml::from_str(&content)
-        .map_err(|e| format!("Invalid YAML template: {}", e))?;
-
-    let prompts_dir = paths::prompts_dir(&app_handle);
-    std::fs::create_dir_all(&prompts_dir).map_err(|e| format!("mkdir: {}", e))?;
-
-    let dest = prompts_dir.join(format!("{}.custom.yaml", agent_type));
-    std::fs::write(&dest, content).map_err(|e| format!("write: {}", e))?;
-    Ok(())
+    let content =
+        std::fs::read_to_string(&source_path).map_err(|e| format!("Failed to read file: {}", e))?;
+    crate::agent::prompt_templates::save_custom_template(
+        &paths::prompts_dir(&app_handle),
+        &agent_type,
+        &content,
+    )
 }
 
 #[tauri::command]
@@ -369,7 +496,6 @@ pub fn load_custom_template(
         Err(e) => Err(e),
     }
 }
-
 #[tauri::command]
 pub async fn get_agent_status(
     runtime_state: State<'_, SharedAgentRuntime>,
@@ -381,9 +507,7 @@ pub async fn get_agent_status(
         "tagging" => TaskType::Tagging,
         _ => return Err("Unknown agent type".into()),
     };
-    let rt = runtime_state.lock().await;
-    let status = rt.get_status(tt);
-    Ok(AgentStatus { agent_type: status.agent_type, state: status.state, current_entry_id: status.current_entry_id, queue_depth: status.queue_depth })
+    Ok(runtime_state.lock().unwrap().get_status(tt))
 }
 
 // ── Model management ──
@@ -402,18 +526,18 @@ pub async fn add_model(
     provider_id: String,
     name: String,
     model_name: String,
+    supports_summary: Option<bool>,
+    supports_translation: Option<bool>,
+    supports_tagging: Option<bool>,
 ) -> Result<(), String> {
-    let id = uuid::Uuid::new_v4().to_string();
-    let pool = pool.inner().clone();
-    pool.get().await.map_err(|e| e.to_string())?
-        .interact(move |conn| {
-            conn.execute(
-                "INSERT INTO agent_model_profile (id, provider_id, name, model_name)
-                 VALUES (?1, ?2, ?3, ?4)",
-                rusqlite::params![id, provider_id, name, model_name],
-            )
-        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
-    Ok(())
+    agent_store::create_model(
+        &pool,
+        &provider_id,
+        &name,
+        &model_name,
+        [supports_summary, supports_translation, supports_tagging],
+    )
+    .await
 }
 
 #[tauri::command]
@@ -426,30 +550,43 @@ pub async fn update_model(
     supports_translation: bool,
     supports_tagging: bool,
 ) -> Result<(), String> {
+    let name = name.trim().to_owned();
+    let model_name = model_name.trim().to_owned();
+    if name.is_empty() || model_name.is_empty() {
+        return Err("Model name is required".into());
+    }
     let pool = pool.inner().clone();
-    pool.get().await.map_err(|e| e.to_string())?
+    let changed = pool
+        .get()
+        .await
+        .map_err(|e| e.to_string())?
         .interact(move |conn| {
             conn.execute(
                 "UPDATE agent_model_profile SET name = ?1, model_name = ?2,
                  supports_summary = ?3, supports_translation = ?4, supports_tagging = ?5
-                 WHERE id = ?6",
-                rusqlite::params![name, model_name, supports_summary, supports_translation, supports_tagging, id],
+                 WHERE id = ?6 AND is_archived=0",
+                rusqlite::params![
+                    name,
+                    model_name,
+                    supports_summary,
+                    supports_translation,
+                    supports_tagging,
+                    id
+                ],
             )
-        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+        })
+        .await
+        .map_err(|e| e.to_string())?
+        .map_err(|e| e.to_string())?;
+    if changed == 0 {
+        return Err("Model not found".into());
+    }
     Ok(())
 }
 
 #[tauri::command]
-pub async fn delete_model(
-    pool: State<'_, Pool>,
-    id: String,
-) -> Result<(), String> {
-    let pool = pool.inner().clone();
-    pool.get().await.map_err(|e| e.to_string())?
-        .interact(move |conn| {
-            conn.execute("DELETE FROM agent_model_profile WHERE id = ?1", rusqlite::params![id])
-        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
-    Ok(())
+pub async fn delete_model(pool: State<'_, Pool>, id: String) -> Result<(), String> {
+    agent_store::archive_model(&pool, &id).await
 }
 
 // ── Agent profile ──
@@ -473,8 +610,39 @@ pub async fn update_agent_profile(
     prompt_strategy: Option<String>,
     concurrency_degree: Option<i32>,
 ) -> Result<(), String> {
+    if !matches!(agent_type.as_str(), "summary" | "translation" | "tagging") {
+        return Err("Unknown agent type".into());
+    }
+    for id in [&primary_model_id, &fallback_model_id]
+        .into_iter()
+        .flatten()
+    {
+        let mut valid = false;
+        for provider in agent_store::list_providers(&pool).await? {
+            if provider.is_enabled
+                && agent_store::list_models(&pool, &provider.id)
+                    .await?
+                    .iter()
+                    .any(|model| {
+                        model.id == *id
+                            && model.is_enabled
+                            && crate::agent::configuration::supports(model, &agent_type)
+                    })
+            {
+                valid = true;
+                break;
+            }
+        }
+        if !valid {
+            return Err(format!(
+                "Model is unavailable or does not support {agent_type}: {id}"
+            ));
+        }
+    }
     let pool = pool.inner().clone();
-    pool.get().await.map_err(|e| e.to_string())?
+    pool.get()
+        .await
+        .map_err(|e| e.to_string())?
         .interact(move |conn| {
             conn.execute(
                 "INSERT INTO agent_profile (agent_type, primary_model_id, fallback_model_id,
@@ -487,8 +655,29 @@ pub async fn update_agent_profile(
                    detail_level = excluded.detail_level,
                    prompt_strategy = excluded.prompt_strategy,
                    concurrency_degree = excluded.concurrency_degree",
-                rusqlite::params![agent_type, primary_model_id, fallback_model_id, target_language, detail_level, prompt_strategy, concurrency_degree],
+                rusqlite::params![
+                    agent_type,
+                    primary_model_id,
+                    fallback_model_id,
+                    target_language,
+                    detail_level,
+                    prompt_strategy,
+                    concurrency_degree
+                ],
             )
-        }).await.map_err(|e| e.to_string())?.map_err(|e| e.to_string())?;
+        })
+        .await
+        .map_err(|e| e.to_string())?
+        .map_err(|e| e.to_string())?;
     Ok(())
+}
+
+#[tauri::command]
+pub async fn set_configuration_enabled(
+    pool: State<'_, Pool>,
+    id: String,
+    entity: String,
+    enabled: bool,
+) -> Result<(), String> {
+    agent_store::set_enabled(&pool, &id, &entity, enabled).await
 }

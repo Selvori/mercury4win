@@ -1,7 +1,8 @@
 // mercury4win/src/features/reader/components/reader_pane.tsx
 // Reader main panel — renders article HTML with resizable side panels
 
-import { useQuery } from "@tanstack/react-query";
+import { useKeyboardShortcuts } from "@/hooks/use_keyboard_shortcuts";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Loader2,
   FileText,
@@ -17,33 +18,50 @@ import { cn } from "@/lib/utils";
 import { build_reader_content } from "@/lib/tauri_bindings";
 import { useAppStore } from "@/stores/app_store";
 import type { Entry } from "@/types";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ReaderNote } from "./reader_note";
 import { ReaderSummary } from "./reader_summary";
 import { ReaderTranslation } from "./reader_translation";
+import { RelatedEntries } from "./related_entries";
 import { ReaderTagging } from "./reader_tagging";
 import { FontSettingsDialog } from "./font_settings_dialog";
+import { DigestDialog } from "./digest_dialog";
+import { useDigestSelectionStore } from "@/stores/digest_selection_store";
 
 interface Props {
   entry: Entry;
+  on_select_entry?: (entry: Entry) => void;
 }
 
 type Panel = "reader" | "notes" | "summary" | "translation" | "tags";
 
-export function ReaderPane({ entry }: Props) {
+export function ReaderPane({ entry, on_select_entry }: Props) {
+  const digest_selecting = useDigestSelectionStore((s) => s.selecting);
+  const query_client = useQueryClient();
   const { t } = useTranslation();
+  const [bilingual, set_bilingual] = useState<{ entry_id: number; html: string; reader_html?: string } | null>(null);
+  const receive_bilingual = useCallback((entry_id: number, html: string | null, reader_html?: string) => {
+    set_bilingual((previous) => html ? { entry_id, html, reader_html } : previous?.entry_id === entry_id ? null : previous);
+  }, []);
   const [panel, set_panel] = useState<Panel>("reader");
+  useLayoutEffect(() => {
+    set_panel((current) => current === "translation" ? "reader" : current);
+    set_bilingual(null);
+  }, [entry.id]);
   const [font_dialog_open, set_font_dialog_open] = useState(false);
+  const [digest_entry, set_digest_entry] = useState<number | null>(null);
+  useLayoutEffect(() => { set_digest_entry(null); }, [entry.id]);
   const [side_panel_width, set_side_panel_width] = useState(320);
   const [dragging_side, set_dragging_side] = useState(false);
 
   const font_family = useAppStore((s) => s.font_family);
   const font_size = useAppStore((s) => s.font_size);
+  const reader_style = useAppStore((s) => s.reader_style);
   const effective_theme = useAppStore((s) => s.effective_theme());
 
   // Compute reader theme ID (classic/paper + light/dark)
-  const reader_theme_id = `classic-${effective_theme}`;
+  const reader_theme_id = `${reader_style}-${effective_theme}`;
 
   const drag_ref = useRef<{ start_x: number; start_w: number } | null>(null);
 
@@ -82,11 +100,26 @@ export function ReaderPane({ entry }: Props) {
     set_dragging_side(true);
   }, [side_panel_width]);
 
-  const { data: reader_html, isLoading, isFetching, isError, error } = useQuery({
+  const { data: reader_html, dataUpdatedAt: reader_updated_at, isLoading, isFetching, isError, error, refetch } = useQuery({
     queryKey: ["reader", entry.id, reader_theme_id, font_family, font_size],
     queryFn: () => build_reader_content(entry.id, reader_theme_id, font_family, font_size),
     staleTime: 0,
+    // Keep the same frame during appearance changes. Chromium can leave frames
+    // created inside an inert modal background unable to receive wheel input.
+    // Never carry an article's HTML into a different article's query.
+    placeholderData: (previous, previous_query) => previous_query?.queryKey[1] === entry.id ? previous : undefined,
   });
+  useEffect(() => {
+    if (!reader_updated_at || isFetching) return;
+    // Reader reconstruction can finish after a result's initial source lookup.
+    void query_client.invalidateQueries({ queryKey: ["summary_result", entry.id] });
+    void query_client.invalidateQueries({ queryKey: ["latest_summary", entry.id] });
+    void query_client.invalidateQueries({ queryKey: ["translation_result", entry.id] });
+    void query_client.invalidateQueries({ queryKey: ["translation_document", entry.id] });
+  }, [entry.id, reader_updated_at, isFetching, query_client]);
+  const summary_fallback = reader_html?.includes(
+    '<meta name="mercury-content-source" content="summary">',
+  ) ?? false;
 
   const panel_options: { value: Panel; icon: typeof BookOpen; label: string }[] = [
     { value: "reader", icon: BookOpen, label: t("reader.reader") },
@@ -96,10 +129,16 @@ export function ReaderPane({ entry }: Props) {
     { value: "tags", icon: Tag, label: t("reader.tags") },
   ];
 
-  const show_side_panel = panel !== "reader";
+  useKeyboardShortcuts({
+    on_toggle_reader: () => set_panel((current) => current === "summary" ? "reader" : "summary"),
+    on_toggle_translation: () => set_panel((current) => current === "translation" ? "reader" : "translation"),
+    on_toggle_note: () => set_panel((current) => current === "notes" ? "reader" : "notes"),
+  });
+
+  const show_side_panel = panel === "notes" || panel === "summary" || panel === "tags";
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full" inert={digest_selecting}>
       {/* Main reader area */}
       <div className="flex h-full flex-col flex-1 overflow-hidden">
         {/* Toolbar */}
@@ -117,6 +156,8 @@ export function ReaderPane({ entry }: Props) {
                 )}
                 onClick={() => set_panel(panel === opt.value ? "reader" : opt.value)}
                 title={opt.label}
+                aria-label={opt.label}
+                aria-pressed={panel === opt.value}
               >
                 <opt.icon className="h-3.5 w-3.5" />
               </Button>
@@ -128,6 +169,7 @@ export function ReaderPane({ entry }: Props) {
             </h2>
           </div>
           {/* Open in browser button */}
+          <Button variant="ghost" size="sm" onClick={() => set_digest_entry(entry.id)}>{t("digest.title")}</Button>
           {entry.url && (
             <Button
               variant="ghost"
@@ -137,6 +179,7 @@ export function ReaderPane({ entry }: Props) {
                 await openUrl(entry.url!);
               }}
               title={t("reader.openInBrowser")}
+              aria-label={t("reader.openInBrowser")}
             >
               <ExternalLink className="h-4 w-4" />
             </Button>
@@ -146,23 +189,40 @@ export function ReaderPane({ entry }: Props) {
             variant="ghost"
             size="icon-sm"
             onClick={() => set_font_dialog_open(true)}
-            title={t("fontSettings.title")}
+            title={t("readerSettings.title")}
+            aria-label={t("readerSettings.title")}
           >
             <Type className="h-4 w-4" />
           </Button>
         </div>
 
+        {panel === "translation" && (
+          <ReaderTranslation key={entry.id} entry_id={entry.id} reader_html={reader_html} reader_ready={!!reader_html && !isFetching && !summary_fallback} on_bilingual_html={receive_bilingual} automatic />
+        )}
+
+        {summary_fallback && !isFetching && (
+          <div role="status" className="flex items-center gap-2 border-b border-border bg-muted px-3 py-2">
+            <p className="flex-1 text-xs text-muted-foreground">{t("readerPane.summaryFallback")}</p>
+            <Button variant="ghost" size="sm" onClick={() => void refetch()}>
+              {t("readerPane.retryFullArticle")}
+            </Button>
+          </div>
+        )}
+
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {isLoading || isFetching ? (
-            <div className="flex h-full items-center justify-center">
+          {(isLoading || isFetching) && !reader_html ? (
+            <div role="status" aria-label={t("common.loading")} className="flex h-full items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           ) : isError ? (
             <div className="flex h-full items-center justify-center p-8 text-center">
               <div>
-                <p className="text-sm font-medium text-destructive">{t("readerPane.failedToLoad")}</p>
+                <p role="alert" className="text-sm font-medium text-destructive">{t("readerPane.failedToLoad")}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{String(error)}</p>
+                <Button className="mt-3" variant="outline" size="sm" onClick={() => void refetch()}>
+                  {t("readerPane.retryFullArticle")}
+                </Button>
               </div>
             </div>
           ) : !reader_html ? (
@@ -173,7 +233,7 @@ export function ReaderPane({ entry }: Props) {
             </div>
           ) : (
             <iframe
-              srcDoc={reader_html}
+              srcDoc={panel === "translation" && bilingual?.entry_id === entry.id && bilingual.reader_html === reader_html ? bilingual.html : reader_html}
               className="h-full w-full border-0"
               sandbox="allow-same-origin"
               title={t("readerPane.readerContent")}
@@ -181,12 +241,23 @@ export function ReaderPane({ entry }: Props) {
                 const doc = e.currentTarget.contentDocument;
                 if (!doc) return;
                 // Route in-article link clicks to the system browser
+                doc.addEventListener("keydown", (event) => {
+                  if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.altKey) return;
+                  const target = event.target as Element | null;
+                  if (target?.nodeType === 1 && target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
+                  if (event.key === "Enter" && target?.nodeType === 1 && target.closest('button, a, [role="button"]')) return;
+                  const forwarded = new KeyboardEvent("keydown", { key: event.key, ctrlKey: event.ctrlKey,
+                    metaKey: event.metaKey, shiftKey: event.shiftKey, bubbles: true, cancelable: true });
+                  if (!document.dispatchEvent(forwarded)) event.preventDefault();
+                });
                 doc.addEventListener("click", async (ev) => {
                   const anchor = (ev.target as HTMLElement)?.closest("a");
                   const href = anchor?.getAttribute("href");
                   if (!href) return;
+                  if (href.startsWith("#")) return;
+                  // Unknown/local protocols must never navigate the srcDoc.
+                  ev.preventDefault();
                   if (/^https?:\/\//i.test(href)) {
-                    ev.preventDefault();
                     const { openUrl } = await import("@tauri-apps/plugin-opener");
                     await openUrl(href);
                   }
@@ -195,6 +266,7 @@ export function ReaderPane({ entry }: Props) {
             />
           )}
         </div>
+        <RelatedEntries entry_id={entry.id} on_select={on_select_entry} />
       </div>
 
       {/* Resize handle + Side panel */}
@@ -212,17 +284,17 @@ export function ReaderPane({ entry }: Props) {
           </div>
 
           <div style={{ width: side_panel_width }} className="shrink-0 overflow-hidden">
-            {panel === "notes" && <ReaderNote entry_id={entry.id} />}
+            {panel === "notes" && <ReaderNote key={entry.id} entry_id={entry.id} />}
             {panel === "summary" && (
-              <ReaderSummary entry_id={entry.id} entry_title={entry.title || t("entry.untitled")} />
+              <ReaderSummary key={entry.id} entry_id={entry.id} entry_title={entry.title || t("entry.untitled")} reader_ready={!!reader_html && !isFetching && !summary_fallback} />
             )}
-            {panel === "translation" && <ReaderTranslation entry_id={entry.id} />}
-            {panel === "tags" && <ReaderTagging entry_id={entry.id} />}
+            {panel === "tags" && <ReaderTagging key={entry.id} entry_id={entry.id} />}
           </div>
         </>
       )}
 
       {/* Font settings dialog */}
+      {digest_entry === entry.id && <DigestDialog key={entry.id} entry_ids={[entry.id]} on_close={() => set_digest_entry(null)} />}
       <FontSettingsDialog
         open={font_dialog_open}
         on_close={() => set_font_dialog_open(false)}

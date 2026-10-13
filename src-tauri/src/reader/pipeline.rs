@@ -1,17 +1,35 @@
 // mercury4win/src-tauri/reader/pipeline.rs
 // Reader build pipeline with layered rebuild and version caching
 
+use crate::db::models::Content;
+use crate::db::{content_store, entry_store};
+use crate::reader::theme::FontConfig;
+use crate::reader::{extraction, html_to_md, md_to_html, obsidian};
 use deadpool_sqlite::Pool;
 use reqwest::Client;
-use crate::db::{content_store, entry_store};
-use crate::db::models::Content;
-use crate::reader::{extraction, html_to_md, md_to_html, theme};
-use crate::reader::theme::FontConfig;
 
 /// Pipeline version constants.
-pub const READABILITY_VERSION: i32 = 1;
-pub const MARKDOWN_VERSION: i32 = 1;
-pub const READER_RENDER_VERSION: i32 = 2;
+pub const READABILITY_VERSION: i32 = 3;
+pub const MARKDOWN_VERSION: i32 = 2;
+pub const READER_RENDER_VERSION: i32 = 5;
+
+/// A summary fallback is display-only and never a successful body/cache entry.
+pub const SUMMARY_SOURCE_MARKER: &str =
+    "<meta name=\"mercury-content-source\" content=\"summary\">";
+
+/// Both pipeline types own canonical Markdown, but only default owns Readability.
+pub fn has_current_markdown(c: &Content) -> bool {
+    has_text(c.markdown.as_deref())
+        && c.markdown_version == Some(MARKDOWN_VERSION)
+        && if c.pipeline_type == "obsidian" {
+            c.resolved_intermediate_content
+                .as_deref()
+                .and_then(obsidian::markdown_url)
+                .is_some()
+        } else {
+            c.pipeline_type == "default" && c.readability_version == Some(READABILITY_VERSION)
+        }
+}
 
 /// Build reader content for an entry. Implements the layered rebuild strategy.
 pub async fn build_reader_content(
@@ -24,65 +42,318 @@ pub async fn build_reader_content(
     // Cache key includes theme + font family + font size to avoid serving wrong font.
     let cache_key = format!("{}:{}:{}", theme_id, font_config.family, font_config.size);
 
+    let detail = entry_store::get_entry_detail(pool, entry_id)
+        .await?
+        .ok_or("Entry not found")?;
+    let entry = &detail.entry;
     let content = content_store::get_content(pool, entry_id).await?;
 
-    match content {
-        Some(ref c) if c.markdown.is_some() => {
-            // Step 1: render from existing markdown
-            let md = c.markdown.as_ref().unwrap();
-            let html = md_to_html::render_markdown_with_font(md, theme_id, font_config);
-            save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
-            Ok(html)
-        }
-        Some(ref c) if c.cleaned_html.is_some() => {
-            // Step 2: convert cleaned HTML to markdown then render
-            let cleaned = c.cleaned_html.as_ref().unwrap();
-            let md = html_to_md::convert_html_to_markdown(cleaned)?;
-            let html = md_to_html::render_markdown_with_font(&md, theme_id, font_config);
-            save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
-            Ok(html)
-        }
-        Some(ref c) if c.html.is_some() => {
-            // Step 3: source HTML stored but not yet processed
-            run_full_pipeline(pool, entry_id, c.html.as_ref().unwrap(), theme_id, font_config, &cache_key, false).await
-        }
-        _ => {
-            // Step 4: fetch fresh content — try article URL first, fall back to RSS summary
-            let entry_detail = entry_store::get_entry_detail(pool, entry_id)
-                .await?
-                .ok_or("Entry not found")?;
-
-            // Try fetching from article URL for full content with images
-            // Feed entries such as Daring Fireball contain the complete article
-            // HTML in the Atom content field. Render that content directly;
-            // fetching the linked external article is both slower and often
-            // impossible (paywalls, hotlink protection, or a different site).
-            let feed_content = entry_detail
-                .entry
-                .summary
-                .filter(|html| !html.trim().is_empty());
-            let from_feed_content = feed_content.is_some();
-            let source_html = if let Some(content) = feed_content {
-                content
-            } else if let Some(ref url) = entry_detail.entry.url {
-                let fetched = fetch_article_html(client, url).await?;
-                if fetched.trim().is_empty() { String::new() } else { fetched }
-            } else {
-                String::new()
-            };
-
-            if source_html.is_empty() {
-                return Err("No content available for this entry".into());
+    let result = async {
+        if let Some(c) = content.as_ref() {
+            if c.pipeline_type == "obsidian" {
+                if has_current_markdown(c) {
+                    if let Some(html) = get_cached_reader_html(pool, entry_id, &cache_key).await? {
+                        return Ok(html);
+                    }
+                    let html = md_to_html::render_markdown_with_font(
+                        c.markdown.as_deref().unwrap(),
+                        theme_id,
+                        font_config,
+                    );
+                    save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
+                    return Ok(html);
+                }
+                let url = c
+                    .resolved_intermediate_content
+                    .as_deref()
+                    .and_then(obsidian::markdown_url)
+                    .or_else(|| {
+                        c.html.as_deref().and_then(|h| {
+                            obsidian::resolve(
+                                h,
+                                c.document_base_url
+                                    .as_deref()
+                                    .or(entry.url.as_deref())
+                                    .unwrap_or(""),
+                            )
+                        })
+                    })
+                    .ok_or("Obsidian shell has no static Markdown URL")?;
+                return run_obsidian_pipeline(
+                    pool,
+                    client,
+                    c.clone(),
+                    &url,
+                    theme_id,
+                    font_config,
+                    &cache_key,
+                )
+                .await;
             }
-
-            run_full_pipeline(pool, entry_id, &source_html, theme_id, font_config, &cache_key, from_feed_content).await
+            let readability_current = c.readability_version == Some(READABILITY_VERSION);
+            // Only stable absence of a source is terminal. Old empty rows may
+            // represent network/extraction failures and are deliberately retried.
+            if c.display_mode == "empty"
+                && readability_current
+                && c.markdown_version == Some(MARKDOWN_VERSION)
+            {
+                return Err("No article content is available.".to_string());
+            }
+            if readability_current
+                && has_text(c.markdown.as_deref())
+                && c.markdown_version == Some(MARKDOWN_VERSION)
+            {
+                if let Some(html) = get_cached_reader_html(pool, entry_id, &cache_key).await? {
+                    return Ok(html);
+                }
+                let html = md_to_html::render_markdown_with_font(
+                    c.markdown.as_deref().unwrap(),
+                    theme_id,
+                    font_config,
+                );
+                save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
+                return Ok(html);
+            }
+            if readability_current && has_text(c.cleaned_html.as_deref()) {
+                let mut rebuilt = c.clone();
+                rebuilt.markdown = Some(html_to_md::convert_html_to_markdown_with_base(
+                    c.cleaned_html.as_deref().unwrap(),
+                    c.document_base_url.as_deref().or(entry.url.as_deref()),
+                )?);
+                if !has_text(rebuilt.markdown.as_deref()) {
+                    return Err("Article conversion produced no content".into());
+                }
+                rebuilt.markdown_version = Some(MARKDOWN_VERSION);
+                content_store::upsert_content(pool, &rebuilt).await?;
+                let html = md_to_html::render_markdown_with_font(
+                    rebuilt.markdown.as_deref().unwrap(),
+                    theme_id,
+                    font_config,
+                );
+                save_rendered_cache(pool, entry_id, &cache_key, &html).await?;
+                return Ok(html);
+            }
+            if has_text(c.html.as_deref()) {
+                if entry.feed_content.is_none() {
+                    if let Some(url) = obsidian::resolve(
+                        c.html.as_deref().unwrap(),
+                        c.document_base_url
+                            .as_deref()
+                            .or(entry.url.as_deref())
+                            .unwrap_or(""),
+                    ) {
+                        let mut resolved = c.clone();
+                        resolved.pipeline_type = "obsidian".into();
+                        resolved.resolved_intermediate_content = Some(url.to_string());
+                        resolved.cleaned_html = None;
+                        resolved.markdown = None;
+                        resolved.markdown_version = None;
+                        resolved.readability_version = None;
+                        resolved.readability_title = None;
+                        resolved.readability_byline = None;
+                        resolved.display_mode = "pending".into();
+                        content_store::upsert_content(pool, &resolved).await?;
+                        return run_obsidian_pipeline(
+                            pool,
+                            client,
+                            resolved,
+                            &url,
+                            theme_id,
+                            font_config,
+                            &cache_key,
+                        )
+                        .await;
+                    }
+                }
+                return run_full_pipeline(
+                    pool,
+                    entry_id,
+                    c.html.as_deref().unwrap(),
+                    theme_id,
+                    font_config,
+                    &cache_key,
+                    entry.feed_content.is_some(),
+                    c.document_base_url.as_deref().or(entry.url.as_deref()),
+                    // Version 1 (M4W-005) stored only the entry URL. Other
+                    // persisted bases already include the document's <base>.
+                    c.document_base_url.is_some() && c.readability_version != Some(1),
+                )
+                .await;
+            }
+        }
+        // Only an explicit syndication body can bypass the article fetch.
+        // Plain-text Feed bodies must not be interpreted as HTML.
+        let explicit_body = entry
+            .feed_content
+            .as_deref()
+            .filter(|b| !b.trim().is_empty());
+        if let Some(body) = explicit_body {
+            let html = if entry.feed_content_type.as_deref() == Some("text/plain") {
+                format!("<pre><code>{}</code></pre>", html_escape::encode_text(body))
+            } else {
+                body.to_string()
+            };
+            run_full_pipeline(
+                pool,
+                entry_id,
+                &html,
+                theme_id,
+                font_config,
+                &cache_key,
+                true,
+                entry.url.as_deref(),
+                false,
+            )
+            .await
+        } else if let Some(url) = entry.url.as_deref().filter(|s| !s.trim().is_empty()) {
+            match fetch_article_html(client, url).await {
+                Ok((source, final_url)) => {
+                    if let Some(url) = obsidian::resolve(&source, &final_url) {
+                        let resolved = Content {
+                            entry_id,
+                            html: Some(source),
+                            cleaned_html: None,
+                            readability_title: None,
+                            readability_byline: None,
+                            readability_version: None,
+                            markdown: None,
+                            markdown_version: None,
+                            display_mode: "pending".into(),
+                            document_base_url: Some(final_url),
+                            pipeline_type: "obsidian".into(),
+                            resolved_intermediate_content: Some(url.to_string()),
+                        };
+                        // Persist resolver identity only. Failed fetches are not successful bodies.
+                        content_store::upsert_content(pool, &resolved).await?;
+                        return run_obsidian_pipeline(
+                            pool,
+                            client,
+                            resolved,
+                            &url,
+                            theme_id,
+                            font_config,
+                            &cache_key,
+                        )
+                        .await;
+                    }
+                    run_full_pipeline(
+                        pool,
+                        entry_id,
+                        &source,
+                        theme_id,
+                        font_config,
+                        &cache_key,
+                        false,
+                        Some(&final_url),
+                        false,
+                    )
+                    .await
+                }
+                Err(error) => Err(error),
+            }
+        } else {
+            if !has_text(entry.summary.as_deref()) {
+                let empty = Content {
+                    entry_id,
+                    html: None,
+                    cleaned_html: None,
+                    readability_title: None,
+                    readability_byline: None,
+                    readability_version: Some(READABILITY_VERSION),
+                    markdown: None,
+                    markdown_version: Some(MARKDOWN_VERSION),
+                    display_mode: "empty".into(),
+                    document_base_url: None,
+                    pipeline_type: "default".into(),
+                    resolved_intermediate_content: None,
+                };
+                content_store::upsert_content(pool, &empty).await?;
+            }
+            Err("No article URL or explicit Feed body".into())
+        }
+    }
+    .await;
+    match result {
+        Ok(html) => Ok(html),
+        Err(error) => {
+            if let Some(summary) = entry.summary.as_deref().filter(|s| !s.trim().is_empty()) {
+                // Keep legacy merged data readable offline without claiming
+                // its unknown origin is a full article. Never persist this
+                // fallback, so a later open/retry can fetch the full body.
+                Ok(render_summary_fallback(summary, theme_id, font_config))
+            } else {
+                Err(error)
+            }
         }
     }
 }
 
+async fn run_obsidian_pipeline(
+    pool: &Pool,
+    client: &Client,
+    mut content: Content,
+    url: &url::Url,
+    theme_id: &str,
+    font_config: &FontConfig,
+    cache_key: &str,
+) -> Result<String, String> {
+    if content.resolved_intermediate_content.as_deref() != Some(url.as_str()) {
+        content.pipeline_type = "obsidian".into();
+        content.resolved_intermediate_content = Some(url.to_string());
+        content.markdown = None;
+        content.markdown_version = None;
+        content.cleaned_html = None;
+        content.readability_version = None;
+        content.readability_title = None;
+        content.readability_byline = None;
+        content.display_mode = "pending".into();
+        content_store::upsert_content(pool, &content).await?;
+    }
+    let md = obsidian::build_markdown(client, url).await?;
+    if md.trim().is_empty() {
+        return Err("Obsidian conversion produced no content".into());
+    }
+    content.markdown = Some(md);
+    content.markdown_version = Some(MARKDOWN_VERSION);
+    content.display_mode = "cleaned".into();
+    content.cleaned_html = None;
+    content.readability_version = None;
+    content.readability_title = None;
+    content.readability_byline = None;
+    content_store::upsert_content(pool, &content).await?;
+    let html = md_to_html::render_markdown_with_font(
+        content.markdown.as_deref().unwrap(),
+        theme_id,
+        font_config,
+    );
+    save_rendered_cache(pool, content.entry_id, cache_key, &html).await?;
+    Ok(html)
+}
+
+fn has_text(value: Option<&str>) -> bool {
+    value.is_some_and(|s| !s.trim().is_empty())
+}
+
+fn render_summary_fallback(summary: &str, theme_id: &str, font_config: &FontConfig) -> String {
+    let text = strip_html_tags(summary);
+    let text = html_escape::decode_html_entities(&text);
+    let body = format!(
+        "<pre><code>{}</code></pre>",
+        html_escape::encode_text(&text)
+    );
+    // Use the same converter as successful bodies; comrak deliberately omits
+    // raw HTML, so passing the <pre> wrapper directly would hide the snippet.
+    let markdown = html_to_md::convert_html_to_markdown(&body).unwrap_or_else(|_| text.to_string());
+    md_to_html::render_markdown_with_font(&markdown, theme_id, font_config).replacen(
+        "</head>",
+        &format!("{SUMMARY_SOURCE_MARKER}</head>"),
+        1,
+    )
+}
+
 /// Fetch article HTML from URL with browser-like User-Agent.
-/// Returns empty string on failure or Cloudflare challenge detection.
-async fn fetch_article_html(client: &Client, url: &str) -> Result<String, String> {
+/// Reject failed/challenge responses instead of persisting them as an article.
+async fn fetch_article_html(client: &Client, url: &str) -> Result<(String, String), String> {
     let response = client
         .get(url)
         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
@@ -94,17 +365,24 @@ async fn fetch_article_html(client: &Client, url: &str) -> Result<String, String
         .map_err(|e| format!("HTTP error: {}", e))?;
 
     if !response.status().is_success() {
-        return Ok(String::new());
+        return Err(format!("Article HTTP error: {}", response.status()));
     }
 
-    let body = response.text().await.map_err(|e| format!("Read error: {}", e))?;
+    let final_url = response.url().to_string();
+    let body = response
+        .text()
+        .await
+        .map_err(|e| format!("Read error: {}", e))?;
 
     // Reject Cloudflare challenge pages
     if body.contains("_cf_chl_opt") || body.contains("challenge-platform") {
-        return Ok(String::new());
+        return Err("Article access challenge".into());
     }
 
-    Ok(body)
+    if body.trim().is_empty() {
+        return Err("Empty article response".into());
+    }
+    Ok((body, final_url))
 }
 
 async fn run_full_pipeline(
@@ -115,86 +393,24 @@ async fn run_full_pipeline(
     font_config: &FontConfig,
     cache_key: &str,
     from_feed_content: bool,
+    document_base_url: Option<&str>,
+    base_already_resolved: bool,
 ) -> Result<String, String> {
-    // Try decruft extraction first
-    let decruft_output = extraction::extract_content(source_html, None)?;
-
-    let needs_fallback = decruft_output.needs_fallback();
-    let is_rss_metadata = source_html.len() < 500 || source_html.contains("Article URL:");
-
-    if !from_feed_content && (needs_fallback || is_rss_metadata) {
-        // decruft could not extract meaningful article text.  Load the entry
-        // detail so we can build a per-entry fallback page that shows the entry
-        // metadata plus whatever plain-text we can scrape from the source.
-        let detail = entry_store::get_entry_detail(pool, entry_id)
-            .await?
-            .ok_or("Entry not found")?;
-
-        let title = detail.entry.title.unwrap_or_default();
-        let author = detail.entry.author.unwrap_or_default();
-        let published = detail.entry.published_at.unwrap_or_default();
-        let url = detail.entry.url.unwrap_or_default();
-
-        // Build a simple but per-entry HTML page so different entries don't
-        // look identical.
-        let mut body = String::new();
-        body.push_str(&format!("<h1>{}</h1>\n", html_escape::encode_text(&title)));
-        if !author.is_empty() {
-            body.push_str(&format!("<p><em>{}</em></p>\n", html_escape::encode_text(&author)));
-        }
-        if !published.is_empty() {
-            body.push_str(&format!("<p>{}</p>\n", html_escape::encode_text(&published)));
-        }
-        body.push_str("<hr>\n");
-        body.push_str("<div data-mercury-fallback=\"true\"></div>\n");
-        body.push_str("<p><strong>Full article content is not available.</strong><br>\n");
-        body.push_str("The source website may require JavaScript or block automated access (Cloudflare challenge).</p>\n");
-
-        // Append any plain-text we can extract from the source HTML so that
-        // there is *some* content visible (will be unique per entry if the RSS
-        // description carries a snippet).
-        let stripped = strip_html_tags(source_html);
-        let trimmed = stripped.trim();
-        if trimmed.len() > 20 {
-            body.push_str("<hr>\n<blockquote>\n");
-            body.push_str(&html_escape::encode_text(trimmed).replace("\n", "<br>\n"));
-            body.push_str("\n</blockquote>\n");
-        }
-
-        if !url.is_empty() {
-            body.push_str(&format!(
-                "<p><a href=\"{}\">Open original article in browser</a></p>\n",
-                html_escape::encode_text(&url)
-            ));
-        }
-
-        let html = md_to_html::render_markdown_with_font(&body, theme_id, font_config);
-        save_rendered_cache(pool, entry_id, cache_key, &html).await?;
-
-        // Persist empty marker so we don't keep re-fetching
-        let content = Content {
-            entry_id,
-            html: None,
-            cleaned_html: None,
-            readability_title: Some(title),
-            readability_byline: if author.is_empty() {
-                None
-            } else {
-                Some(author)
-            },
-            readability_version: Some(READABILITY_VERSION),
-            markdown: None,
-            markdown_version: None,
-            display_mode: "empty".to_string(),
-            document_base_url: None,
-            pipeline_type: "default".to_string(),
-            resolved_intermediate_content: None,
-        };
-        content_store::upsert_content(pool, &content).await?;
-        return Ok(html);
+    // Persisted resolved bases must not be joined to a relative <base> again
+    // when rebuilding locally after a version bump.
+    let base = if base_already_resolved {
+        document_base_url
+            .and_then(html_to_md::web_url)
+            .map(|u| u.to_string())
+    } else {
+        html_to_md::document_base_url(source_html, document_base_url)
+    };
+    // Feed bodies are already article fragments; extraction would discard
+    // legitimate short posts. Web pages still require meaningful extraction.
+    let decruft_output = extraction::extract_content(source_html, base.as_deref())?;
+    if !from_feed_content && decruft_output.needs_fallback() {
+        return Err("Article extraction failed".into());
     }
-
-    // Use the better of: decruft output or source HTML
     let cleaned = if from_feed_content {
         source_html.to_string()
     } else {
@@ -202,7 +418,10 @@ async fn run_full_pipeline(
     };
 
     // HTML → Markdown
-    let md = html_to_md::convert_html_to_markdown(&cleaned)?;
+    let md = html_to_md::convert_html_to_markdown_with_base(&cleaned, base.as_deref())?;
+    if md.trim().is_empty() {
+        return Err("Article conversion produced no content".into());
+    }
 
     // Persist pipeline artifacts
     let content = Content {
@@ -215,7 +434,7 @@ async fn run_full_pipeline(
         markdown: Some(md),
         markdown_version: Some(MARKDOWN_VERSION),
         display_mode: "cleaned".to_string(),
-        document_base_url: None,
+        document_base_url: base,
         pipeline_type: "default".to_string(),
         resolved_intermediate_content: None,
     };

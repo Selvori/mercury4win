@@ -24,8 +24,11 @@ export function AppShell() {
   const [show_opml_import, set_show_opml_import] = useState(false);
   const [show_opml_export, set_show_opml_export] = useState(false);
   const [show_settings, set_show_settings] = useState(false);
+  const [tag_batch_active, set_tag_batch_active] = useState(false);
   const [sidebar_view, set_sidebar_view] = useState<"feeds" | "tags">("feeds");
-  const [selected_tag_id, set_selected_tag_id] = useState<number | null>(null);
+  const [selected_tag_ids, set_selected_tag_ids] = useState<number[]>([]);
+
+  const [starred_only, set_starred_only] = useState(false);
 
   // ── Resizable panel state ──
   const [sidebar_width, set_sidebar_width] = useState(240);
@@ -86,24 +89,32 @@ export function AppShell() {
   }, [entry_list_width]);
 
   const handle_select_tag = useCallback((tag_id: number) => {
-    set_selected_tag_id(tag_id === selected_tag_id ? null : tag_id);
+    set_selected_tag_ids((ids) => ids.includes(tag_id) ? ids.filter((id) => id !== tag_id) : ids.length < 5 ? [...ids, tag_id] : ids);
     set_selected_entry(null);
-    if (tag_id !== selected_tag_id) {
-      set_selected_feed_id(undefined);
-    }
-  }, [selected_tag_id]);
+    set_selected_feed_id(undefined);
+    set_starred_only(false);
+  }, []);
+
+  const handle_tags_changed = useCallback((removed: number[], target?: number) => {
+    set_selected_tag_ids((ids) => {
+      const affected = ids.some((id) => removed.includes(id));
+      const remaining = ids.filter((id) => !removed.includes(id));
+      return affected && target ? [...new Set([...remaining, target])].slice(0, 5) : remaining;
+    });
+  }, []);
 
   const handle_select_entry = useCallback((entry: Entry) => {
     set_selected_entry(entry);
   }, []);
 
   const handle_select_feed = useCallback((id: number | null) => {
-    if (id !== selected_feed_id) {
+    if (id !== selected_feed_id || starred_only || selected_tag_ids.length) {
       set_selected_entry(null);
       set_selected_feed_id(id);
-      set_selected_tag_id(null);
+      set_selected_tag_ids([]);
+      set_starred_only(false);
     }
-  }, [selected_feed_id]);
+  }, [selected_feed_id, starred_only, selected_tag_ids]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -111,16 +122,6 @@ export function AppShell() {
       set_show_settings(false);
       set_show_feed_editor(true);
     }, []),
-    on_toggle_read: useCallback(() => {
-      if (selected_entry) {
-        // mark_read would go here
-      }
-    }, [selected_entry]),
-    on_toggle_star: useCallback(() => {
-      if (selected_entry) {
-        // mark_starred would go here
-      }
-    }, [selected_entry]),
   });
 
   return (
@@ -145,12 +146,18 @@ export function AppShell() {
             }}
             view={sidebar_view}
             on_change_view={(v) => {
-              if (v === "feeds") { set_selected_tag_id(null); set_selected_entry(null); }
+              if (v === "feeds") { set_selected_tag_ids([]); set_selected_entry(null); }
               if (v === "tags") { set_selected_feed_id(undefined); set_selected_entry(null); }
+              set_starred_only(false);
               set_sidebar_view(v);
             }}
-            selected_tag_id={selected_tag_id}
+            selected_tag_ids={selected_tag_ids}
+            starred_only={starred_only}
+            on_select_starred={() => {
+              set_selected_feed_id(null); set_selected_tag_ids([]); set_selected_entry(null); set_starred_only(true); set_sidebar_view("feeds");
+            }}
             on_select_tag={handle_select_tag}
+            on_tags_changed={handle_tags_changed}
           />
         </div>
 
@@ -164,7 +171,10 @@ export function AppShell() {
         <div style={{ width: entry_list_width }} className="shrink-0 overflow-hidden border-r border-border">
           <EntryList
             feed_id={selected_feed_id}
-            tag_ids={selected_tag_id ? [selected_tag_id] : undefined}
+            tag_ids={selected_tag_ids.length ? selected_tag_ids : undefined}
+            starred_only={starred_only}
+            on_clear_selection={() => set_selected_entry(null)}
+            on_delete_entry={(id) => set_selected_entry((entry) => entry?.id === id ? null : entry)}
             selected_entry_id={selected_entry?.id ?? null}
             on_select_entry={handle_select_entry}
           />
@@ -179,7 +189,7 @@ export function AppShell() {
         {/* Right — reader area (fills remaining space) */}
         <main className="flex flex-1 flex-col overflow-hidden">
           {selected_entry ? (
-            <ReaderPane entry={selected_entry} />
+            <ReaderPane entry={selected_entry} on_select_entry={handle_select_entry} />
           ) : (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
               <div className="text-center">
@@ -200,10 +210,11 @@ export function AppShell() {
       {show_settings && (
         <Dialog
           open={show_settings}
-          onOpenChange={(o) => !o && set_show_settings(false)}
+          aria_label={t("sidebar.settings")}
+          onOpenChange={(o) => { if (!o && !tag_batch_active) set_show_settings(false); }}
           className="max-w-2xl"
         >
-          <AgentSettings />
+          <AgentSettings on_tags_changed={handle_tags_changed} on_batch_active_change={set_tag_batch_active} />
         </Dialog>
       )}
     </div>

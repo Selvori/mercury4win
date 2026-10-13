@@ -1,7 +1,7 @@
 // mercury4win/src/features/feed/components/feed_editor.tsx
 // Add/edit feed dialog
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,6 +22,7 @@ interface Props {
 
 export function FeedEditor({ open, on_close }: Props) {
   const { t } = useTranslation();
+  const url_id = useId();
   const [url, set_url] = useState("");
   const query_client = useQueryClient();
 
@@ -50,14 +51,16 @@ export function FeedEditor({ open, on_close }: Props) {
         </DialogHeader>
         <form onSubmit={handle_submit}>
           <div className="space-y-3 py-4">
+            <label htmlFor={url_id} className="text-sm">{t("feed.feedUrl")}</label>
             <Input
+              id={url_id}
               placeholder={t("feed.feedUrlPlaceholder")}
               value={url}
               onChange={(e) => set_url(e.target.value)}
               autoFocus
             />
             {mutation.isError && (
-              <p className="text-xs text-destructive">{String(mutation.error)}</p>
+              <p role="alert" className="text-xs text-destructive">{String(mutation.error)}</p>
             )}
           </div>
           <DialogFooter>

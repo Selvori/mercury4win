@@ -1,8 +1,8 @@
 // mercury4win/src-tauri/reader/extraction.rs
 // Article content extraction via decruft
 
-use decruft::{DecruftOptions, DecruftResult};
 use crate::db::models::DecruftOutput;
+use decruft::{DecruftOptions, DecruftResult};
 
 /// Extract clean article content from raw HTML using decruft.
 pub fn extract_content(html: &str, url: Option<&str>) -> Result<DecruftOutput, String> {

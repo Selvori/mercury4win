@@ -10,16 +10,24 @@ import type {
   ImportResult,
   ImportProgress,
   EntryPage,
+  EntryFilter,
+  EntryCursor,
   EntryDetail,
   EntryNote,
   Tag,
-  BatchTagResult,
-  TimeRange,
+  TagAlias,
+  BatchScope,
+  BatchSnapshot,
+  BatchApplyResult,
+  Entry,
   ProviderProfile,
   ModelProfile,
   AgentProfile,
   AgentStatus,
+  AgentResult,
   ProviderConfig,
+  DigestOptions,
+  DigestPreview,
 } from "@/types";
 
 // ── Feed ──
@@ -59,25 +67,27 @@ export async function sync_all_feeds_stream(
 
 // ── Entry ──
 
-export interface LoadEntriesParams {
-  feed_id?: number;
-  unread_only?: boolean;
-  search?: string;
-  tag_ids?: number[];
-  tag_mode?: string;
-  cursor?: string;
+export interface LoadEntriesParams extends EntryFilter {
+  cursor?: EntryCursor;
   limit?: number;
+}
+
+function entry_filter_args(params: EntryFilter) {
+  return {
+    feedId: params.feed_id ?? null,
+    tagIds: params.tag_ids ?? null,
+    unreadOnly: params.unread_only ?? false,
+    starredOnly: params.starred_only ?? false,
+    search: params.search ?? null,
+    tagMode: params.tag_mode ?? "any",
+  };
 }
 
 export async function load_entries(
   params: LoadEntriesParams,
 ): Promise<EntryPage> {
   return invoke("load_entries", {
-    feedId: params.feed_id ?? null,
-    tagIds: params.tag_ids ?? null,
-    unreadOnly: params.unread_only ?? null,
-    search: params.search ?? null,
-    tagMode: params.tag_mode ?? null,
+    ...entry_filter_args(params),
     cursor: params.cursor ?? null,
     limit: params.limit ?? null,
   });
@@ -90,14 +100,8 @@ export async function mark_read(
   return invoke("mark_read", { entryIds: entry_ids, isRead: is_read });
 }
 
-export async function mark_all_read_in_scope(
-  feed_id?: number | null,
-  tag_ids?: number[],
-): Promise<void> {
-  return invoke("mark_all_read_in_scope", {
-    feedId: feed_id ?? null,
-    tagIds: tag_ids ?? null,
-  });
+export async function mark_all_read_in_scope(filter: EntryFilter): Promise<void> {
+  return invoke("mark_all_read_in_scope", entry_filter_args(filter));
 }
 
 export async function mark_starred(
@@ -251,11 +255,13 @@ export async function run_summary(
   target_language: string,
   detail_level: string,
   on_event: Channel<string>,
+  request_id: string = crypto.randomUUID(),
 ): Promise<void> {
   return invoke("run_summary", {
     entryId: entry_id,
     targetLanguage: target_language,
     detailLevel: detail_level,
+    requestId: request_id,
     onEvent: on_event,
   });
 }
@@ -264,20 +270,32 @@ export async function run_translation(
   entry_id: number,
   target_language: string,
   on_event: Channel<string>,
+  request_id: string = crypto.randomUUID(),
+  source_segment_id?: string,
 ): Promise<void> {
   return invoke("run_translation", {
     entryId: entry_id,
     targetLanguage: target_language,
+    requestId: request_id,
+    sourceSegmentId: source_segment_id ?? null,
     onEvent: on_event,
   });
 }
 
-export async function run_tagging(entry_id: number): Promise<string[]> {
-  return invoke("run_tagging", { entryId: entry_id });
+export async function run_tagging(
+  entry_id: number,
+  on_event: Channel<string>,
+  request_id: string = crypto.randomUUID(),
+): Promise<string[]> {
+  return invoke("run_tagging", { entryId: entry_id, onEvent: on_event, requestId: request_id });
 }
 
-export async function cancel_agent_task(task_type: string): Promise<void> {
-  return invoke("cancel_agent_task", { taskType: task_type });
+export async function cancel_agent_task(task_type: string, request_id: string): Promise<void> {
+  return invoke("cancel_agent_task", { taskType: task_type, requestId: request_id });
+}
+
+export async function abandon_agent_waiting(task_type: string, request_id: string): Promise<void> {
+  return invoke("abandon_agent_waiting", { taskType: task_type, requestId: request_id });
 }
 
 // ── Model management ──
@@ -292,8 +310,11 @@ export async function add_model(
   provider_id: string,
   name: string,
   model_name: string,
+  supports_summary?: boolean,
+  supports_translation?: boolean,
+  supports_tagging?: boolean,
 ): Promise<void> {
-  return invoke("add_model", { providerId: provider_id, name, modelName: model_name });
+  return invoke("add_model", { providerId: provider_id, name, modelName: model_name, supportsSummary: supports_summary, supportsTranslation: supports_translation, supportsTagging: supports_tagging });
 }
 
 export async function update_model(
@@ -385,11 +406,20 @@ export async function remove_tag(
   return invoke("remove_tag", { entryId: entry_id, tagId: tag_id });
 }
 
-export async function batch_tag(
-  time_range: TimeRange,
-): Promise<BatchTagResult> {
-  return invoke("batch_tag", { timeRange: time_range });
+export async function batch_tag(scope: BatchScope, request_id: string, confirmed_large: boolean, concurrency: number, on_event: Channel<string>): Promise<BatchSnapshot> {
+  return invoke("batch_tag", { scope, requestId: request_id, confirmedLarge: confirmed_large, concurrency, onEvent: on_event });
 }
+export const count_tag_batch = (scope: BatchScope): Promise<number> => invoke("count_tag_batch", { scope });
+export const load_tag_batch = (run_id?: string): Promise<BatchSnapshot | null> => invoke("load_tag_batch", { runId: run_id ?? null });
+export const apply_tag_batch = (run_id: string, kept: string[], discarded: string[]): Promise<BatchApplyResult> => invoke("apply_tag_batch", { runId: run_id, kept, discarded });
+export const discard_tag_batch = (run_id: string): Promise<void> => invoke("discard_tag_batch", { runId: run_id });
+export const list_tag_aliases = (tag_id: number): Promise<TagAlias[]> => invoke("list_tag_aliases", { tagId: tag_id });
+export const add_tag_alias = (tag_id: number, alias: string): Promise<void> => invoke("add_tag_alias", { tagId: tag_id, alias });
+export const delete_tag_alias = (alias_id: number): Promise<void> => invoke("delete_tag_alias", { aliasId: alias_id });
+export const promote_tag = (tag_id: number): Promise<void> => invoke("promote_tag", { tagId: tag_id });
+export const cleanup_unused_tags = (): Promise<number> => invoke("cleanup_unused_tags");
+export const local_tag_suggestions = (entry_id: number): Promise<string[]> => invoke("local_tag_suggestions", { entryId: entry_id });
+export const related_entries = (entry_id: number): Promise<Entry[]> => invoke("related_entries", { entryId: entry_id });
 
 export async function rename_tag(
   tag_id: number,
@@ -414,10 +444,12 @@ export async function merge_tags(
 export async function generate_digest(
   entry_id: number,
   template_name: string,
+  options?: DigestOptions,
 ): Promise<string> {
   return invoke("generate_digest", {
     entryId: entry_id,
     templateName: template_name,
+    options,
   });
 }
 
@@ -425,12 +457,24 @@ export async function export_digest(
   entry_id: number,
   template_name: string,
   export_path: string,
+  options?: DigestOptions,
+  expected_content?: string,
 ): Promise<void> {
   return invoke("export_digest", {
     entryId: entry_id,
     templateName: template_name,
     exportPath: export_path,
+    options,
+    expectedContent: expected_content,
   });
+}
+
+export function preview_digest(entry_ids: number[], template_name: string, options: DigestOptions): Promise<DigestPreview> {
+  return invoke("preview_digest", { entryIds: entry_ids, templateName: template_name, options });
+}
+
+export function export_multi_digest(entry_ids: number[], template_name: string, export_path: string, options: DigestOptions, expected_content: string): Promise<void> {
+  return invoke("export_multi_digest", { entryIds: entry_ids, templateName: template_name, exportPath: export_path, options, expectedContent: expected_content });
 }
 
 // ── Settings ──
@@ -464,8 +508,28 @@ export async function delete_note(entry_id: number): Promise<void> {
 
 // ── Usage ──
 
-export async function get_usage_report(
-  window: string,
-): Promise<[number, number, number]> {
-  return invoke("get_usage_report", { window });
+export async function get_usage_report(window: string, dimension = "provider", filter: import("@/types/agent").UsageFilter = {}): Promise<import("@/types/agent").UsageReport> {
+  return invoke("get_usage_report", { window, dimension, filter });
+}
+export async function set_configuration_enabled(id: string, entity: "provider" | "model", enabled: boolean): Promise<void> {
+  return invoke("set_configuration_enabled", { id, entity, enabled });
+}
+
+// Durable AI results; language/parameters/source identity is checked in Rust.
+export function load_summary_result(entry_id: number, target_language: string, detail_level: string): Promise<AgentResult | null> {
+  return invoke("load_summary_result", { entryId: entry_id, targetLanguage: target_language, detailLevel: detail_level });
+}
+export function load_translation_result(entry_id: number, target_language: string): Promise<AgentResult | null> {
+  return invoke("load_translation_result", { entryId: entry_id, targetLanguage: target_language });
+}
+
+export function load_translation_document(entry_id: number, target_language: string): Promise<import("@/types/agent").TranslationDocument> {
+  return invoke("load_translation_document", { entryId: entry_id, targetLanguage: target_language });
+}
+
+export function get_agent_fingerprint(agent_type: string): Promise<string> {
+  return invoke("get_agent_fingerprint", { agentType: agent_type });
+}
+export function load_latest_summary(entry_id: number): Promise<{ target_language: string; detail_level: string; configuration_fingerprint: string | null; result: AgentResult } | null> {
+  return invoke("load_latest_summary", { entryId: entry_id });
 }

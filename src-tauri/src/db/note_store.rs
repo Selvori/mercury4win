@@ -1,9 +1,9 @@
 // mercury4win/src-tauri/db/note_store.rs
 // Entry notes persistence
 
+use crate::db::models::EntryNote;
 use deadpool_sqlite::Pool;
 use rusqlite::params;
-use crate::db::models::EntryNote;
 
 pub async fn get_note(pool: &Pool, entry_id: i64) -> Result<Option<EntryNote>, String> {
     let pool = pool.clone();
@@ -58,7 +58,10 @@ pub async fn delete_note(pool: &Pool, entry_id: i64) -> Result<(), String> {
         .await
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
-            conn.execute("DELETE FROM entry_note WHERE entry_id = ?1", params![entry_id])
+            conn.execute(
+                "DELETE FROM entry_note WHERE entry_id = ?1",
+                params![entry_id],
+            )
         })
         .await
         .map_err(|e| e.to_string())?

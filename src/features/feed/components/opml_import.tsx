@@ -37,12 +37,14 @@ export function OpmlImport({ open, on_close }: Props) {
   const [current, set_current] = useState(0);
   const [total, set_total] = useState(0);
   const [done, set_done] = useState(false);
+  const [error, set_error] = useState<string | null>(null);
 
   async function handle_import() {
+    set_error(null);
     try {
       const { open: open_dialog } = await import("@tauri-apps/plugin-dialog");
       const selected = await open_dialog({
-        title: "Select OPML File",
+        title: t("opml.selectFile"),
         filters: [{ name: "OPML", extensions: ["opml", "xml"] }],
         multiple: false,
       });
@@ -107,6 +109,7 @@ export function OpmlImport({ open, on_close }: Props) {
       await import_opml_stream(path, channel);
     } catch (e) {
       console.error("OPML import error:", e);
+      set_error(String(e));
       set_importing(false);
     }
   }
@@ -117,6 +120,7 @@ export function OpmlImport({ open, on_close }: Props) {
     set_current(0);
     set_total(0);
     set_done(false);
+    set_error(null);
     on_close();
   }
 
@@ -132,6 +136,7 @@ export function OpmlImport({ open, on_close }: Props) {
         </DialogHeader>
 
         <div className="space-y-4 py-2">
+          {error && <p role="alert" className="text-sm text-destructive">{t("opml.importError")}: {error}</p>}
           {!importing && !done ? (
             <>
               <p className="text-sm text-muted-foreground">
@@ -140,7 +145,7 @@ export function OpmlImport({ open, on_close }: Props) {
             </>
           ) : (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
+              <div role="status" className="flex items-center justify-between text-sm">
                 <span className="font-medium">
                   {done ? t("opml.importDone") : t("opml.progressTitle")}
                 </span>

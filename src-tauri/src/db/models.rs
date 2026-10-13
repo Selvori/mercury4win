@@ -40,6 +40,9 @@ pub struct Entry {
     pub author: Option<String>,
     pub published_at: Option<String>,
     pub summary: Option<String>,
+    /// Explicit RSS/Atom/JSON Feed body, separate from the teaser.
+    pub feed_content: Option<String>,
+    pub feed_content_type: Option<String>,
     pub is_read: bool,
     pub is_starred: bool,
     pub is_deleted: bool,
@@ -47,9 +50,15 @@ pub struct Entry {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EntryCursor {
+    pub published_at: Option<String>,
+    pub id: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntryPage {
     pub entries: Vec<Entry>,
-    pub next_cursor: Option<String>,
+    pub next_cursor: Option<EntryCursor>,
     pub total: i64,
 }
 
@@ -111,6 +120,7 @@ pub struct TagAlias {
     pub id: i64,
     pub tag_id: i64,
     pub alias_normalized: String,
+    pub alias: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -303,6 +313,9 @@ pub struct AgentStatus {
     pub agent_type: String,
     pub state: String,
     pub current_entry_id: Option<i64>,
+    pub current_request_id: Option<String>,
+    pub waiting_entry_id: Option<i64>,
+    pub waiting_request_id: Option<String>,
     pub queue_depth: usize,
 }
 

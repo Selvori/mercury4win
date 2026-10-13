@@ -1,12 +1,10 @@
 // mercury4win/src-tauri/agent/tagging.rs
 // Tagging agent — non-streaming LLM completion for tag suggestions
 
-use std::collections::HashMap;
+use crate::agent::provider::{self, ChatCompletionRequest, ChatMessage};
+use crate::db::{tag_batch_store, tag_store};
 use reqwest::Client;
-use crate::agent::prompt_templates;
-use crate::agent::provider::{self, ChatMessage, ChatCompletionRequest};
-use crate::db::{entry_store, content_store, tag_store, usage_store};
-use crate::db::models::LlmUsageEvent;
+use std::collections::HashMap;
 
 /// Run tagging agent. Returns a list of suggested tag names.
 /// Retries up to 3 times when DeepSeek returns empty responses (known occasional quirk).
@@ -18,30 +16,63 @@ pub async fn run_tagging(
     api_key: &str,
     model_name: &str,
 ) -> Result<Vec<String>, String> {
-    let detail = entry_store::get_entry_detail(pool, entry_id)
-        .await?
-        .ok_or("Entry not found")?;
+    run_tagging_with_source(
+        pool,
+        client,
+        entry_id,
+        provider_base_url,
+        api_key,
+        model_name,
+    )
+    .await
+    .map(|(_, tags)| tags)
+}
 
-    let content = content_store::get_content(pool, entry_id).await?;
-    let markdown = content
-        .as_ref()
-        .and_then(|c| c.markdown.as_deref())
-        .unwrap_or("");
+pub async fn run_tagging_with_source(
+    pool: &deadpool_sqlite::Pool,
+    client: &Client,
+    entry_id: i64,
+    provider_base_url: &str,
+    api_key: &str,
+    model_name: &str,
+) -> Result<(String, Vec<String>), String> {
+    crate::agent::usage::scope(
+        pool,
+        entry_id,
+        "tagging",
+        run_tagging_with_source_inner(
+            pool,
+            client,
+            entry_id,
+            provider_base_url,
+            api_key,
+            model_name,
+        ),
+    )
+    .await
+}
+
+async fn run_tagging_with_source_inner(
+    pool: &deadpool_sqlite::Pool,
+    client: &Client,
+    entry_id: i64,
+    provider_base_url: &str,
+    api_key: &str,
+    model_name: &str,
+) -> Result<(String, Vec<String>), String> {
+    let source = tag_batch_store::load_source(pool, entry_id).await?;
 
     // Get existing tags for the template
     let existing = tag_store::list_tags(pool, None).await?;
     let existing_tags: Vec<String> = existing.iter().map(|t| t.name.clone()).collect();
     let existing_tags_str = existing_tags.join("\n");
 
-    let template = prompt_templates::load_builtin_template("tagging", None)?;
+    let template = crate::agent::configuration::template("tagging", None)?;
 
     let mut params = HashMap::new();
-    params.insert("title".into(), detail.entry.title.unwrap_or_default());
-    params.insert(
-        "byline".into(),
-        detail.entry.author.unwrap_or_default(),
-    );
-    params.insert("content".into(), markdown.to_string());
+    params.insert("title".into(), source.title);
+    params.insert("byline".into(), source.author);
+    params.insert("content".into(), source.content);
     params.insert("existing_tags".into(), existing_tags_str);
 
     let rendered = template.render(&params);
@@ -61,20 +92,23 @@ pub async fn run_tagging(
     let request = ChatCompletionRequest {
         model: model_name.to_string(),
         messages,
-        temperature: Some(0.3),
+        temperature: Some(crate::agent::configuration::request_parameters("tagging").temperature),
         top_p: None,
-        max_tokens: Some(512),  // enough for a JSON array of 8 tags + formatting
+        max_tokens: Some(crate::agent::configuration::request_parameters("tagging").max_tokens), // enough for a JSON array of 8 tags + formatting
         stream: None,
     };
 
     // Retry up to 3 times for empty responses (DeepSeek quirk) or transient network errors
     let mut raw = String::new();
-    let mut last_usage = None;
     let mut last_error: Option<String> = None;
     for attempt in 0u32..3 {
-        match provider::chat_completion(
-            client, provider_base_url, api_key, &request,
-        ).await {
+        match crate::agent::usage::PHASE
+            .scope(
+                if attempt == 0 { "normal" } else { "retry" },
+                provider::chat_completion(client, provider_base_url, api_key, &request),
+            )
+            .await
+        {
             Ok(response) => {
                 let content = response
                     .choices
@@ -82,11 +116,14 @@ pub async fn run_tagging(
                     .map(|c| c.message.content.clone())
                     .unwrap_or_default();
 
-                log::info!("[tagging] attempt={attempt}, raw LLM response (len={}): {:.300}", content.len(), content);
+                log::info!(
+                    "[tagging] attempt={attempt}, raw LLM response (len={}): {:.300}",
+                    content.len(),
+                    content
+                );
 
                 if !content.trim().is_empty() {
                     raw = content;
-                    last_usage = response.usage;
                     last_error = None;
                     break;
                 }
@@ -95,7 +132,7 @@ pub async fn run_tagging(
                 last_error = Some("Empty response from LLM".into());
             }
             Err(e) => {
-                log::warn!("[tagging] error on attempt={attempt}: {e}");
+                log::warn!("[tagging] request failed on attempt={attempt}");
                 last_error = Some(e);
             }
         }
@@ -104,31 +141,15 @@ pub async fn run_tagging(
         }
     }
 
-    // Log usage from the successful response
-    if let Some(ref usage) = last_usage {
-        let _ = usage_store::insert_usage_event(
-            pool,
-            &LlmUsageEvent {
-                id: 0,
-                task_run_id: None,
-                provider_name: Some("default".into()),
-                model_name: Some(model_name.into()),
-                agent_type: Some("tagging".into()),
-                prompt_tokens: Some(usage.prompt_tokens as i64),
-                completion_tokens: Some(usage.completion_tokens as i64),
-                total_tokens: Some(usage.total_tokens as i64),
-                request_status: Some("success".into()),
-                created_at: String::new(),
-            },
-        ).await;
-    }
-
     // Parse tag names from LLM response.
     let tags: Vec<String> = parse_tag_response(&raw);
 
     // Deduplicate: remove tags that share the same normalized (lowercase) form
     let mut seen = std::collections::HashSet::new();
-    let tags: Vec<String> = tags.into_iter().filter(|t| seen.insert(t.to_lowercase())).collect();
+    let tags: Vec<String> = tags
+        .into_iter()
+        .filter(|t| seen.insert(tag_store::normalize(t)))
+        .collect();
 
     // If all parsing failed, return the raw response as error so user can see it
     if tags.is_empty() {
@@ -137,13 +158,18 @@ pub async fn run_tagging(
             if let Some(ref err) = last_error {
                 return Err(format!("Tagging failed after 3 attempts: {}", err));
             }
-            return Err("DeepSeek returned empty responses after 3 retries. Please try again.".into());
+            return Err(
+                "DeepSeek returned empty responses after 3 retries. Please try again.".into(),
+            );
         }
         let preview: String = raw.chars().take(500).collect();
-        return Err(format!("Failed to parse tags from LLM response. Raw output:\n{}", preview));
+        return Err(format!(
+            "Failed to parse tags from LLM response. Raw output:\n{}",
+            preview
+        ));
     }
 
-    Ok(tags)
+    Ok((source.hash, tag_store::canonical_names(pool, tags).await?))
 }
 
 /// Parse tag names from the LLM response. Tries JSON array first, falls back to
@@ -207,7 +233,7 @@ fn parse_tag_response(raw: &str) -> Vec<String> {
                     }
                 }
                 // Repair truncated JSON: try appending "] and parsing
-                let repaired = format!("{}\"]", &slice[..slice.len()-1]);
+                let repaired = format!("{}\"]", &slice[..slice.len() - 1]);
                 if let Ok(arr) = serde_json::from_str::<Vec<String>>(&repaired) {
                     let tags: Vec<String> = arr
                         .into_iter()
@@ -238,7 +264,8 @@ fn parse_tag_response(raw: &str) -> Vec<String> {
             // Strip leading number like "1. " or "1) "
             let cleaned = strip_number_prefix(cleaned);
             // Strip quotes and bracket remnants
-            let cleaned = cleaned.trim_matches(|c: char| c == '"' || c == '\'' || c == '`' || c == '[' || c == ']');
+            let cleaned = cleaned
+                .trim_matches(|c: char| c == '"' || c == '\'' || c == '`' || c == '[' || c == ']');
             // Remove internal quotes
             let cleaned = cleaned.replace('"', "").replace('\'', "").replace('`', "");
             cleaned.trim().to_string()
@@ -271,20 +298,4 @@ fn strip_number_prefix(s: &str) -> &str {
         }
     }
     s
-}
-
-/// Apply tag suggestions to an entry (creates provisional tags).
-pub async fn apply_tag_suggestions(
-    pool: &deadpool_sqlite::Pool,
-    entry_id: i64,
-    tag_names: &[String],
-) -> Result<usize, String> {
-    let mut applied = 0usize;
-    for name in tag_names {
-        match tag_store::add_tag(pool, entry_id, name).await {
-            Ok(_) => applied += 1,
-            Err(_) => {} // skip duplicates
-        }
-    }
-    Ok(applied)
 }

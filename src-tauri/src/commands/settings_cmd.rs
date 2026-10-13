@@ -1,15 +1,12 @@
 // mercury4win/src/commands/settings_cmd.rs
 // Settings and usage Tauri commands
 
+use crate::db::usage_store;
 use deadpool_sqlite::Pool;
 use tauri::State;
-use crate::db::usage_store;
 
 #[tauri::command]
-pub async fn get_setting(
-    pool: State<'_, Pool>,
-    key: String,
-) -> Result<Option<String>, String> {
+pub async fn get_setting(pool: State<'_, Pool>, key: String) -> Result<Option<String>, String> {
     let pool = pool.inner().clone();
     pool.get()
         .await
@@ -31,11 +28,7 @@ pub async fn get_setting(
 }
 
 #[tauri::command]
-pub async fn set_setting(
-    pool: State<'_, Pool>,
-    key: String,
-    value: String,
-) -> Result<(), String> {
+pub async fn set_setting(pool: State<'_, Pool>, key: String, value: String) -> Result<(), String> {
     let pool = pool.inner().clone();
     pool.get()
         .await
@@ -57,6 +50,14 @@ pub async fn set_setting(
 pub async fn get_usage_report(
     pool: State<'_, Pool>,
     window: String,
-) -> Result<(i64, i64, f64), String> {
-    usage_store::get_usage_totals(&pool, &window).await
+    dimension: Option<String>,
+    filter: Option<usage_store::UsageFilter>,
+) -> Result<usage_store::UsageReport, String> {
+    usage_store::report(
+        &pool,
+        &window,
+        dimension.as_deref().unwrap_or("provider"),
+        filter.unwrap_or_default(),
+    )
+    .await
 }

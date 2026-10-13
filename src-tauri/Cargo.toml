@@ -41,6 +41,7 @@ decruft = "0.2"
 
 # Markdown processing
 htmd = "0.5"
+markup5ever_rcdom = "0.38.0"
 comrak = "0.29"
 
 # HTTP client

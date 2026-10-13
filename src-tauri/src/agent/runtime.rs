@@ -1,12 +1,13 @@
-// mercury4win/src-tauri/agent/runtime.rs
-// Agent task queue + state machine — mirrors Swift Actor pattern
-// Design: 1 active slot + 1 waiting slot per task type, latest-only replacement
-
+//! One executing request and one latest waiting request per agent kind.
+//! A permit covers routing and the entire executor. Dropping the executor
+//! (including every buffered translation request) precedes slot promotion.
 use std::collections::HashMap;
-use std::sync::Arc;
-use tokio::sync::Mutex;
+use std::future::Future;
+use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
+use tauri::ipc::Channel;
+use tokio::sync::watch;
 
-/// Agent task types.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum TaskType {
     Summary,
@@ -17,226 +18,289 @@ pub enum TaskType {
 impl TaskType {
     pub fn as_str(&self) -> &'static str {
         match self {
-            TaskType::Summary => "summary",
-            TaskType::Translation => "translation",
-            TaskType::Tagging => "tagging",
+            Self::Summary => "summary",
+            Self::Translation => "translation",
+            Self::Tagging => "tagging",
+        }
+    }
+    pub fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "summary" => Ok(Self::Summary),
+            "translation" => Ok(Self::Translation),
+            "tagging" => Ok(Self::Tagging),
+            _ => Err("Unknown task type".into()),
         }
     }
 }
 
-/// State of an agent task slot.
-#[derive(Debug, Clone, PartialEq)]
-pub enum SlotState {
-    Idle,
-    Running { entry_id: i64 },
-    RunningWithWaiting { running: i64, waiting: i64 },
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum PermitState {
+    Waiting,
+    Running,
+    Cancelled(&'static str),
 }
 
-/// The agent runtime engine — one per task type.
-pub struct AgentRuntimeEngine {
-    task_type: TaskType,
-    state: SlotState,
+struct Request {
+    id: String,
+    entry_id: i64,
+    signal: watch::Sender<PermitState>,
+    fence: CommitFence,
 }
 
-impl AgentRuntimeEngine {
-    pub fn new(task_type: TaskType) -> Self {
-        Self {
-            task_type,
-            state: SlotState::Idle,
-        }
-    }
-
-    /// Submit a task. Returns the replaced waiting entry_id, if any.
-    /// Rules:
-    /// - If idle → Running
-    /// - If Running → RunningWithWaiting
-    /// - If RunningWithWaiting → replace waiting, return old waiting
-    pub fn submit(&mut self, entry_id: i64) -> Option<i64> {
-        match &self.state {
-            SlotState::Idle => {
-                self.state = SlotState::Running { entry_id };
-                None
-            }
-            SlotState::Running { .. } => {
-                // Clone current running, transition to RunningWithWaiting
-                let new_state = match self.state {
-                    SlotState::Running { entry_id: running } => {
-                        SlotState::RunningWithWaiting { running, waiting: entry_id }
-                    }
-                    _ => unreachable!(),
-                };
-                self.state = new_state;
-                None // No old waiting to replace
-            }
-            SlotState::RunningWithWaiting { running, waiting } => {
-                let replaced = *waiting;
-                self.state = SlotState::RunningWithWaiting {
-                    running: *running,
-                    waiting: entry_id,
-                };
-                Some(replaced)
-            }
-        }
-    }
-
-    /// Mark running task complete. Promotes waiting → running if present.
-    /// Returns completed entry_id and optionally the promoted entry_id.
-    pub fn complete(&mut self) -> (Option<i64>, Option<i64>) {
-        match self.state {
-            SlotState::Running { entry_id } => {
-                self.state = SlotState::Idle;
-                (Some(entry_id), None)
-            }
-            SlotState::RunningWithWaiting { running, waiting } => {
-                self.state = SlotState::Running { entry_id: waiting };
-                (Some(running), Some(waiting))
-            }
-            SlotState::Idle => (None, None),
-        }
-    }
-
-    pub fn state(&self) -> &SlotState {
-        &self.state
-    }
-}
-
-/// Global agent runtime managing all task types.
-pub struct AgentRuntime {
-    engines: HashMap<TaskType, AgentRuntimeEngine>,
-}
-
-impl AgentRuntime {
+/// SQLite interact jobs can outlive their async owner. Only this fence decides
+/// whether a transaction may commit; cancellation and commit are linearized.
+#[derive(Clone)]
+pub struct CommitFence(Arc<Mutex<bool>>);
+impl CommitFence {
     pub fn new() -> Self {
-        let mut engines = HashMap::new();
-        for tt in &[TaskType::Summary, TaskType::Translation, TaskType::Tagging] {
-            engines.insert(*tt, AgentRuntimeEngine::new(*tt));
+        Self(Arc::new(Mutex::new(true)))
+    }
+    pub fn invalidate(&self) {
+        *self.0.lock().unwrap() = false;
+    }
+    pub fn commit(&self, tx: rusqlite::Transaction<'_>) -> Result<(), String> {
+        let valid = self.0.lock().unwrap();
+        if !*valid {
+            return Err("Agent task cancelled: persistence fenced".into());
         }
-        Self { engines }
+        tx.commit().map_err(|e| e.to_string())
     }
+}
+tokio::task_local! { static COMMIT_FENCE: CommitFence; }
+pub fn current_commit_fence() -> CommitFence {
+    COMMIT_FENCE
+        .try_with(Clone::clone)
+        .unwrap_or_else(|_| CommitFence::new())
+}
 
-    pub fn submit(&mut self, entry_id: i64, task_type: TaskType) -> Option<i64> {
-        self.engines
-            .get_mut(&task_type)
-            .and_then(|e| e.submit(entry_id))
-    }
+#[derive(Default)]
+struct Slots {
+    active: Option<Request>,
+    waiting: Option<Request>,
+}
 
-    pub fn complete(&mut self, task_type: TaskType) -> (Option<i64>, Option<i64>) {
-        self.engines
-            .get_mut(&task_type)
-            .map(|e| e.complete())
-            .unwrap_or((None, None))
-    }
-
-    pub fn get_state(&self, task_type: TaskType) -> Option<&SlotState> {
-        self.engines.get(&task_type).map(|e| e.state())
-    }
+#[derive(Default)]
+pub struct AgentRuntime {
+    slots: HashMap<TaskType, Slots>,
+    // Immediate unmount may dispatch cancellation before submit reaches Rust.
+    abandoned: HashMap<(TaskType, String), Instant>,
 }
 
 pub type SharedAgentRuntime = Arc<Mutex<AgentRuntime>>;
-
 pub fn create_runtime() -> SharedAgentRuntime {
-    Arc::new(Mutex::new(AgentRuntime::new()))
-}
-
-// ── Agent status for IPC ──
-
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct AgentStatusInfo {
-    pub agent_type: String,
-    pub state: String,
-    pub current_entry_id: Option<i64>,
-    pub queue_depth: usize,
+    Arc::new(Mutex::new(AgentRuntime::default()))
 }
 
 impl AgentRuntime {
-    pub fn get_status(&self, task_type: TaskType) -> AgentStatusInfo {
-        let state = self.get_state(task_type);
-        let (state_str, current_id, queue_depth) = match state {
-            Some(SlotState::Idle) => ("idle", None, 0),
-            Some(SlotState::Running { entry_id }) => ("running", Some(*entry_id), 0),
-            Some(SlotState::RunningWithWaiting { running, .. }) => {
-                ("running_waiting", Some(*running), 1)
-            }
-            None => ("idle", None, 0),
+    fn submit(
+        &mut self,
+        task_type: TaskType,
+        entry_id: i64,
+        request_id: &str,
+    ) -> Result<watch::Receiver<PermitState>, String> {
+        if request_id.is_empty() || request_id.len() > 128 {
+            return Err("Invalid agent request ID".into());
+        }
+        self.abandoned
+            .retain(|_, at| at.elapsed() < Duration::from_secs(300));
+        if self
+            .abandoned
+            .remove(&(task_type, request_id.into()))
+            .is_some()
+        {
+            return Err("Agent task cancelled: abandoned before registration".into());
+        }
+        let slots = self.slots.entry(task_type).or_default();
+        if [&slots.active, &slots.waiting]
+            .iter()
+            .any(|r| r.as_ref().is_some_and(|r| r.id == request_id))
+        {
+            return Err("Duplicate agent request ID".into());
+        }
+        let state = if slots.active.is_none() {
+            PermitState::Running
+        } else {
+            PermitState::Waiting
         };
-        AgentStatusInfo {
-            agent_type: task_type.as_str().to_string(),
-            state: state_str.to_string(),
-            current_entry_id: current_id,
-            queue_depth,
+        let (signal, receiver) = watch::channel(state);
+        let request = Request {
+            id: request_id.into(),
+            entry_id,
+            signal,
+            fence: CommitFence::new(),
+        };
+        if state == PermitState::Running {
+            slots.active = Some(request);
+        } else if let Some(old) = slots.waiting.replace(request) {
+            old.signal
+                .send_replace(PermitState::Cancelled("replaced_by_latest"));
+        }
+        Ok(receiver)
+    }
+
+    /// waiting_only is used on article/panel leave and never aborts active work.
+    pub fn cancel(
+        &mut self,
+        task_type: TaskType,
+        request_id: &str,
+        waiting_only: bool,
+    ) -> Result<(), String> {
+        if request_id.is_empty() || request_id.len() > 128 {
+            return Err("Invalid agent request ID".into());
+        }
+        let slots = self.slots.entry(task_type).or_default();
+        if let Some(active) = slots.active.as_ref().filter(|r| r.id == request_id) {
+            if !waiting_only {
+                active.fence.invalidate();
+                // Occupied until execute() drops its actual work.
+                active
+                    .signal
+                    .send_replace(PermitState::Cancelled("user_cancelled"));
+            }
+            return Ok(());
+        }
+        if slots.waiting.as_ref().is_some_and(|r| r.id == request_id) {
+            let waiting = slots.waiting.take().unwrap();
+            waiting
+                .signal
+                .send_replace(PermitState::Cancelled(if waiting_only {
+                    "abandoned_by_entry_switch"
+                } else {
+                    "user_cancelled"
+                }));
+        } else {
+            self.abandoned
+                .retain(|_, at| at.elapsed() < Duration::from_secs(300));
+            self.abandoned
+                .insert((task_type, request_id.into()), Instant::now());
+        }
+        Ok(())
+    }
+
+    fn finish(&mut self, task_type: TaskType, request_id: &str) {
+        let slots = self.slots.entry(task_type).or_default();
+        if slots.active.as_ref().is_some_and(|r| r.id == request_id) {
+            slots.active.as_ref().unwrap().fence.invalidate();
+            slots.active = None;
+            if let Some(next) = slots.waiting.take() {
+                next.signal.send_replace(PermitState::Running);
+                slots.active = Some(next);
+            }
+        } else if slots.waiting.as_ref().is_some_and(|r| r.id == request_id) {
+            slots.waiting = None;
+        }
+        // Stale completion of replaced waiting work cannot release active work.
+    }
+
+    pub fn get_status(&self, task_type: TaskType) -> crate::db::models::AgentStatus {
+        let slots = self.slots.get(&task_type);
+        let active = slots.and_then(|s| s.active.as_ref());
+        let waiting = slots.and_then(|s| s.waiting.as_ref());
+        let state = match active {
+            None => "idle",
+            Some(r) if matches!(*r.signal.borrow(), PermitState::Cancelled(_)) => "cancelling",
+            Some(_) if waiting.is_some() => "running_waiting",
+            Some(_) => "running",
+        };
+        crate::db::models::AgentStatus {
+            agent_type: task_type.as_str().into(),
+            state: state.into(),
+            current_entry_id: active.map(|r| r.entry_id),
+            current_request_id: active.map(|r| r.id.clone()),
+            waiting_entry_id: waiting.map(|r| r.entry_id),
+            waiting_request_id: waiting.map(|r| r.id.clone()),
+            queue_depth: usize::from(waiting.is_some()),
         }
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_idle_to_running() {
-        let mut engine = AgentRuntimeEngine::new(TaskType::Summary);
-        assert!(engine.submit(42).is_none());
-        assert_eq!(*engine.state(), SlotState::Running { entry_id: 42 });
-    }
-
-    #[test]
-    fn test_running_to_running_with_waiting() {
-        let mut engine = AgentRuntimeEngine::new(TaskType::Summary);
-        engine.submit(42);
-        assert!(engine.submit(99).is_none());
-        assert_eq!(
-            *engine.state(),
-            SlotState::RunningWithWaiting { running: 42, waiting: 99 }
-        );
-    }
-
-    #[test]
-    fn test_replace_waiting() {
-        let mut engine = AgentRuntimeEngine::new(TaskType::Summary);
-        engine.submit(42);
-        engine.submit(99);
-        let replaced = engine.submit(77);
-        assert_eq!(replaced, Some(99));
-        assert_eq!(
-            *engine.state(),
-            SlotState::RunningWithWaiting { running: 42, waiting: 77 }
-        );
-    }
-
-    #[test]
-    fn test_complete_promotes_waiting() {
-        let mut engine = AgentRuntimeEngine::new(TaskType::Summary);
-        engine.submit(42);
-        engine.submit(99);
-        let (completed, promoted) = engine.complete();
-        assert_eq!(completed, Some(42));
-        assert_eq!(promoted, Some(99));
-        assert_eq!(*engine.state(), SlotState::Running { entry_id: 99 });
-    }
-
-    #[test]
-    fn test_complete_returns_to_idle() {
-        let mut engine = AgentRuntimeEngine::new(TaskType::Summary);
-        engine.submit(42);
-        let (completed, promoted) = engine.complete();
-        assert_eq!(completed, Some(42));
-        assert_eq!(promoted, None);
-        assert_eq!(*engine.state(), SlotState::Idle);
-    }
-
-    #[test]
-    fn test_runtime_multiple_types() {
-        let runtime = create_runtime();
-        let mut rt = runtime.blocking_lock();
-        rt.submit(42, TaskType::Summary);
-        rt.submit(99, TaskType::Translation);
-
-        let summary_status = rt.get_status(TaskType::Summary);
-        assert_eq!(summary_status.state, "running");
-        assert_eq!(summary_status.current_entry_id, Some(42));
-
-        let trans_status = rt.get_status(TaskType::Translation);
-        assert_eq!(trans_status.state, "running");
-        assert_eq!(trans_status.current_entry_id, Some(99));
+// Short synchronous locks allow RAII release on external future drop or panic.
+// No lock spans an HTTP/SQLite await.
+struct PermitGuard<'a> {
+    runtime: &'a SharedAgentRuntime,
+    task_type: TaskType,
+    request_id: &'a str,
+}
+impl Drop for PermitGuard<'_> {
+    fn drop(&mut self) {
+        self.runtime
+            .lock()
+            .unwrap()
+            .finish(self.task_type, self.request_id);
     }
 }
+
+fn event(channel: &Channel<String>, request_id: &str, state: &str, reason: Option<&str>) {
+    let _ = channel.send(serde_json::json!({ "type": "task_state", "request_id": request_id, "state": state, "reason": reason }).to_string());
+}
+
+pub async fn execute<T, F, Fut>(
+    runtime: &SharedAgentRuntime,
+    task_type: TaskType,
+    entry_id: i64,
+    request_id: &str,
+    channel: &Channel<String>,
+    work: F,
+) -> Result<T, String>
+where
+    F: FnOnce() -> Fut,
+    Fut: Future<Output = Result<T, String>>,
+{
+    let mut signal = runtime
+        .lock()
+        .unwrap()
+        .submit(task_type, entry_id, request_id)?;
+    let guard = PermitGuard {
+        runtime,
+        task_type,
+        request_id,
+    };
+    if *signal.borrow() == PermitState::Waiting {
+        event(channel, request_id, "waiting", None);
+    }
+    loop {
+        let state = *signal.borrow_and_update();
+        match state {
+            PermitState::Running => break,
+            PermitState::Cancelled(reason) => {
+                event(channel, request_id, "cancelled", Some(reason));
+                return Err(format!("Agent task cancelled: {reason}"));
+            }
+            PermitState::Waiting => {
+                signal.changed().await.map_err(|_| "Agent runtime closed")?;
+            }
+        }
+    }
+    event(channel, request_id, "running", None);
+    let fence = runtime
+        .lock()
+        .unwrap()
+        .slots
+        .get(&task_type)
+        .unwrap()
+        .active
+        .as_ref()
+        .unwrap()
+        .fence
+        .clone();
+    // Scoped future drops all HTTP/segment work before releasing the slot.
+    let result = {
+        let future = COMMIT_FENCE.scope(fence, work());
+        tokio::pin!(future);
+        tokio::select! {
+            biased;
+            _ = signal.changed() => {
+                let reason = match *signal.borrow() { PermitState::Cancelled(reason) => reason, _ => "runtime_closed" };
+                event(channel, request_id, "cancelled", Some(reason));
+                Err(format!("Agent task cancelled: {reason}"))
+            }
+            result = &mut future => result,
+        }
+    };
+    drop(guard);
+    result
+}
+
+#[cfg(test)]
+#[path = "runtime_tests.rs"]
+mod tests;

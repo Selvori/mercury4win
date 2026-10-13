@@ -1,10 +1,25 @@
-# Digest: {{digest_title}}
+# {{digest_title}}
+{{#each entries}}
 
-{{#entries}}
 ## {{title}}
-{{#byline}}*{{byline}}*{{/byline}}
+{{#if byline}}
+Author: {{byline}}
+{{/if}}
+Source: {{url}}
+{{#if summary}}
+### Summary
 
-{{{content}}}
+{{summary}}
 
+{{summary_attribution}}
+{{/if}}{{#if note}}
+### My Take
+
+{{note}}
+{{/if}}{{#if content}}
+### Article
+
+{{content}}
+{{/if}}
 ---
-{{/entries}}
+{{/each}}

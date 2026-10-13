@@ -1,22 +1,15 @@
-// mercury4win/src-tauri/agent/translation.rs
-// Translation agent — per-segment concurrency, hash-based cache invalidation
-// Mirrors original Mercury Translation segmentation + hash contract
-
-use std::collections::HashMap;
-use std::sync::Arc;
-use reqwest::Client;
-use tauri::ipc::Channel;
+//! Per-source-block translation with bounded requests and durable recovery.
 use futures_util::StreamExt;
+use reqwest::Client;
+use std::collections::HashMap;
+use tauri::ipc::Channel;
 
-use crate::agent::prompt_templates;
-use crate::agent::provider::{self, ChatMessage, ChatCompletionRequest};
-use crate::db::{entry_store, content_store, usage_store};
-use crate::db::models::LlmUsageEvent;
+use crate::agent::{
+    provider::{self, ChatCompletionRequest, ChatMessage},
+    translation_segments,
+};
+use crate::db::agent_result_store::{self, AgentResult, ResultSlot};
 
-/// Run a translation task with per-segment concurrent streaming.
-/// When concurrency is 1, passes the previous segment's source and translation
-/// as context to maintain coherence. When concurrency > 1, context is skipped
-/// because segments may complete out of order.
 pub async fn run_translation(
     pool: &deadpool_sqlite::Pool,
     client: &Client,
@@ -29,32 +22,136 @@ pub async fn run_translation(
     concurrency: usize,
     on_event: Channel<String>,
 ) -> Result<(), String> {
-    let detail = entry_store::get_entry_detail(pool, entry_id)
-        .await?
-        .ok_or("Entry not found")?;
+    run_translation_segments(
+        pool,
+        client,
+        entry_id,
+        target_language,
+        provider_base_url,
+        api_key,
+        model_name,
+        prompt_strategy,
+        concurrency,
+        None,
+        on_event,
+    )
+    .await
+}
 
-    let content = content_store::get_content(pool, entry_id).await?;
-    let markdown = content
-        .as_ref()
-        .and_then(|c| c.markdown.as_deref())
-        .unwrap_or("");
+pub async fn run_translation_segments(
+    pool: &deadpool_sqlite::Pool,
+    client: &Client,
+    entry_id: i64,
+    target_language: &str,
+    provider_base_url: &str,
+    api_key: &str,
+    model_name: &str,
+    prompt_strategy: Option<&str>,
+    concurrency: usize,
+    retry_segment_id: Option<&str>,
+    on_event: Channel<String>,
+) -> Result<(), String> {
+    crate::agent::usage::scope(
+        pool,
+        entry_id,
+        "translation",
+        run_translation_segments_inner(
+            pool,
+            client,
+            entry_id,
+            target_language,
+            provider_base_url,
+            api_key,
+            model_name,
+            prompt_strategy,
+            concurrency,
+            retry_segment_id,
+            on_event,
+        ),
+    )
+    .await
+}
 
-    // Segment the content: split by double-newline (paragraph boundaries)
-    let segments: Vec<String> = markdown
-        .split("\n\n")
-        .filter(|s| !s.trim().is_empty())
-        .map(|s| s.to_string())
-        .collect();
-
+async fn run_translation_segments_inner(
+    pool: &deadpool_sqlite::Pool,
+    client: &Client,
+    entry_id: i64,
+    target_language: &str,
+    provider_base_url: &str,
+    api_key: &str,
+    model_name: &str,
+    prompt_strategy: Option<&str>,
+    concurrency: usize,
+    retry_segment_id: Option<&str>,
+    on_event: Channel<String>,
+) -> Result<(), String> {
+    let document = translation_segments::load_document(
+        pool,
+        entry_id,
+        target_language,
+        prompt_strategy,
+        concurrency,
+    )
+    .await?;
+    let segments = document.source_segments;
     if segments.is_empty() {
         return Err("No translatable content found".into());
     }
-
-    let templates =
-        prompt_templates::load_builtin_template("translation", prompt_strategy)?;
-
-    // Convert language codes to readable names for the LLM
-    let lang_display = match target_language {
+    let total = segments.len();
+    let ids = segments
+        .iter()
+        .map(|s| s.source_segment_id.clone())
+        .collect::<Vec<_>>();
+    let selected = retry_segment_id
+        .map(|id| {
+            ids.iter()
+                .position(|s| s == id)
+                .ok_or_else(|| "Translation source segment changed or does not exist".to_string())
+        })
+        .transpose()?;
+    let slot = ResultSlot::new(
+        entry_id,
+        "translation",
+        target_language,
+        &agent_result_store::translation_parameters(prompt_strategy, concurrency),
+        &document.source_hash,
+    );
+    let mut saved = AgentResult {
+        request_route: None,
+        segment_routes: vec![None; total],
+        source_hash: document.source_hash,
+        text: None,
+        segments: vec![None; total],
+        complete: false,
+        model_name: model_name.into(),
+        segment_ids: ids,
+        segment_errors: vec![None; total],
+    };
+    // Manual article regeneration starts afresh after a complete success; a retry
+    // merges into the current slot. A checkpoint resumes only missing blocks.
+    if let Some(cached) = document
+        .result
+        .filter(|c| !c.complete || selected.is_some())
+    {
+        saved = cached;
+        saved.segment_errors.resize(total, None);
+        saved.model_name = model_name.into();
+    }
+    if let Some(i) = selected {
+        if saved.segments[i].is_some() {
+            return Err("Only missing translation segments can be retried".into());
+        }
+    }
+    saved.complete = false;
+    saved.segment_routes.resize(total, None);
+    let _ = on_event.send(serde_json::json!({"type":"source_segments","source_hash":saved.source_hash,"segments":segments,"html":document.html}).to_string());
+    for (i, text) in saved.segments.iter().enumerate() {
+        if let Some(text) = text {
+            emit_segment(&on_event, &saved, i, text);
+        }
+    }
+    let template = crate::agent::configuration::template("translation", prompt_strategy)?;
+    let lang = match target_language {
         "zh-Hans" => "Simplified Chinese",
         "zh-Hant" => "Traditional Chinese",
         "ja" => "Japanese",
@@ -65,272 +162,229 @@ pub async fn run_translation(
         "en" => "English",
         other => other,
     };
-
-    let total = segments.len();
-    let actual_concurrency = if concurrency == 0 { 3 } else { concurrency };
-
-    // ── Serial mode (concurrency = 1): pass context between segments ──
-    if actual_concurrency == 1 && segments.len() > 1 {
-        return run_translation_serial(
-            pool, client, entry_id, target_language,
-            provider_base_url, api_key, model_name,
-            &templates, &segments, &lang_display,
-            on_event,
-        ).await;
-    }
-
-    // ── Concurrent mode: no context (segments may complete out of order) ──
-    let template = Arc::new(templates);
-    let target_language = Arc::new(lang_display.to_string());
-    let provider_base_url = Arc::new(provider_base_url.to_string());
-    let api_key = Arc::new(api_key.to_string());
-    let model_name = Arc::new(model_name.to_string());
-
-    // Concurrent translation with buffer_unordered
-    let mut stream = futures_util::stream::iter(
-        segments.into_iter().enumerate().map(|(i, segment)| {
-            let template = template.clone();
-            let target_language = target_language.clone();
-            let provider_base_url = provider_base_url.clone();
-            let api_key = api_key.clone();
-            let model_name = model_name.clone();
-            let client = client.clone();
-            let on_event = on_event.clone();
-            let total = total;
-
-            async move {
-                let mut params = HashMap::new();
-                params.insert("target_language".into(), (*target_language).clone());
-                params.insert("source_text".into(), segment);
-
-                let rendered = template.render(&params);
-
-                let mut messages = Vec::new();
-                if let Some(ref system) = rendered.system_message {
-                    messages.push(ChatMessage {
-                        role: "system".to_string(),
-                        content: system.clone(),
-                    });
-                }
-                messages.push(ChatMessage {
-                    role: "user".to_string(),
-                    content: rendered.user_message,
-                });
-
-                let request = ChatCompletionRequest {
-                    model: (*model_name).clone(),
-                    messages,
-                    temperature: Some(0.3),
-                    top_p: None,
-                    max_tokens: Some(2048),
-                    stream: None,
-                };
-
-                let _ = on_event.send(format!(
-                    r#"{{"type":"progress","segment":{},"total":{}}}"#,
-                    i + 1,
-                    total
-                ));
-
-                match provider::chat_completion(
-                    &client, &provider_base_url, &api_key, &request,
-                )
-                .await
-                {
-                    Ok(response) => {
-                        let translated = response
-                            .choices
-                            .first()
-                            .map(|c| c.message.content.clone())
-                            .unwrap_or_default();
-
-                        let _ = on_event.send(format!(
-                            r#"{{"type":"segment","index":{},"text":{}}}"#,
-                            i,
-                            serde_json::to_string(&translated).unwrap_or_default()
-                        ));
-
-                        Ok((i, translated, response.usage))
-                    }
-                    Err(e) => {
-                        let _ = on_event.send(format!(
-                            r#"{{"type":"error","segment":{},"error":"{}"}}"#,
-                            i, e
-                        ));
-                        Err(e)
-                    }
-                }
-            }
-        })
-    )
-    .buffer_unordered(actual_concurrency);
-
-    let mut total_prompt = 0i64;
-    let mut total_completion = 0i64;
-    let mut total_tokens = 0i64;
-
-    while let Some(result) = stream.next().await {
-        if let Ok((_i, _translated, usage)) = &result {
-            if let Some(ref u) = usage {
-                total_prompt += u.prompt_tokens as i64;
-                total_completion += u.completion_tokens as i64;
-                total_tokens += u.total_tokens as i64;
-            }
-        }
-    }
-
-    // Log aggregated usage
-    let _ = usage_store::insert_usage_event(
-        pool,
-        &LlmUsageEvent {
-            id: 0,
-            task_run_id: None,
-            provider_name: Some("default".into()),
-            model_name: Some((*model_name).clone()),
-            agent_type: Some("translation".into()),
-            prompt_tokens: Some(total_prompt),
-            completion_tokens: Some(total_completion),
-            total_tokens: Some(total_tokens),
-            request_status: Some("success".into()),
-            created_at: String::new(),
-        },
-    )
-    .await;
-
-    let _ = on_event.send(
-        r#"{"type":"done","result":"translation_complete"}"#.to_string(),
-    );
-
-    Ok(())
-}
-
-/// Serial translation with context passing between consecutive segments.
-/// Each segment receives the previous segment's source text and translation
-/// to maintain stylistic and terminological coherence.
-async fn run_translation_serial(
-    pool: &deadpool_sqlite::Pool,
-    client: &Client,
-    _entry_id: i64,
-    _target_language: &str,
-    provider_base_url: &str,
-    api_key: &str,
-    model_name: &str,
-    template: &prompt_templates::PromptTemplate,
-    segments: &[String],
-    lang_display: &str,
-    on_event: Channel<String>,
-) -> Result<(), String> {
-    let total = segments.len();
-    let mut total_prompt = 0i64;
-    let mut total_completion = 0i64;
-    let mut total_tokens = 0i64;
-    let mut previous_source: Option<String> = None;
-    let mut previous_translated: Option<String> = None;
-
-    for (i, segment) in segments.iter().enumerate() {
+    let concurrency = agent_result_store::normalize_translation_concurrency(concurrency);
+    let indices: Vec<_> = (0..total)
+        .filter(|i| saved.segments[*i].is_none() && selected.is_none_or(|s| s == *i))
+        .collect();
+    let mut usage = [0i64; 3];
+    let mut storage_errors = Vec::new();
+    let mut completed = saved.segments.iter().filter(|s| s.is_some()).count();
+    let request = |i: usize, previous: Option<(String, String)>| {
         let mut params = HashMap::new();
-        params.insert("target_language".into(), lang_display.to_string());
-        params.insert("source_text".into(), segment.clone());
-        if let Some(ref ps) = previous_source {
-            params.insert("previous_source_text".into(), ps.clone());
+        params.insert("target_language".into(), lang.to_string());
+        params.insert("source_text".into(), segments[i].source_text.clone());
+        if let Some((source, translation)) = previous {
+            params.insert("previous_source_text".into(), source);
+            params.insert("previous_translated_text".into(), translation);
         }
-        if let Some(ref pt) = previous_translated {
-            params.insert("previous_translated_text".into(), pt.clone());
-        }
-
         let rendered = template.render(&params);
-
         let mut messages = Vec::new();
-        if let Some(ref system) = rendered.system_message {
+        if let Some(system) = rendered.system_message {
             messages.push(ChatMessage {
-                role: "system".to_string(),
-                content: system.clone(),
+                role: "system".into(),
+                content: system,
             });
         }
         messages.push(ChatMessage {
-            role: "user".to_string(),
+            role: "user".into(),
             content: rendered.user_message,
         });
-
-        let request = ChatCompletionRequest {
-            model: model_name.to_string(),
-            messages,
-            temperature: Some(0.3),
-            top_p: None,
-            max_tokens: Some(2048),
-            stream: None,
-        };
-
-        let _ = on_event.send(format!(
-            r#"{{"type":"progress","segment":{},"total":{}}}"#,
-            i + 1,
-            total
-        ));
-
-        match provider::chat_completion(client, provider_base_url, api_key, &request).await {
-            Ok(response) => {
-                let translated = response
-                    .choices
-                    .first()
-                    .map(|c| c.message.content.clone())
-                    .unwrap_or_default();
-
-                let _ = on_event.send(format!(
-                    r#"{{"type":"segment","index":{},"text":{}}}"#,
-                    i,
-                    serde_json::to_string(&translated).unwrap_or_default()
-                ));
-
-                if let Some(ref u) = response.usage {
-                    total_prompt += u.prompt_tokens as i64;
-                    total_completion += u.completion_tokens as i64;
-                    total_tokens += u.total_tokens as i64;
-                }
-
-                // Pass context to next segment
-                previous_source = Some(segment.clone());
-                previous_translated = Some(translated);
-            }
-            Err(e) => {
-                let _ = on_event.send(format!(
-                    r#"{{"type":"error","segment":{},"error":"{}"}}"#,
-                    i, e
-                ));
-                return Err(e);
-            }
+        let channel = &on_event;
+        let segment_id = &segments[i].source_segment_id;
+        async move {
+            let _ = channel.send(serde_json::json!({"type":"segment_started","index":i,"source_segment_id":segment_id}).to_string());
+            let response = crate::agent::usage::PHASE
+                .scope(
+                    if retry_segment_id.is_some() {
+                        "retry"
+                    } else {
+                        "normal"
+                    },
+                    provider::chat_completion(
+                        client,
+                        provider_base_url,
+                        api_key,
+                        &ChatCompletionRequest {
+                            model: model_name.into(),
+                            messages,
+                            temperature: Some(
+                                crate::agent::configuration::request_parameters("translation")
+                                    .temperature,
+                            ),
+                            top_p: None,
+                            max_tokens: Some(
+                                crate::agent::configuration::request_parameters("translation")
+                                    .max_tokens,
+                            ),
+                            stream: None,
+                        },
+                    ),
+                )
+                .await;
+            (
+                i,
+                response.and_then(|r| {
+                    if let Some(reason) = r.choices.first().and_then(|c| c.finish_reason.as_deref())
+                    {
+                        if reason != "stop" {
+                            return Err(format!("Provider did not finish translation: {reason}"));
+                        }
+                    }
+                    let text = r
+                        .choices
+                        .first()
+                        .map(|c| c.message.content.clone())
+                        .unwrap_or_default();
+                    if text.trim().is_empty() {
+                        Err("Provider returned an empty translation".into())
+                    } else {
+                        Ok((
+                            text,
+                            Some(provider::UsageInfo {
+                                route: r.route,
+                                ..r.usage.unwrap_or_default()
+                            }),
+                        ))
+                    }
+                }),
+            )
+        }
+    };
+    // Serial and parallel share reconciliation; every request is drained before
+    // a terminal outcome. Serial context uses only the preceding source block.
+    if concurrency == 1 {
+        for i in indices {
+            let previous = i.checked_sub(1).and_then(|p| {
+                saved.segments[p]
+                    .as_ref()
+                    .map(|t| (segments[p].source_text.clone(), t.clone()))
+            });
+            let (i, result) = request(i, previous).await;
+            reconcile(
+                pool,
+                &slot,
+                &mut saved,
+                i,
+                result,
+                &on_event,
+                &mut usage,
+                &mut completed,
+                &mut storage_errors,
+            )
+            .await;
+        }
+    } else {
+        let mut stream = futures_util::stream::iter(indices.into_iter().map(|i| request(i, None)))
+            .buffer_unordered(concurrency);
+        while let Some((i, result)) = stream.next().await {
+            reconcile(
+                pool,
+                &slot,
+                &mut saved,
+                i,
+                result,
+                &on_event,
+                &mut usage,
+                &mut completed,
+                &mut storage_errors,
+            )
+            .await;
         }
     }
-
-    // Log aggregated usage
-    let _ = usage_store::insert_usage_event(
-        pool,
-        &LlmUsageEvent {
-            id: 0,
-            task_run_id: None,
-            provider_name: Some("default".into()),
-            model_name: Some(model_name.into()),
-            agent_type: Some("translation".into()),
-            prompt_tokens: Some(total_prompt),
-            completion_tokens: Some(total_completion),
-            total_tokens: Some(total_tokens),
-            request_status: Some("success".into()),
-            created_at: String::new(),
-        },
-    )
-    .await;
-
-    let _ = on_event.send(r#"{"type":"done","result":"translation_complete"}"#.to_string());
-
+    let succeeded = saved.segments.iter().filter(|s| s.is_some()).count();
+    let failed = total - succeeded;
+    let status = if failed == 0 && storage_errors.is_empty() {
+        "complete"
+    } else if succeeded == 0 {
+        "all_failed"
+    } else {
+        "partial"
+    };
+    if status == "complete" {
+        saved.complete = true;
+        slot.save(pool, &saved).await?;
+    }
+    let _ = on_event.send(serde_json::json!({"type":"outcome","status":status,"succeeded":succeeded,"failed":failed,"total":total}).to_string());
+    if status != "complete" {
+        let errors = saved
+            .segment_errors
+            .iter()
+            .flatten()
+            .cloned()
+            .chain(storage_errors)
+            .collect::<Vec<_>>()
+            .join("; ");
+        return Err(format!(
+            "Translation {status}: {succeeded}/{total} segments completed. {errors}"
+        ));
+    }
+    let _ = on_event
+        .send(serde_json::json!({"type":"done","result":"translation_complete"}).to_string());
     Ok(())
 }
 
-/// Compute a sourceContentHash for translation cache invalidation.
-/// Mirrors original Mercury's SHA-256 hash over all segment payloads.
-pub fn compute_source_content_hash(segments: &[&str]) -> String {
-    use sha2::{Sha256, Digest};
-    let mut hasher = Sha256::new();
-    for seg in segments {
-        hasher.update(seg.as_bytes());
+fn emit_segment(channel: &Channel<String>, saved: &AgentResult, i: usize, text: &str) {
+    let _ = channel.send(serde_json::json!({"type":"segment","index":i,"source_segment_id":saved.segment_ids[i],"text":text}).to_string());
+}
+
+async fn reconcile(
+    pool: &deadpool_sqlite::Pool,
+    slot: &ResultSlot,
+    saved: &mut AgentResult,
+    i: usize,
+    result: Result<(String, Option<provider::UsageInfo>), String>,
+    channel: &Channel<String>,
+    usage: &mut [i64; 3],
+    completed: &mut usize,
+    storage_errors: &mut Vec<String>,
+) {
+    match result {
+        Ok((text, tokens)) => {
+            if let Some(tokens) = tokens {
+                if let Some(route) = &tokens.route {
+                    saved.segment_routes[i] = Some(route.clone());
+                    let unique_models: std::collections::HashSet<_> = saved
+                        .segment_routes
+                        .iter()
+                        .flatten()
+                        .map(|r| r.model_name.as_str())
+                        .collect();
+                    saved.model_name = if unique_models.len() > 1 {
+                        "mixed".into()
+                    } else {
+                        route.model_name.clone()
+                    };
+                }
+                usage[0] += tokens.prompt_tokens as i64;
+                usage[1] += tokens.completion_tokens as i64;
+                usage[2] += tokens.total_tokens as i64;
+            }
+            saved.segments[i] = Some(text.clone());
+            saved.segment_errors[i] = None;
+            match slot.save(pool, saved).await {
+                Ok(()) => emit_segment(channel, saved, i, &text),
+                Err(e) => storage_errors.push(e),
+            }
+        }
+        Err(error) => {
+            saved.segment_errors[i] = Some(error.clone());
+            if let Err(e) = slot.save(pool, saved).await {
+                storage_errors.push(e);
+            }
+            let _ = channel.send(serde_json::json!({"type":"error","segment":i,"index":i,"source_segment_id":saved.segment_ids[i],"error":error}).to_string());
+        }
     }
-    format!("{:x}", hasher.finalize())
+    *completed += 1;
+    let _ = channel.send(
+        serde_json::json!({"type":"progress","segment":completed,"total":saved.segments.len()})
+            .to_string(),
+    );
+}
+
+pub fn compute_source_content_hash(segments: &[&str]) -> String {
+    use sha2::{Digest, Sha256};
+    format!(
+        "{:x}",
+        Sha256::digest(serde_json::to_vec(segments).unwrap())
+    )
 }

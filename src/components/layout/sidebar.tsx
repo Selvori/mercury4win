@@ -2,7 +2,7 @@
 // Left sidebar with feed list and navigation
 
 import { useTranslation } from "react-i18next";
-import { Rss, Library, Tags, Settings } from "lucide-react";
+import { Rss, Library, Tags, Settings, Star } from "lucide-react";
 import { FeedList } from "@/features/feed/components/feed_list";
 import { TagLibrary } from "@/features/tags/components/tag_library";
 import { ThemeToggle } from "./theme_toggle";
@@ -16,8 +16,11 @@ interface Props {
   on_open_settings: () => void;
   view: "feeds" | "tags";
   on_change_view: (view: "feeds" | "tags") => void;
-  selected_tag_id: number | null;
+  selected_tag_ids: number[];
+  starred_only: boolean;
+  on_select_starred: () => void;
   on_select_tag: (tag_id: number) => void;
+  on_tags_changed?: (removed: number[], target?: number) => void;
 }
 
 export function Sidebar({
@@ -29,8 +32,11 @@ export function Sidebar({
   on_open_settings,
   view,
   on_change_view,
-  selected_tag_id,
+  selected_tag_ids,
+  starred_only,
+  on_select_starred,
   on_select_tag,
+  on_tags_changed,
 }: Props) {
   const { t } = useTranslation();
 
@@ -44,6 +50,7 @@ export function Sidebar({
       <nav className="flex gap-1 p-2">
         <button
           onClick={() => on_change_view("feeds")}
+          aria-pressed={view === "feeds"}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium ${
             view === "feeds"
               ? "bg-accent text-accent-foreground"
@@ -55,6 +62,7 @@ export function Sidebar({
         </button>
         <button
           onClick={() => on_change_view("tags")}
+          aria-pressed={view === "tags"}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium ${
             view === "tags"
               ? "bg-accent text-accent-foreground"
@@ -66,10 +74,14 @@ export function Sidebar({
         </button>
       </nav>
 
+      <button onClick={on_select_starred} aria-pressed={starred_only}
+        className={`mx-2 mb-2 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm ${starred_only ? "bg-accent" : "hover:bg-accent"}`}>
+        <Star className="h-4 w-4" />{t("sidebar.starred")}
+      </button>
       <div className="flex-1 overflow-hidden">
         {view === "feeds" ? (
           <FeedList
-            selected_id={selected_feed_id}
+            selected_id={starred_only ? undefined : selected_feed_id}
             on_select={on_select_feed}
             on_add={on_add_feed}
             on_import={on_import_opml}
@@ -78,7 +90,8 @@ export function Sidebar({
         ) : (
           <TagLibrary
             on_select_tag={on_select_tag}
-            selected_tag_id={selected_tag_id}
+            selected_tag_ids={selected_tag_ids}
+            on_tags_changed={on_tags_changed}
           />
         )}
       </div>

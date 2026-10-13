@@ -1,9 +1,9 @@
 // mercury4win/src-tauri/db/content_store.rs
 // Content pipeline persistence
 
+use crate::db::models::Content;
 use deadpool_sqlite::Pool;
 use rusqlite::params;
-use crate::db::models::Content;
 
 pub async fn get_content(pool: &Pool, entry_id: i64) -> Result<Option<Content>, String> {
     let pool = pool.clone();
@@ -65,7 +65,8 @@ pub async fn upsert_content(pool: &Pool, c: &Content) -> Result<(), String> {
         .await
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
-            conn.execute(
+            let tx = conn.transaction().map_err(|e| e.to_string())?;
+            tx.execute(
                 "INSERT INTO content (entry_id, html, cleaned_html, readability_title,
                  readability_byline, readability_version, markdown, markdown_version,
                  display_mode, document_base_url, pipeline_type, resolved_intermediate_content)
@@ -80,12 +81,29 @@ pub async fn upsert_content(pool: &Pool, c: &Content) -> Result<(), String> {
                  pipeline_type=excluded.pipeline_type,
                  resolved_intermediate_content=excluded.resolved_intermediate_content",
                 rusqlite::params![
-                    entry_id, html, cleaned_html, readability_title,
-                    readability_byline, readability_version, markdown, markdown_version,
-                    display_mode, document_base_url, pipeline_type, resolved,
+                    entry_id,
+                    html,
+                    cleaned_html,
+                    readability_title,
+                    readability_byline,
+                    readability_version,
+                    markdown,
+                    markdown_version,
+                    display_mode,
+                    document_base_url,
+                    pipeline_type,
+                    resolved,
                 ],
             )
-            .map_err(|e| e.to_string())
+            .map_err(|e| e.to_string())?;
+            // Rebuilt upstream artifacts invalidate every theme/font render,
+            // including caches built with the same reader render version.
+            tx.execute(
+                "DELETE FROM content_html_cache WHERE entry_id = ?1",
+                params![entry_id],
+            )
+            .map_err(|e| e.to_string())?;
+            tx.commit().map_err(|e| e.to_string())
         })
         .await
         .map_err(|e| e.to_string())?

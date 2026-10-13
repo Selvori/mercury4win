@@ -1,9 +1,9 @@
 // mercury4win/src-tauri/reader/md_to_html.rs
 // Markdown to Reader HTML via comrak (GFM-compatible renderer)
 
-use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 use crate::reader::theme;
 use crate::reader::theme::FontConfig;
+use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 
 /// Render Markdown to reader-ready HTML with theme CSS (default font).
 pub fn render_markdown(md: &str, theme_id: &str) -> String {
@@ -82,6 +82,20 @@ mod tests {
         let md = "# Title\n\nContent here.";
         let html = render_markdown(md, "classic-light");
         assert!(html.contains("<article class=\"reader\""));
-        assert!(html.contains("<h1>Title</h1>"));
+        let heading = html
+            .split_once("<h1>")
+            .unwrap()
+            .1
+            .split_once("</h1>")
+            .unwrap()
+            .0;
+        assert!(
+            heading.ends_with("Title"),
+            "heading text must remain visible"
+        );
+        assert!(heading.contains("href=\"#title\""));
+        assert!(heading.contains("id=\"title\""));
+        assert!(heading.contains("aria-hidden=\"true\""));
+        assert!(html.contains("<p>Content here.</p>"));
     }
 }

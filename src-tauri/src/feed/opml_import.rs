@@ -1,7 +1,7 @@
 // mercury4win/src-tauri/feed/opml_import.rs
 // OPML import pipeline
 
-use opml::{OPML, Outline};
+use opml::{Outline, OPML};
 use std::path::Path;
 
 pub struct OpmlImportEntry {

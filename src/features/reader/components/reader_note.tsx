@@ -1,13 +1,13 @@
 // mercury4win/src/features/reader/components/reader_note.tsx
 // Note editor for entries — Markdown editing with save
 
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FileText, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { get_note, save_note } from "@/lib/tauri_bindings";
 import { render_markdown } from "@/lib/markdown";
+import { useNoteDraftStore } from "@/stores/note_draft_store";
 
 interface Props {
   entry_id: number;
@@ -16,8 +16,15 @@ interface Props {
 export function ReaderNote({ entry_id }: Props) {
   const { t } = useTranslation();
   const query_client = useQueryClient();
-  const [draft, set_draft] = useState("");
-  const [is_editing, set_is_editing] = useState(false);
+  const draft = useNoteDraftStore((state) => state.drafts[entry_id]);
+  const set_draft = useNoteDraftStore((state) => state.set_draft);
+  const discard_draft = useNoteDraftStore((state) => state.discard_draft);
+  const begin_save = useNoteDraftStore((state) => state.begin_save);
+  const finish_save = useNoteDraftStore((state) => state.finish_save);
+  const fail_save = useNoteDraftStore((state) => state.fail_save);
+  const is_saving = useNoteDraftStore((state) => state.pending_saves[entry_id] !== undefined);
+  const save_error = useNoteDraftStore((state) => state.save_errors[entry_id]);
+  const is_editing = draft !== undefined;
 
   const { data: existing_note, isLoading: is_loading_note } = useQuery({
     queryKey: ["notes", entry_id],
@@ -25,25 +32,24 @@ export function ReaderNote({ entry_id }: Props) {
   });
 
   const save_mutation = useMutation({
-    mutationFn: async (markdown: string) => {
-      return save_note(entry_id, markdown);
+    mutationFn: async (snapshot: NonNullable<ReturnType<typeof begin_save>>) => {
+      return save_note(snapshot.entry_id, snapshot.markdown);
     },
-    onSuccess: () => {
-      query_client.invalidateQueries({ queryKey: ["notes", entry_id] });
-      set_is_editing(false);
+    onSuccess: (_note, snapshot) => {
+      query_client.invalidateQueries({ queryKey: ["notes", snapshot.entry_id] });
+      finish_save(snapshot);
     },
+    onError: (error, snapshot) => fail_save(snapshot, String(error)),
   });
 
   function handle_save() {
-    save_mutation.mutate(draft);
+    const snapshot = begin_save(entry_id);
+    if (snapshot) save_mutation.mutate(snapshot);
   }
 
   function handle_edit() {
     // Populate draft with existing note content when entering edit mode
-    if (existing_note) {
-      set_draft(existing_note.markdown);
-    }
-    set_is_editing(true);
+    set_draft(entry_id, existing_note?.markdown ?? "");
   }
 
   return (
@@ -56,10 +62,10 @@ export function ReaderNote({ entry_id }: Props) {
             size="sm"
             className="h-6 text-xs"
             onClick={handle_save}
-            disabled={save_mutation.isPending}
+            disabled={is_saving}
           >
             <Save className="mr-1 h-3 w-3" />
-            {save_mutation.isPending ? t("note.saving") : t("note.save")}
+            {is_saving ? t("note.saving") : t("note.save")}
           </Button>
         )}
         <Button
@@ -68,15 +74,23 @@ export function ReaderNote({ entry_id }: Props) {
           className="h-6 text-xs"
           onClick={() => {
             if (is_editing) {
-              set_is_editing(false);
+              discard_draft(entry_id);
             } else {
               handle_edit();
             }
           }}
+          disabled={is_loading_note}
         >
           {is_editing ? t("note.cancel") : existing_note ? t("note.edit") : t("note.addNote")}
         </Button>
       </div>
+
+      {save_error && (
+        <div role="alert" className="mx-4 mt-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+          <p>{t("note.saveFailed")}</p>
+          <p className="mt-1 whitespace-pre-wrap break-words text-xs">{save_error}</p>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto p-4">
         {is_loading_note ? (
@@ -86,8 +100,9 @@ export function ReaderNote({ entry_id }: Props) {
         ) : is_editing ? (
           <textarea
             value={draft}
-            onChange={(e) => set_draft(e.target.value)}
+            onChange={(e) => set_draft(entry_id, e.target.value)}
             placeholder={t("note.placeholder")}
+            aria-label={t("reader.notes")}
             className="h-full w-full resize-none rounded-lg border border-border bg-transparent p-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
           />
         ) : existing_note ? (
