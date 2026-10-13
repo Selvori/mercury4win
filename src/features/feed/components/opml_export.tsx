@@ -56,8 +56,9 @@ export function OpmlExport({ open, on_close }: Props) {
     mutationFn: async () => {
       const { save } = await import("@tauri-apps/plugin-dialog");
       const path = await save({
+        title: t("opml.exportTitle"),
         defaultPath: "mercury_feeds.opml",
-        filters: [{ name: "OPML", extensions: ["opml"] }],
+        filters: [{ name: t("common.opmlFile"), extensions: ["opml"] }],
       });
       if (!path) return null;
       await export_opml(path, ids_to_export.length === feeds?.length ? undefined : ids_to_export);

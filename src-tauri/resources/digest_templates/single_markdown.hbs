@@ -1,21 +1,21 @@
 {{#each entries}}
 # {{title}}
 {{#if byline}}
-Author: {{byline}}
+{{@root.labels.author}}: {{byline}}
 {{/if}}
-Source: {{url}}
+{{@root.labels.source}}: {{url}}
 {{#if summary}}
-## Summary
+## {{@root.labels.summary}}
 
 {{summary}}
 
 {{summary_attribution}}
 {{/if}}{{#if note}}
-## My Take
+## {{@root.labels.note}}
 
 {{note}}
 {{/if}}{{#if content}}
-## Article
+## {{@root.labels.article}}
 
 {{content}}
 {{/if}}{{/each}}

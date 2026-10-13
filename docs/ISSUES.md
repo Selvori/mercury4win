@@ -20,7 +20,7 @@
 | M4W-012 | P2 | 用量统计与 Provider 生命周期偏差 | 待验证 | P2-12；[请求事实与生命周期回归](../tests/usage_lifecycle/README.md) | 按真实请求与提供商记录成功 / 失败；多维报表正确；归档或删除失败不丢密钥 / 历史 |
 | M4W-013 | P2 | Obsidian Publish 阅读分支未移植 | 待验证 | [静态Publish阅读回归](../tests/obsidian_publish/README.md) | 样例 shell 可解析 Markdown 地址，正文与缓存契约通过；或记录明确范围决策 |
 | M4W-014 | P2 | Paper 主题入口和系统主题同步不完整 | 待验证 | 其他移植项；[主题与系统同步回归](../tests/reader_theme/README.md) | 可选择已提供主题，系统主题变化同步 Reader iframe，亮暗及字体桌面验证 |
-| M4W-015 | P2 | 部分文案及按钮可访问性缺口 | 待验证 | 双语键 / 生产 DOM 与相关回归通过；native 待验收 | 补齐双语键、按钮名称和键盘焦点；相关界面验收 |
+| M4W-015 | P2 | 部分文案及按钮可访问性缺口 | 待验证 | 双语键 / 生产 DOM 与相关回归、[中文界面与持久化](../tests/localization/README.md) 通过；native 待验收 | 补齐双语键、按钮名称和键盘焦点；语言选择在完整退出重启后恢复，相关界面与中文文摘桌面验收 |
 | M4W-016 | P2 | 笔记 Markdown HTML 净化缺失 | 待验证 | 其他移植项；[净化回归](../tests/markdown_safety/README.md) | 明确允许内容并用恶意 HTML fixture 验证净化；普通 Markdown 不回归 |
 | M4W-017 | P2 | SSE UTF-8 跨块及错误 JSON 编码风险 | 待验证 | [SSE 与错误事件回归](../tests/agent_stream/README.md)，已定向复现 | 字节分块中文、带引号 / 换行错误、终止与断流测试通过 |
 | M4W-018 | P2 | 测试预期陈旧与格式基线未通过 | 已关闭 | [最终验证](audits/final-validation-2026-10-13.md)，2026-10-13 / c90567b + 未提交修改 | 真实语义断言及完整测试 / 格式基线通过，保留历史失败与明确格式范围；未删除或忽略测试 |
@@ -203,6 +203,12 @@
 - native Tauri /WebView2实际系统事件 /srcDoc排版 /字体可用性 /键盘 /完整退出重启、Linux /macOS和真实AI未验证；全套Rust /全仓fmt未跑，018历史失败保留。全局Dialog焦点仍留015。无用户库 /凭据 /远程访问、无依赖或权限变更，未提交 /推送 /发布，保持待验证。下一015尚未启动。
 
 ## M4W-015 修复及验证记录
+
+- 2026-10-13 英文设置导航补充：真实 Edge 在 1200px 窗口复现 Tag Library 位于第二行；减少横向留白、固定单行并为窄窗口保留水平滚动后，中文 / 英文 1200 / 800 / 600px、最后标签的键盘及点击访问通过，最新 7 组浏览器与 lint / build / diff 通过。详见[中文化验证](../tests/localization/README.md)，native 桌面验收仍待完成。
+
+- 2026-10-13 后续入口 / 术语调整：按用户要求将语言选择移至设置顶部，主界面无独立控件，用量中文保留 token。6 组真实 Edge、20 组可访问性 / 标签 DOM、lint / build / 359 对资源 / diff 通过；详情见同一[中文化入口](../tests/localization/README.md)。未改 Rust，native 桌面验收仍待完成。
+
+- 2026-10-13 中文化补充：默认简体中文、界面语言切换 / 保存、日期 / 数字和文摘标题同步；359 对资源、6 组真实 Edge、7 项文摘 Rust、37 组相关 DOM及构建 / 格式检查通过。[专项证据](../tests/localization/README.md)保留实际命令和准备失败；native 完整退出重启及系统窗口尚待验收，状态仍为待验证。
 
 - 2026-10-13；HEAD `c90567b` 加保留的此前串行修复及本项未提交改动；Windows /PowerShell7.6.5、Node24.12.0。核对实际环境和记录、只读上游README /l10n与相关SwiftUI名称 /键盘语义，先报告方案后实施。
 - 补主题当前模式、Feed同步 /删除名称 /URL label、OPML标题 /完成 /错误重试双语，原Reader失败 /标签空状态已本地化并继续验证；机器诊断保留。Feed选择和删除改同级原生button，键盘焦点可见；Settings表单 /Reader外链 /笔记标签输入补名称，选择状态明确，局部错误 /进度角色补齐。

@@ -9,7 +9,7 @@ export async function build_agent_test() {
     plugins: [{ name: "native-memory-only", setup(builder) {
       builder.onResolve({ filter: /^@tauri-apps\/api\/core$|^@tauri-apps\/plugin-dialog$/ }, () => ({ path: path.join(dir, "mock_transport.ts") }));
       builder.onResolve({ filter: /^react-i18next$/ }, () => ({ path: "i18n", namespace: "mock" }));
-      builder.onLoad({ filter: /.*/, namespace: "mock" }, () => ({ contents: "export const useTranslation = () => ({ t: (key,params) => params?.path ? key+':'+params.path : key });", loader: "js" }));
+      builder.onLoad({ filter: /.*/, namespace: "mock" }, () => ({ contents: "export const useTranslation = () => ({ i18n: { language: 'en' }, t: (key,params) => params?.path ? key+':'+params.path : key });", loader: "js" }));
     } }],
   });
   return result.outputFiles[0].text;

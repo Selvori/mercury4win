@@ -16,6 +16,7 @@ export interface DigestOptions {
   include_body: boolean;
   include_note: boolean;
   include_summary: boolean;
+  locale?: "en" | "zh-Hans";
 }
 
 export interface DigestPreview {

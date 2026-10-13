@@ -28,6 +28,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { TagLibrary } from "@/features/tags/components/tag_library";
 import { UsageStats } from "@/features/usage/components/usage_stats";
+import { LanguageSelect } from "./language_select";
 
 type OpenReport = (context: UsageContext) => void;
 
@@ -59,8 +60,11 @@ export function AgentSettings({ on_tags_changed, on_batch_active_change }: { on_
 
   return (
     <div className="flex min-h-0 flex-col">
+      <div className="border-b border-border px-6 py-4">
+        <LanguageSelect />
+      </div>
       {/* Tab navigation */}
-      <div className="flex flex-wrap gap-1 border-b border-border px-6 pt-4">
+      <div className="flex flex-nowrap gap-1 overflow-x-auto border-b border-border px-6 pt-4">
         {tabs.map((opt) => (
           <Button
             key={opt.value}
@@ -69,7 +73,7 @@ export function AgentSettings({ on_tags_changed, on_batch_active_change }: { on_
             variant="ghost"
             size="sm"
             className={cn(
-              "rounded-b-none border-b-2 border-transparent px-4",
+              "rounded-b-none border-b-2 border-transparent px-3",
               tab === opt.value && "border-primary text-primary",
             )}
             onClick={() => { set_tab(opt.value); if (opt.value === "usage") set_usage_context(undefined); }}
@@ -672,7 +676,8 @@ function PromptSection({
     try {
       const { open } = await import("@tauri-apps/plugin-dialog");
       const selected = await open({
-        filters: [{ name: "YAML", extensions: ["yaml", "yml"] }],
+        title: t("settings.uploadYaml"),
+        filters: [{ name: t("common.yamlFile"), extensions: ["yaml", "yml"] }],
         multiple: false,
       });
       if (selected) {

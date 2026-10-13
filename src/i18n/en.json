@@ -210,6 +210,12 @@
     "unavailableModel": "Configured model unavailable (disabled or archived)"
   },
   "common": {
+    "interfaceLanguage": "Language",
+    "englishName": "English",
+    "chineseName": "简体中文",
+    "opmlFile": "OPML file",
+    "yamlFile": "YAML template",
+    "markdownFile": "Markdown file",
     "loading": "Loading...",
     "error": "Error",
     "noData": "No data",
@@ -359,6 +365,8 @@
     "cancel": "Cancel task"
   },
   "digest": {
+    "previewFailed": "Could not load the digest preview.",
+    "exportFailed": "Could not export the digest.",
     "title": "Export Digest",
     "multiple": "Export Multiple Digest",
     "format": "Format",

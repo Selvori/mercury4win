@@ -45,7 +45,7 @@ export function OpmlImport({ open, on_close }: Props) {
       const { open: open_dialog } = await import("@tauri-apps/plugin-dialog");
       const selected = await open_dialog({
         title: t("opml.selectFile"),
-        filters: [{ name: "OPML", extensions: ["opml", "xml"] }],
+        filters: [{ name: t("common.opmlFile"), extensions: ["opml", "xml"] }],
         multiple: false,
       });
       if (!selected) return;

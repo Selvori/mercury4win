@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function EntryList({ feed_id, tag_ids, starred_only = false, selected_entry_id, on_select_entry, on_clear_selection, on_delete_entry }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const query_client = useQueryClient();
   const [search, set_search] = useState("");
   const [unread_only, set_unread_only] = useState(false);
@@ -249,7 +249,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                 <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
                   {entry.author && <span>{entry.author}</span>}
                   {entry.published_at && (
-                    <span>{new Date(entry.published_at).toLocaleDateString()}</span>
+                    <span>{new Date(entry.published_at).toLocaleDateString(i18n.language)}</span>
                   )}
                 </div>
                 {entry.summary && (

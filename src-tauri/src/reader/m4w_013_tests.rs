@@ -237,6 +237,7 @@ async fn m4w_013_redirect_media_safety_persistence_cache_and_consumers() {
             include_body: true,
             include_note: false,
             include_summary: false,
+            locale: None,
         },
     )
     .await

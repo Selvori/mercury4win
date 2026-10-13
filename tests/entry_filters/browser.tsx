@@ -60,8 +60,9 @@ async function run() {
   await key('n'); assert(host.textContent?.includes('note.noNotes'),'note shortcut missing');
   await key('n'); assert(!host.textContent?.includes('note.noNotes'),'note toggle missing');
   await key('r'); assert(host.textContent?.includes('summary.generate'),'summary shortcut missing');
-  await key('t'); assert(host.textContent?.includes('translation.translateArticle'),'translation shortcut missing');
-  await key('t');
+  await key('t'); assert(button('reader.translation').getAttribute('aria-pressed') === 'true','translation shortcut missing');
+  assert(!host.textContent?.includes('translation.translateArticle'),'silent translation exposed obsolete controls');
+  await key('t'); assert(button('reader.reader').getAttribute('aria-pressed') === 'true','translation toggle did not return to reader');
   const count=transport.calls.filter((c)=>c.command==='mark_read').length;
   await key('m',{},host.querySelector('input[type="search"]')!);
   const edit=document.createElement('div');edit.setAttribute('contenteditable','true');const child=document.createElement('span');edit.append(child);host.append(edit);

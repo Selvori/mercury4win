@@ -255,3 +255,31 @@
 - 按用户要求将当前工作区改动提交到本地 main；父基线为 c90567b，包含18阶段移植修复、后续静默翻译 / 漏译范围、M4W-020字体滚轮修复、开发启动脚本、测试与文档。保留所有既有修改，不推送、不发布、不创建标签。
 - 提交前核对实际目录 / PowerShell / Git根 / 状态、已登记验证与新增文件，diff空白检查通过；未纳入用户数据库、凭据、临时日志或target / dist / node_modules。此次仅提交整理与文档状态更新，未改业务代码、未重跑测试；既有全套和后续定向验证的范围与未验证项维持原记录。
 - STATUS更新为本次提交状态；历史审查和验证报告仍保留各自当时的未提交基线，不改写历史。实际桌面、真实Provider和三平台验收继续按ISSUES推进。
+
+## 2026-10-13 — 软件中文化及语言选择持久化
+
+- HEAD `c90567bd1f0f93b0a7f6e4cc00a19b24520ac2de` 加开始时已有的全部未提交改动和本任务；实际目录 / Shell / Git 根与状态、STATUS、ISSUES、已有双语资源及语言初始化已检查。Windows / PowerShell 7.6.5、Node 24.12.0、Rust 1.97.0 GNU、Edge 155.0.4283.45。用户在模型可用性询问后明确选择主 agent 完成，没有派发子 agent / 新聊天。
+- 原界面有 351 对资源却固定英文启动且无语言入口。改为默认简体中文，侧栏原生选择框保存 mercury_locale，store / i18next / HTML 语言同步；无存储也可切换。补设置 / 文件窗口中文、日期 / 数字格式；文摘携带可选 locale，三种格式标题 / 作者 / 来源 / 摘要出处中文化，旧调用英文兼容，原文和 AI 输出语言配置保留。
+- 新增生产 App 的真实 Edge 专项 6 组和两项文摘 Rust；7 项文摘 Rust、37 组相关 DOM、359 对资源键 / 插值 / 引用、lint / build / cargo check / 定向 rustfmt / diff 实际通过，build 保留已有 chunk 提示。修正语言 mock 缺项及此前静默翻译后的过时快捷键断言；浏览器标签定位和临时 fixture 路径准备失败已查实修正。完整命令、修改范围和结果见 [中文化专项记录](audits/localization-2026-10-13.md) / [验证入口](../tests/localization/README.md)。
+- 未验证 native Tauri / WebView2 完整退出重启、实际系统文件窗口 / 屏幕阅读器、真实 AI、Linux / macOS 或全仓套件。未读写真实用户数据库 / 凭据、未修改依赖 / 锁文件、无提交 / 推送 / 发布。同步 STATUS、M4W-015 与 D-007；M4W-015 仍待验证。
+- 收尾 Git 核对：另一流程已于 15:39:01 +0800 将此前修复提交为 f732ee70f59a65589e0ef96ac29b289696e945af；中文化仍未提交。本任务涉及的 18 个既有实现 / 资源文件快照与该提交按换行归一一致，保留其提交与记录更新。
+
+## 2026-10-13 — 语言选择移入设置，保留 token 术语
+
+- 当前 HEAD f732ee70f59a65589e0ef96ac29b289696e945af 加保留的全部中文化未提交修改；实际目录 / PowerShell 7.6.5 / Git 根与状态、STATUS / M4W-015 已检查。用户明确要求仅在设置提供语言入口，并保留 token 名称。
+- 将 LanguageSelect 从 src/components/layout 移至 src/features/agent/components，在 AgentSettings 顶部显示；Sidebar 移除独立入口，保存偏好和语言同步逻辑不变。zh-Hans 用量相关描述、输入 / 输出 / 总数、覆盖率、缺失及历史说明统一使用小写 token。
+- 更新现有生产 App 浏览器回归，从设置执行键盘 / 鼠标切换并断言主界面无语言控件。lint / build、6 组真实 Edge、可访问性 10 / 标签及设置关闭锁 10 组 DOM、359 对资源 / 插值 / 引用、diff 通过；亮暗设置截图已复核，build 保留既有 chunk 提示。详见 tests/localization/README.md 及中文化审查后续记录。
+- 无 Rust / 数据 / 依赖变更；未重跑 Rust / 完整前端套件。native Tauri / WebView2、系统窗口、真实 AI 和其他平台仍未验证；保留 M4W-015 待验证状态。未访问用户库 / 凭据，未提交 / 推送 / 发布。
+
+## 2026-10-13 — 修正英文设置 Tag Library 入口换行
+
+- HEAD f732ee70f59a65589e0ef96ac29b289696e945af 加保留的全部中文化未提交修改；核对实际 cwd / PowerShell 7.6.5 / Git 根、status、STATUS、M4W-015。用户反馈英文标签库设置入口换行。
+- 真实 Edge 在 1200px 窗口复现 Tag Library 与 Providers 不同 y 坐标。AgentSettings 导航容器改为不换行并允许横向滚动，按钮横向留白从 px-4 收至 px-3；正常宽度全显示，窄窗口仍可访问最后入口。
+- 现有生产 App 浏览器回归补中英 1200 / 800 / 600px 的六个标签同排、正常宽度无横向溢出，以及 Tab 到最后标签 / 点击选中验证；7 组通过，英文设置截图已复核。lint / build / diff 通过，build 保留已有 >500kB chunk 提示；结果目录 mercury4win-localization-OpgVC9。详细证据见 tests/localization/README.md 和 docs/audits/localization-2026-10-13.md 后续章节。
+- 仅修改 agent_settings.tsx 两处样式、现有浏览器验证及记录；不改文案 / Rust / IPC / 数据 / 依赖。未重跑 Rust / 全套 DOM，native Tauri / WebView2 和其他平台未验收。保留 M4W-015 待验证；未访问用户数据 / 凭据，未提交 / 推送 / 发布。
+
+## 2026-10-13 — 提交中文化与设置布局调整
+
+- 用户明确授权将当前改动提交 Git。父基线 f732ee70f59a65589e0ef96ac29b289696e945af，main 分支；提交范围为这轮中文化、设置内语言选择 / 持久化、token 术语、文摘双语导出、英文导航单行布局及其回归 / 文档，共 33 个文件，不包含构建产物或临时截图。
+- 提交前复核当前 diff、新增文件、359 对资源 / 插值 / 引用及 git diff --check；此前实际通过的 lint / build、7 组最新 Edge、7 项文摘 Rust和各专项 DOM / 编译 / 格式结果保留，源码没有新变更，不重复运行整套测试。完整命令和阶段结果见中文化专项记录。
+- 同步 STATUS 的提交状态；历史工作日志和审查保留当时未提交事实。仅本地提交，不推送、不建标签或发布。native Tauri / WebView2、真实 AI、其他平台仍未验收，M4W-015 状态不变。

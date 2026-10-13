@@ -44,7 +44,13 @@ export const useAppStore = create<AppState>((set, get) => ({
     } catch {}
     return "classic";
   })(),
-  locale: "en",
+  locale: (() => {
+    try {
+      const stored = localStorage.getItem("mercury_locale");
+      if (stored === "en" || stored === "zh-Hans") return stored;
+    } catch {}
+    return "zh-Hans";
+  })(),
   font_family: (() => {
     try {
       const stored = localStorage.getItem("mercury_font_family");
@@ -69,7 +75,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     try { localStorage.setItem("mercury_reader_style", reader_style); } catch {}
     set({ reader_style });
   },
-  set_locale: (locale) => set({ locale }),
+  set_locale: (locale) => {
+    try { localStorage.setItem("mercury_locale", locale); } catch {}
+    set({ locale });
+  },
   set_font_family: (family) => {
     try { localStorage.setItem("mercury_font_family", family); } catch {}
     set({ font_family: family });

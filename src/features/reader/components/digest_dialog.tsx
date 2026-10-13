@@ -9,8 +9,9 @@ import type { DigestOptions } from "@/types";
 
 // Mount per confirmed selection. Options and late async responses stay in that session.
 export function DigestDialog({ entry_ids, multiple = false, on_close }: { entry_ids: number[]; multiple?: boolean; on_close: () => void }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [options, set_options] = useState<DigestOptions>({ include_body: false, include_note: false, include_summary: false });
+  const export_options: DigestOptions = { ...options, locale: i18n.language === "zh-Hans" ? "zh-Hans" : "en" };
   const [template, set_template] = useState(multiple ? "multiple_markdown" : "single_markdown");
   const [ready, set_ready] = useState(multiple);
   const [defaults_error, set_defaults_error] = useState("");
@@ -33,8 +34,8 @@ export function DigestDialog({ entry_ids, multiple = false, on_close }: { entry_
     }
     return () => { current = false; };
   }, [ids_key, multiple, defaults_attempt]);
-  const preview = useQuery({ queryKey: ["digest_preview", ids_key, template, options],
-    queryFn: () => preview_digest(entry_ids, template, options), enabled: ready, retry: false });
+  const preview = useQuery({ queryKey: ["digest_preview", ids_key, template, export_options],
+    queryFn: () => preview_digest(entry_ids, template, export_options), enabled: ready, retry: false });
   async function save() {
     if (!preview.data || preview.isFetching || busy) return;
     const shown = preview.data.content;
@@ -42,11 +43,11 @@ export function DigestDialog({ entry_ids, multiple = false, on_close }: { entry_
     try {
       const { save } = await import("@tauri-apps/plugin-dialog");
       const extension = preview.data.format === "text" ? "txt" : "md";
-      const path = await save({ defaultPath: `mercury_digest.${extension}`, filters: [{ name: preview.data.format === "text" ? t("digest.plainText") : "Markdown", extensions: [extension] }] });
+      const path = await save({ title: t(multiple ? "digest.multiple" : "digest.title"), defaultPath: `mercury_digest.${extension}`, filters: [{ name: preview.data.format === "text" ? t("digest.plainText") : t("common.markdownFile"), extensions: [extension] }] });
       if (!alive.current) return;
       if (!path) { set_status(t("digest.cancelled")); return; }
-      if (multiple) await export_multi_digest(entry_ids, template, path, options, shown);
-      else await export_digest(entry_ids[0], template, path, options, shown);
+      if (multiple) await export_multi_digest(entry_ids, template, path, export_options, shown);
+      else await export_digest(entry_ids[0], template, path, export_options, shown);
       if (alive.current) set_status(t("digest.saved", { path }));
     } catch (error) {
       if (alive.current) { set_failure(String(error)); void preview.refetch(); }
@@ -63,20 +64,20 @@ export function DigestDialog({ entry_ids, multiple = false, on_close }: { entry_
         </select>
       </label>}
       <div className="mb-3 flex flex-wrap gap-3">{(["body", "note", "summary"] as const).map((field) => {
-        const key = `include_${field}` as keyof DigestOptions;
+        const key = `include_${field}` as "include_body" | "include_note" | "include_summary";
         return <label key={field} className="flex items-center gap-2 text-sm"><input type="checkbox" disabled={!ready || busy} checked={options[key]}
           onChange={(e) => { set_options({ ...options, [key]: e.target.checked }); set_status(""); }} />{t(`digest.${field}`)}</label>;
       })}</div>
-      {defaults_error && <div><p role="alert">{defaults_error}</p><Button variant="outline" onClick={() => set_defaults_attempt((n) => n + 1)}>{t("digest.retryDefaults")}</Button></div>}
+      {defaults_error && <div><p role="alert">{t("digest.previewFailed")} {defaults_error}</p><Button variant="outline" onClick={() => set_defaults_attempt((n) => n + 1)}>{t("digest.retryDefaults")}</Button></div>}
       {preview.isFetching && <p role="status">{t("common.loading")}</p>}
-      {preview.isError && <p role="alert" className="text-destructive">{String(preview.error)}</p>}
+      {preview.isError && <p role="alert" className="text-destructive">{t("digest.previewFailed")} {String(preview.error)}</p>}
       {preview.data && !preview.isFetching && <>
         {!!preview.data.missing.length && <div role="status" className="mb-3 text-sm"><p>{t("digest.missing")}</p>
           <ul>{preview.data.missing.map((item) => <li key={`${item.entry_id}-${item.field}`}>{item.title}: {t(`digest.${item.field}`)}</li>)}</ul>
         </div>}
         <pre aria-label={t("digest.preview")} className="max-h-[40vh] overflow-auto whitespace-pre-wrap break-words rounded border border-border bg-muted p-3 text-xs">{preview.data.content}</pre>
       </>}
-      {failure && <p role="alert" className="mt-3 text-sm text-destructive">{failure}</p>}
+      {failure && <p role="alert" className="mt-3 text-sm text-destructive">{t("digest.exportFailed")} {failure}</p>}
       {status && <p role="status" className="mt-3 break-all text-sm">{status}</p>}
       <DialogFooter><Button variant="outline" disabled={busy} onClick={on_close}>{t("digest.close")}</Button>
         <Button variant="outline" disabled={!ready || busy || preview.isFetching} onClick={() => { set_failure(""); set_status(""); void preview.refetch(); }}>{t("digest.refresh")}</Button>

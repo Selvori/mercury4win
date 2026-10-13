@@ -14,7 +14,7 @@ export async function build_entry_test() {
       builder.onResolve({ filter: /^@tauri-apps\/api\/core$/ }, () => ({ path: path.join(directory, "mock_transport.ts") }));
       builder.onResolve({ filter: /^react-i18next$/ }, () => ({ path: "i18n", namespace: "mock" }));
       builder.onLoad({ filter: /.*/, namespace: "mock" }, () => ({
-        contents: "export const useTranslation = () => ({ t: (key, params) => params?.count != null ? key + ':' + params.count : key });", loader: "js",
+        contents: "export const useTranslation = () => ({ i18n: { language: 'en' }, t: (key, params) => params?.count != null ? key + ':' + params.count : key });", loader: "js",
       }));
     } }],
   });
