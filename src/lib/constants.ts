@@ -1,7 +1,7 @@
 // mercury4win/src/lib/constants.ts
 
 export const APP_NAME = "Mercury";
-export const APP_VERSION = "0.1.0";
+export const APP_VERSION = "0.4.0";
 
 // Reader pipeline versions
 export const READABILITY_VERSION = 1;

@@ -4,7 +4,7 @@
 
 本项目基于仅支持 macOS 的 [Mercury](https://github.com/neolee/mercury) 开发，以 Tauri v2、Rust 和 React 实现 Windows、Linux 与 macOS 多平台支持。原始 Mercury 采用 Swift / SwiftUI，其功能设计、业务逻辑及文档是本项目的开发参考；本项目的功能实现情况以当前代码为准。
 
-> v0.2.0 · MIT License · Windows / macOS / Linux
+> v0.4.0 · MIT License · Windows / macOS / Linux
 
 开发记录从 [docs/README.md](docs/README.md) 进入；当前实现与验证状态见 [项目状态](docs/STATUS.md)，已知差异见 [问题台账](docs/ISSUES.md)。下方功能概览不代表所有用户流程已验收。固定 RSS 导入样例及验证方法见 [测试约定](docs/TESTING.md)。
 
@@ -102,8 +102,8 @@ npx tauri build    # 构建发布版本
 src-tauri/target/release/
 ├── mercury.exe                              (49 MB)
 └── bundle/
-    ├── nsis/Mercury_0.2.0_x64-setup.exe     (11 MB)
-    └── msi/Mercury_0.2.0_x64_en-US.msi      (16 MB)
+    ├── nsis/Mercury_0.4.0_x64-setup.exe     (11 MB)
+    └── msi/Mercury_0.4.0_x64_en-US.msi      (16 MB)
 ```
 
 ---

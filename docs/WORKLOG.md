@@ -283,3 +283,11 @@
 - 用户明确授权将当前改动提交 Git。父基线 f732ee70f59a65589e0ef96ac29b289696e945af，main 分支；提交范围为这轮中文化、设置内语言选择 / 持久化、token 术语、文摘双语导出、英文导航单行布局及其回归 / 文档，共 33 个文件，不包含构建产物或临时截图。
 - 提交前复核当前 diff、新增文件、359 对资源 / 插值 / 引用及 git diff --check；此前实际通过的 lint / build、7 组最新 Edge、7 项文摘 Rust和各专项 DOM / 编译 / 格式结果保留，源码没有新变更，不重复运行整套测试。完整命令和阶段结果见中文化专项记录。
 - 同步 STATUS 的提交状态；历史工作日志和审查保留当时未提交事实。仅本地提交，不推送、不建标签或发布。native Tauri / WebView2、真实 AI、其他平台仍未验收，M4W-015 状态不变。
+
+## 2026-10-13 — 合入远端 README 提交并统一版本为 0.4.0
+
+- 基线 main HEAD `12be8ea77a86483d99daa2a9df69a3bcb66eb17e`，工作区干净；Windows / PowerShell 7.6.5、Node 24.12.0、Cargo / Rust 1.97.0 GNU。确认 cwd / Shell / Git 根 / status，读取 AGENTS / STATUS，核对最高本地标签 v0.3.1、各配置和三平台发布工作流。
+- 用户要求各处统一为更高版本，采用 0.4.0；合入本地已保存的 origin/main 提交 `5563cad6636015bdca81ae036ecca63108bed2be`（仅将 README v0.2.0 改为 v0.3.1）。README 内容冲突保留本地项目说明，以 v0.4.0 解决，并更新 Windows 安装包文件名示例；不改写历史标签或审查记录。此前 fetch 因本机代理连接失败，未宣称已获取最新远端状态。
+- package.json、package-lock.json 根项目、src-tauri/Cargo.toml、Cargo.lock 本项目包、tauri.conf.json 和 src/lib/constants.ts 的 APP_VERSION 全部统一为 0.4.0。锁文件通过 `npm.cmd version 0.4.0 --no-git-tag-version --ignore-scripts --offline` 与 `cargo metadata --offline --manifest-path src-tauri/Cargo.toml --format-version 1` 更新，diff 确认无依赖版本变化。
+- 实际通过 `npm.cmd run lint`、`npm.cmd run build`、`cargo check --locked --offline --manifest-path src-tauri/Cargo.toml`、七个版本相关文件一致性 / 严格 UTF-8 无 BOM / `git diff HEAD --check` 检查；build 保留既有 >500kB chunk 提示。初次 PowerShell JSON 检查因锁文件空字符串根键解析失败，改用 ConvertFrom-Json -AsHashtable 后通过，没有修改锁文件结构。
+- 本次仅版本元数据和文档变更，没有 Rust 业务源码或依赖变更，未重跑 Rust 单元 / DOM / native 桌面验收；三平台安装包构建与升级安装未验证。完成本地合并提交，不推送、不创建发布标签或发布，不访问用户数据库 / 凭据；既有问题状态保持。

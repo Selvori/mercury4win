@@ -41,4 +41,6 @@ Rust 使用当前 GNU 测试产物的 Common Controls 6 sidecar 环境；DOM 的
 
 ## 下一步
 
+2026-10-13 版本统一：README、前端 APP_VERSION、npm / Cargo 清单与锁文件、Tauri 配置统一为 0.4.0，高于现有最高标签 v0.3.1；本地 main 合入已保存的远端提交 5563cad，README 冲突以新版本解决。npm lint / build、cargo check --locked --offline、版本一致性 / UTF-8 / diff 检查通过，依赖版本无变化。尚未推送、创建标签或发布；三平台安装包构建和升级安装未验证，既有产品验收状态保持。
+
 以隔离应用数据、固定 F-001 和合成凭据 / 本地 Provider 完成 native Tauri / WebView2 验收：切换文章、面板关闭 / 重开、取消与部分失败、完整退出重启、无 AI 配置、导入 / 导出对话框、键盘 / 焦点 / iframe、实际主题 / 字体 / 图片。再核对真实 Provider 和在线站点兼容，以及 Windows / Linux / macOS 打包与运行；按各问题最低关闭条件附证据后更新台账。当前不再有下一实现编号。
