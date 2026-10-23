@@ -291,3 +291,13 @@
 - package.json、package-lock.json 根项目、src-tauri/Cargo.toml、Cargo.lock 本项目包、tauri.conf.json 和 src/lib/constants.ts 的 APP_VERSION 全部统一为 0.4.0。锁文件通过 `npm.cmd version 0.4.0 --no-git-tag-version --ignore-scripts --offline` 与 `cargo metadata --offline --manifest-path src-tauri/Cargo.toml --format-version 1` 更新，diff 确认无依赖版本变化。
 - 实际通过 `npm.cmd run lint`、`npm.cmd run build`、`cargo check --locked --offline --manifest-path src-tauri/Cargo.toml`、七个版本相关文件一致性 / 严格 UTF-8 无 BOM / `git diff HEAD --check` 检查；build 保留既有 >500kB chunk 提示。初次 PowerShell JSON 检查因锁文件空字符串根键解析失败，改用 ConvertFrom-Json -AsHashtable 后通过，没有修改锁文件结构。
 - 本次仅版本元数据和文档变更，没有 Rust 业务源码或依赖变更，未重跑 Rust 单元 / DOM / native 桌面验收；三平台安装包构建与升级安装未验证。完成本地合并提交，不推送、不创建发布标签或发布，不访问用户数据库 / 凭据；既有问题状态保持。
+
+## 2026-10-24 — 检查 GitHub Actions 并推送 main
+
+- 基线 HEAD `0c8258d8fd2e27112bfd4536cfea0c232c3d3c34`，开始时工作区干净、领先 origin/main 5 个提交；Windows / PowerShell 7.6.7、Node 24.12.0、Rust 1.97.0 GNU。按用户要求先检查编译流程，再推送；读取 AGENTS / STATUS，核对实际目录 / Shell / Git 根 / 状态与远端身份。
+- 通过 gh 查询 Release 工作流与近期运行。工作流 blob `9a821e053ef187c557bfafac61c627205469a030` 与远端完全一致且已启用；最近 v0.3.1 的 [运行 30750008150](https://github.com/Selvori/mercury4win/actions/runs/30750008150) 三平台构建、上传和发布成功，API 中三份 artifact 均存在。npm ci 使用现有 legacy-peer-deps 配置，Node 22 满足锁定 Vite 的 >=22.12.0 要求，Linux 系统依赖与三平台 bundle 输出路径已静态核对；版本均为 0.4.0。没有修改工作流、依赖或产品源码。
+- 本次实际通过 `npm.cmd run lint`、`npm.cmd run build`、`cargo check --locked --offline --manifest-path src-tauri/Cargo.toml` 与初始 diff 检查；build 保留已有 >500kB chunk 提示。默认 git fetch 因失效的本机代理失败，使用单次 `git -c http.proxy= fetch origin` 成功，没有改全局代理配置；远端仍为 5563cad 且已被本地合入。
+- 预检通过后，`git -c http.proxy= push origin main` 成功，将远端 5563cad 更新至 0c8258d。随后 `gh workflow run release.yml --repo Selvori/mercury4win --ref main` 启动 [运行 40003947795](https://github.com/Selvori/mercury4win/actions/runs/40003947795)，head SHA 已核对。该工作流仅由 v* 标签或手动触发，main 的手动构建会跳过 release 作业，不创建标签或发布。
+- 首次运行 Windows / macOS 构建及上传成功，Linux 在下载系统依赖时耗时较长；为获取日志取消剩余运行，保留该次 cancelled 记录。日志显示 azure.archive.ubuntu.com 下载持续缓慢，最后正在获取 25.5MB WebKit 包，尚未进入源码编译，没有源码编译失败证据。`gh run rerun 40003947795 --repo Selvori/mercury4win --failed` 重跑未完成作业，新 runner 顺利安装系统库，最终 Linux 构建 / 上传成功；第二次尝试的整体 conclusion 为 success，release 为 skipped。无需修改工作流或产品源码。
+- 实际日志确认生成 `Mercury_0.4.0_x64_en-US.msi`、`Mercury_0.4.0_x64-setup.exe`、`Mercury_0.4.0_amd64.deb`、`Mercury_0.4.0_aarch64.dmg`。API 核对 mercury-windows / mercury-linux / mercury-macos-arm64 三个 artifact 均存在、非空且未过期，压缩大小分别为 17,638,010 / 12,842,756 / 10,823,884 bytes；没有下载或运行安装包。本条记录所在提交只更新 STATUS / WORKLOG，随 main 同步，产品构建基线仍为 0c8258d。
+- 本次未重跑 Rust 单元 / DOM，也未验证安装包升级、native 桌面或真实 AI；产品问题状态保持。源码与验证记录均通过普通 push 同步，不创建标签、不发布、不改远端历史，也未访问用户数据库 / 凭据。
