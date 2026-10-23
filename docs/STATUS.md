@@ -6,7 +6,7 @@
 
 移植审查的 18 个串行修复阶段均已完成实现与隔离验证，相关改动及后续翻译 / 字体滚轮修复已纳入此前本地 Git 提交；中文化、设置内语言选择和单行导航由本轮本地提交记录。实际产品验收仍待完成。当前完整 Rust、前端构建、所有已登记隔离 DOM 回归与 Rust 格式基线通过。问题状态只维护在 [ISSUES.md](ISSUES.md)：M4W-018 的测试语义 / 格式与 M4W-019 的详情契约已关闭，其余 18 项（含新增 M4W-020）保持待验证。
 
-- 当前代码包含此前 `f732ee7` 的全部移植修复、翻译 / 字体滚轮修复、开发启动脚本和验证文件，以及中文化、语言选择持久化、设置导航与对应回归记录；0.4.0 基线 `0c8258d` 已于 2026-10-24 推送至 GitHub main，未发布或创建标签。schema 为 5，Reader Readability / Markdown / render 为 3 / 2 / 5。
+- 当前代码包含此前 `f732ee7` 的全部移植修复、翻译 / 字体滚轮修复、开发启动脚本和验证文件，以及中文化、语言选择持久化、设置导航与对应回归记录；0.4.0 基线 `0c8258d` 已于 2026-10-24 推送至 GitHub main，并正式发布 [v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)。schema 为 5，Reader Readability / Markdown / render 为 3 / 2 / 5。
 - 上游参考 Mercury：`5b2e58ebccc772263b0fc70360f667c3abf03eea` / v1.4.32，仅作语义参考。原 [2026-10-12 审查](audits/mercury-porting-2026-10-12.md) 的基线和历史失败保留，本轮结果不改写历史。
 - 逐项修复、限制和证据见 [问题台账](ISSUES.md)、[工作日志](WORKLOG.md)、[串行顺序](audits/porting-fix-sequence-2026-10-12.md) 及各 tests README。固定 RSS 导入样例仍为 [hn-popular10+1.opml](../tests/fixtures/opml/hn-popular10+1.opml)，验收约定见 [TESTING.md](TESTING.md)。
 
@@ -41,7 +41,9 @@ Rust 使用当前 GNU 测试产物的 Common Controls 6 sidecar 环境；DOM 的
 
 ## 最新云端构建
 
-2026-10-24：0.4.0 基线 `0c8258d` 已推送，手动触发的 [三平台构建](https://github.com/Selvori/mercury4win/actions/runs/40003947795) 最终成功。Windows MSI / NSIS、Linux DEB、macOS ARM64 DMG 均生成，三个 artifact 存在且非空；首轮 Linux 镜像下载缓慢，取消后仅重跑未完成作业，第二次通过，没有修改工作流或源码。本次本地 lint / build、cargo check --locked --offline 也通过。main 推送本身不自动触发此工作流，手动运行的 release 作业按预期跳过；未创建标签或发布，安装 / 升级与桌面运行尚未验证。
+2026-10-24：0.4.0 基线 `0c8258d` 已推送，手动触发的 [三平台构建](https://github.com/Selvori/mercury4win/actions/runs/40003947795) 最终成功。Windows MSI / NSIS、Linux DEB、macOS ARM64 DMG 均生成，三个 artifact 存在且非空；首轮 Linux 镜像下载缓慢，取消后仅重跑未完成作业，第二次通过，没有修改工作流或源码。本次本地 lint / build、cargo check --locked --offline 也通过。main 推送本身不自动触发此工作流，手动运行的 release 作业按预期跳过。
+
+用户随后明确授权发布，已直接复用上述产物创建正式 Latest Release [v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)，标签指向实际构建提交 `0c8258d`。四个安装包及 SHA256SUMS.txt 的上传状态、大小与 SHA-256 均已核对；标签创建自动触发的重复 [运行 40022933876](https://github.com/Selvori/mercury4win/actions/runs/40022933876) 已请求取消，不作为新的构建通过证据。安装 / 升级与桌面运行尚未验证，问题状态保持。
 
 ## 下一步
 

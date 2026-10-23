@@ -301,3 +301,12 @@
 - 首次运行 Windows / macOS 构建及上传成功，Linux 在下载系统依赖时耗时较长；为获取日志取消剩余运行，保留该次 cancelled 记录。日志显示 azure.archive.ubuntu.com 下载持续缓慢，最后正在获取 25.5MB WebKit 包，尚未进入源码编译，没有源码编译失败证据。`gh run rerun 40003947795 --repo Selvori/mercury4win --failed` 重跑未完成作业，新 runner 顺利安装系统库，最终 Linux 构建 / 上传成功；第二次尝试的整体 conclusion 为 success，release 为 skipped。无需修改工作流或产品源码。
 - 实际日志确认生成 `Mercury_0.4.0_x64_en-US.msi`、`Mercury_0.4.0_x64-setup.exe`、`Mercury_0.4.0_amd64.deb`、`Mercury_0.4.0_aarch64.dmg`。API 核对 mercury-windows / mercury-linux / mercury-macos-arm64 三个 artifact 均存在、非空且未过期，压缩大小分别为 17,638,010 / 12,842,756 / 10,823,884 bytes；没有下载或运行安装包。本条记录所在提交只更新 STATUS / WORKLOG，随 main 同步，产品构建基线仍为 0c8258d。
 - 本次未重跑 Rust 单元 / DOM，也未验证安装包升级、native 桌面或真实 AI；产品问题状态保持。源码与验证记录均通过普通 push 同步，不创建标签、不发布、不改远端历史，也未访问用户数据库 / 凭据。
+
+## 2026-10-24 — 正式发布 v0.4.0
+
+- 用户在确认 Releases 尚无新版本后明确授权“是的，发布”。开始基线 main `0d8551f66e7b7fcb21ac277280e526a184d83e9d`、工作区干净；Windows / PowerShell 7.6.7。核对实际目录 / Shell / Git 根 / 状态、STATUS、远端 main、既有版本与构建配置；远端尚无 v0.4.0。`git diff --exit-code 0c8258d HEAD -- .github package.json package-lock.json src src-tauri index.html` 通过，main 相比实际构建基线仅有验证文档差异。
+- 重新核对 [运行 40003947795](https://github.com/Selvori/mercury4win/actions/runs/40003947795) 的成功结论、完整 head SHA、三平台作业与三个未过期 artifact，使用 `gh run download` 下载到独立系统临时目录；不将安装包或临时发布说明纳入仓库。复用已验证的产物，没有重新编译或升级依赖。
+- 四个附件为 `Mercury_0.4.0_x64-setup.exe`（7,347,323 bytes）、`Mercury_0.4.0_x64_en-US.msi`（10,559,488）、`Mercury_0.4.0_amd64.deb`（12,935,194）、`Mercury_0.4.0_aarch64.dmg`（10,877,459）；生成 `SHA256SUMS.txt`（370 bytes）。先通过 `gh release create --draft --target 0c8258d8fd2e27112bfd4536cfea0c232c3d3c34 --notes-file ...` 上传，API 对照五个附件的 uploaded 状态、大小与 SHA-256 digest，全部与本地文件一致。
+- `gh release edit v0.4.0 --draft=false --latest` 正式发布 [Release v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)；API 核对 latest 标签正确、非草稿、非预发布、五个附件齐全，远端标签 v0.4.0 指向实际构建提交 0c8258d，已 fetch 到本地。发布说明列出改动、四种安装包、校验文件、构建来源及未验收范围。
+- 发布标签额外触发同一提交的 [运行 40022933876](https://github.com/Selvori/mercury4win/actions/runs/40022933876)。核对 head SHA / v0.4.0 / push 事件后请求取消，避免重复构建和重复创建已有 Release；该取消不替代也不否定此前已通过的三平台构建。本次只更新 STATUS / WORKLOG 并同步 main，没有修改工作流或产品源码。
+- 未安装或执行附件，未重新运行单元 / DOM / 完整桌面验收；安装、升级与真实 AI 兼容仍未验证，问题台账状态保持；未访问用户数据库 / 凭据。
