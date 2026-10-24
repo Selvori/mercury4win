@@ -5,7 +5,7 @@
 ## 存储与恢复契约
 
 - schema v3 新增 `agent_result_slot`，保留原有未使用结果表及旧数据。未知来源的旧表数据不自动恢复，避免将旧结果套在当前来源上。新建、v1升级、v2升级及重复迁移通过。
-- 摘要身份为 entry / target language / detail level / source hash；翻译额外使用 prompt strategy、实际 concurrency及 `markdown-paragraph-v1` 分段版本。Hash按长度明确的JSON数组对标题、作者、URL、Feed summary / 正文 / 类型、Markdown / 版本及cleaned HTML / readability版本计算SHA-256，避免来源未重建时误复用。来源变动仍保留旧记录，但读取不匹配，旧任务保存也被拒绝。
+- 摘要身份为 entry / target language / detail level / source hash；翻译额外使用 prompt strategy、实际 concurrency及 `markdown-paragraph-v1` 分段版本。来源标识由标题、作者、URL、Feed summary / 正文 / 类型、Markdown / 版本及cleaned HTML / readability版本组成的长度明确JSON数组生成，避免来源未重建时误复用。来源变动仍保留旧记录，但读取不匹配，旧任务保存也被拒绝。
 - 当前 model name 是结果溯源字段，未进入slot；模板版本、自定义Prompt及model route指纹还未接入，后续M4W-009须扩展parameters并同步读取身份。通用表的parameters字段允许扩展；未来004采用HTML稳定分段必须更换segmenter版本。没有声称本项已完成004的稳定p / ul / ol映射或双语显示。
 - 摘要累计完整SSE delta，只在合法DONE、非空内容且数据库COMMIT成功后发done。翻译每个成功段保存checkpoint；全段成功再原子promote完整success。失败、空响应或取消不替换旧完整success；有旧完整结果时优先恢复它。没有完整success时，“继续翻译”只请求缺失段，串行模式恢复前段上下文。
 - `agent_result_store::load_summary` / `load_translation` 是生产读取入口，已通过注册IPC / TS wrapper接入面板，也可供后续文摘导出使用。面板重开按参数读取；后台完成、失败、取消及Reader正文重建完成时刷新查询，旧读取和旧Channel不得覆盖当前文章。

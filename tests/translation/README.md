@@ -7,7 +7,7 @@
 ## 当前实现契约
 
 - 从生产Reader的安全Markdown→HTML渲染结果提取p / ul / ol、h1–h6、th / td / caption / figcaption / dt / dd；引用内部的正文 / 列表照常翻译。选中的外层列表、单元格 / 定义块拥有内部文本，不重复提取后代；空图片段不占段索引，pre代码块和非正文区域保留原文。内联代码以反引号包围保留语义。
-- source ID基于段类型、有效顺序、渲染HTML及来源文本的SHA-256。相同输入得到相同映射；不同来源被来源hash拒绝。slot使用`reader-html-block-v3`，旧v2及`markdown-paragraph-v1`结果保留但不命中新身份。AgentResult的segment_ids / segment_errors使用serde默认值，旧schema v3摘要仍可读，无新增数据库迁移。
+- source ID由段类型、有效顺序、渲染HTML及来源文本生成。相同输入得到相同映射；不同来源被来源hash拒绝。slot使用`reader-html-block-v3`，旧v2及`markdown-paragraph-v1`结果保留但不命中新身份。AgentResult的segment_ids / segment_errors使用serde默认值，旧schema v3摘要仍可读，无新增数据库迁移。
 - 实际并发统一1..5；0默认3，超过5归一为5。每段非空响应且未明确报告非stop终止才成功。HTTP错误、空响应及length截断按段失败；串行失败仍处理剩余段，全部请求收尾后才发complete / partial / all_failed，完整结果COMMIT后才发done。
 - 成功段和错误原因保存checkpoint。继续翻译只补缺段；source ID单段重试仅发送指定缺段；来源变化拒绝旧ID。串行恢复前一段原文 / 译文上下文，HY-MT内置模板版本2新增同样条件入口。完整旧success优先恢复，失败再生成不能覆盖它；取消沿用002的提交fence。
 - `load_translation_document`返回来源映射和已标记Reader HTML；run_translation新增可选sourceSegmentId。保留017的error.segment，额外提供index / source_segment_id；TS封装、Rust注册和所有调用方同步。

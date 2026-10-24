@@ -60,7 +60,7 @@ Rust 测试是仓库持久 `#[cfg(test)]` 模块 `src-tauri/src/feed/m4w_005_tes
 
 ## F-001 实测边界
 
-使用仓库 [hn-popular10+1.opml](../fixtures/opml/hn-popular10+1.opml)，测试内校验 SHA-256 为 `14BF86ADC6146B3430FE901B5E467CBB679609A54F38F2708097D098C49783F3`。生产解析器得到 11 唯一 HTTPS URL、10 个 site URL，Paradigm X 缺省值正常。
+使用仓库 [hn-popular10+1.opml](../fixtures/opml/hn-popular10+1.opml)。生产解析器得到 11 唯一 HTTPS URL、10 个 site URL，Paradigm X 缺省值正常。
 
 生产 `insert_feed` 在空内存库预置 3 个源、导入全部再新增 8 个、重复导入新增 0 个；预置已读 / 收藏 / 笔记 / 标签保持。生产导出器写临时 UTF-8 OPML，再由生产解析器读取，11 个 URL 集合相等并能写入另一空内存库。导出临时文件已删除，内存库随测试结束释放，未改固定样例或 bootstrap。
 

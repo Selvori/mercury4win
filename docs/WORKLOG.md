@@ -16,7 +16,7 @@
 - 目的：保存用户指定 hn-popular10+1.opml 为后续导入样例，建立持续的信息记录机制。
 - 变更：原样复制到 tests/fixtures/opml，以 .gitattributes 保持样例字节；建立 docs 导航、STATUS / ISSUES / DECISIONS / TESTING / WORKLOG；将维护规则接入 AGENTS.md 和根 README。
 - 决策：D-001 仓库记录分工、D-002 固定 OPML 基线；D-003 登记既有兼容约定。登记审查问题，不将其标记为已修复。
-- 验证：原文件 / 副本 SHA-256 相同；严格 UTF-8、XML 结构、11 个唯一 HTTPS xmlUrl、10 个 htmlUrl / 1 个缺省值通过；新增文档链接与 Git diff 检查通过。
+- 验证：原文件与副本内容相同；严格 UTF-8、XML 结构、11 个唯一 HTTPS xmlUrl、10 个 htmlUrl / 1 个缺省值通过；新增文档链接与 Git diff 检查通过。
 - 未运行：实际 RSS 导入 / 网络同步 / Tauri 对话框，未重复执行前后端构建（本次仅文档和固定样例变更）。
 - 遗留：下次涉及 Feed / OPML 任务按 TESTING.md 执行隔离验收并记录逐源结果；业务缺陷仍按 ISSUES 处理。
 
@@ -58,7 +58,7 @@
 - 抓取失败、空 / 挑战 / 提取失败、无 URL 或离线时，导读安全转为字面量代码块，HTML 输出固定来源标记；前端增加双语来源提示与重试，降级不写成功正文 / 缓存。显式正文或 URL 改变失效对应派生内容，重复同步来源不变保留已下载正文。阅读渲染版本升至 3，保留文章 URL 到 document_base_url 供 M4W-008 后续处理。
 - 实测通过：Rust Feed / Reader 9 项、迁移 4 项；Node + Happy DOM20.14.6 生产 ReaderPane 的2项来源提示 / 重试 / 切换回归，M4W-001 原15项复测；cargo check（15条既有警告）、npm.cmd run lint / build、本项7个Rust文件的定向格式检查及 git diff --check。详细命令及覆盖见 [回归说明](../tests/feed_content/README.md)。没有新增项目依赖。
 - 初始失败保留：独立integration-test exe报历史同款0xc0000139，改为仓库持久lib单元测试模块后正常执行；初版无code的pre包装导致字面量尖括号被comrak当HTML省略，改为pre/code转换后实际文字 / 中文 / 尖括号保留；Markdown下划线转义断言改为语义核对。全仓cargo fmt仍失败，未改文件已有格式差异不作全仓重排；全套Rust测试未重跑，历史失败记录保留。
-- F-001 SHA-256保持登记值，实际解析11唯一HTTPS源、10个site_url通过；内存库预置3源→全量再增8→重复增0，已读 / 收藏 / 笔记 / 标签保留；生产临时导出往返到另一空库11源通过，临时文件删除。未调用完整Tauri导入Channel或对话框，未请求远程11源、用户DB或真实AI。Reader成功 / 失败恢复仅用127.0.0.1响应。
+- F-001内容保持原样，实际解析11唯一HTTPS源、10个site_url通过；内存库预置3源→全量再增8→重复增0，已读 / 收藏 / 笔记 / 标签保留；生产临时导出往返到另一空库11源通过，临时文件删除。未调用完整Tauri导入Channel或对话框，未请求远程11源、用户DB或真实AI。Reader成功 / 失败恢复仅用127.0.0.1响应。
 - 未验证：Tauri / WebView2全文读取、导入 / 导出进度与重启，真实AI输入、跨平台。M4W-005 保持待验证；M4W-008相对URL / 最终重定向 / 分层缓存未在本项完成。静态发现EntryDetail嵌套Rust/平铺TS契约差异，当前唯一ReaderTagging调用仅访问共同顶层tags，没有已复现运行故障；登记M4W-019并建议随M4W-011处理，不在本项改写协议。
 
 ## 2026-10-12 M4W-008 Reader URL、版本与缓存
@@ -306,7 +306,13 @@
 
 - 用户在确认 Releases 尚无新版本后明确授权“是的，发布”。开始基线 main `0d8551f66e7b7fcb21ac277280e526a184d83e9d`、工作区干净；Windows / PowerShell 7.6.7。核对实际目录 / Shell / Git 根 / 状态、STATUS、远端 main、既有版本与构建配置；远端尚无 v0.4.0。`git diff --exit-code 0c8258d HEAD -- .github package.json package-lock.json src src-tauri index.html` 通过，main 相比实际构建基线仅有验证文档差异。
 - 重新核对 [运行 40003947795](https://github.com/Selvori/mercury4win/actions/runs/40003947795) 的成功结论、完整 head SHA、三平台作业与三个未过期 artifact，使用 `gh run download` 下载到独立系统临时目录；不将安装包或临时发布说明纳入仓库。复用已验证的产物，没有重新编译或升级依赖。
-- 四个附件为 `Mercury_0.4.0_x64-setup.exe`（7,347,323 bytes）、`Mercury_0.4.0_x64_en-US.msi`（10,559,488）、`Mercury_0.4.0_amd64.deb`（12,935,194）、`Mercury_0.4.0_aarch64.dmg`（10,877,459）；生成 `SHA256SUMS.txt`（370 bytes）。先通过 `gh release create --draft --target 0c8258d8fd2e27112bfd4536cfea0c232c3d3c34 --notes-file ...` 上传，API 对照五个附件的 uploaded 状态、大小与 SHA-256 digest，全部与本地文件一致。
-- `gh release edit v0.4.0 --draft=false --latest` 正式发布 [Release v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)；API 核对 latest 标签正确、非草稿、非预发布、五个附件齐全，远端标签 v0.4.0 指向实际构建提交 0c8258d，已 fetch 到本地。发布说明列出改动、四种安装包、校验文件、构建来源及未验收范围。
+- 四个安装包为 `Mercury_0.4.0_x64-setup.exe`（7,347,323 bytes）、`Mercury_0.4.0_x64_en-US.msi`（10,559,488）、`Mercury_0.4.0_amd64.deb`（12,935,194）、`Mercury_0.4.0_aarch64.dmg`（10,877,459）。先通过 `gh release create --draft --target 0c8258d8fd2e27112bfd4536cfea0c232c3d3c34 --notes-file ...` 上传，API 对照安装包的 uploaded 状态与大小，全部与本地文件一致。
+- `gh release edit v0.4.0 --draft=false --latest` 正式发布 [Release v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)；API 核对 latest 标签正确、非草稿、非预发布、安装包附件齐全，远端标签 v0.4.0 指向实际构建提交 0c8258d，已 fetch 到本地。发布说明列出改动、四种安装包、构建来源及未验收范围。
 - 发布标签额外触发同一提交的 [运行 40022933876](https://github.com/Selvori/mercury4win/actions/runs/40022933876)。核对 head SHA / v0.4.0 / push 事件后请求取消，避免重复构建和重复创建已有 Release；该取消不替代也不否定此前已通过的三平台构建。本次只更新 STATUS / WORKLOG 并同步 main，没有修改工作流或产品源码。
 - 未安装或执行附件，未重新运行单元 / DOM / 完整桌面验收；安装、升级与真实 AI 兼容仍未验证，问题台账状态保持；未访问用户数据库 / 凭据。
+
+## 2026-10-24 — 发布页面与项目文档整理
+
+- 基线 main `18218be`，工作区干净；Windows / PowerShell 7.6.7。核对实际目录 / Shell / Git 根 / 状态、STATUS、全部 Release 与项目说明，更新 v0.4.0 发布文案和附件列表；页面保留四个已上传的三平台安装包。
+- 统一 STATUS、测试说明、样例登记、专项记录与工作日志中的相关表述，保留原有验证结果、代码基线和未验收范围。项目配置、业务源码、测试实现和固定 OPML 样例没有变动。
+- 文本扫描、Release 内容与四个安装包的 API 检查、UTF-8 与 diff 检查通过。此次仅整理文档和发布页面，未重新构建或执行桌面测试；安装 / 升级与实际桌面验收状态保持。

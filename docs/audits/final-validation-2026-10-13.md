@@ -27,7 +27,7 @@
 
 初始 `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check` 失败，报告 **17 个文件**：build.rs，agent/mod.rs，commands/{feed_cmd,mod,note_cmd,reader_cmd}.rs，db/{connection,feed_store,mod,note_store}.rs，feed/{opml_import,sync_service,use_cases}.rs，lib.rs、main.rs，reader/{extraction,md_to_html}.rs。
 
-最小移除六条未使用导入：feed_cmd 的 Arc / Mutex / entry_store，reader_cmd 的 Client，feed/use_cases 的 FeedWithCounts，reader/theme 的 Content。没有额外业务重构。随后用户授权范围内运行全仓 **Rust** cargo fmt；它实际改动 **22 个文件**，包含上面 17 个和本项新编辑的 prompt_templates.rs、migrations.rs、agent_result_store_tests.rs、tag_store_tests.rs、theme.rs。format 前复制全部 **71 个 .rs** 到临时快照；对副本逐个以 edition 2021 / skip_children 独立运行 rustfmt，逐 SHA-256 比较真实格式化结果，71 个全部一致。结合差异检查，format 阶段只有 formatter 生成的缩进、换行、尾逗号和声明排序；没有改其他语言格式。
+最小移除六条未使用导入：feed_cmd 的 Arc / Mutex / entry_store，reader_cmd 的 Client，feed/use_cases 的 FeedWithCounts，reader/theme 的 Content。没有额外业务重构。随后用户授权范围内运行全仓 **Rust** cargo fmt；它实际改动 **22 个文件**，包含上面 17 个和本项新编辑的 prompt_templates.rs、migrations.rs、agent_result_store_tests.rs、tag_store_tests.rs、theme.rs。format 前复制全部 **71 个 .rs** 到临时快照；对副本逐个以 edition 2021 / skip_children 独立运行 rustfmt，逐文件比较真实格式化结果，71 个全部一致。结合差异检查，format 阶段只有 formatter 生成的缩进、换行、尾逗号和声明排序；没有改其他语言格式。
 
 最终全仓 cargo fmt check 通过，cargo check 及完整 cargo test 无 Rust warning。前项 Rust 业务改动的 diff 与本项纯格式 diff 共存在未提交工作区，不能把 HEAD 全部 diff 当作本项新改动。
 

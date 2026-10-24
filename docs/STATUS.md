@@ -43,7 +43,7 @@ Rust 使用当前 GNU 测试产物的 Common Controls 6 sidecar 环境；DOM 的
 
 2026-10-24：0.4.0 基线 `0c8258d` 已推送，手动触发的 [三平台构建](https://github.com/Selvori/mercury4win/actions/runs/40003947795) 最终成功。Windows MSI / NSIS、Linux DEB、macOS ARM64 DMG 均生成，三个 artifact 存在且非空；首轮 Linux 镜像下载缓慢，取消后仅重跑未完成作业，第二次通过，没有修改工作流或源码。本次本地 lint / build、cargo check --locked --offline 也通过。main 推送本身不自动触发此工作流，手动运行的 release 作业按预期跳过。
 
-用户随后明确授权发布，已直接复用上述产物创建正式 Latest Release [v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)，标签指向实际构建提交 `0c8258d`。四个安装包及 SHA256SUMS.txt 的上传状态、大小与 SHA-256 均已核对；标签创建自动触发的重复 [运行 40022933876](https://github.com/Selvori/mercury4win/actions/runs/40022933876) 已请求取消，不作为新的构建通过证据。安装 / 升级与桌面运行尚未验证，问题状态保持。
+用户随后明确授权发布，已直接复用上述产物创建正式 Latest Release [v0.4.0](https://github.com/Selvori/mercury4win/releases/tag/v0.4.0)，标签指向实际构建提交 `0c8258d`。四个安装包的上传状态与大小已核对；标签创建自动触发的重复 [运行 40022933876](https://github.com/Selvori/mercury4win/actions/runs/40022933876) 已取消，不作为新的构建通过证据。安装 / 升级与桌面运行尚未验证，问题状态保持。
 
 ## 下一步
 

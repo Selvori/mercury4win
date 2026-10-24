@@ -122,6 +122,7 @@ mercury4win 是基于原始 Mercury 开发的本地优先、多平台 RSS 阅读
 
 ## 验证与交付
 
+- Release、README 和项目文档不得包含 SHA-256 校验说明、对应附件或相关内容，也不得提及这一限制；该约定仅在本 AGENTS.md 中维护。
 - 文档修改：核对命令、路径、配置事实和 UTF-8 编码，检查 Git diff；无需为纯文档修改新增测试或执行全套桌面构建。
 - 前端修改：运行 `npm run lint` 和 `npm run build`；涉及交互时补充相应桌面验证。
 - Rust 修改：运行 cargo check 及相关单元测试；可用模块过滤器缩小范围，例如 `cargo test --locked --manifest-path src-tauri/Cargo.toml reader::`。修改 Rust 文件时检查格式；已有格式问题不应导致无关的全仓重排。
