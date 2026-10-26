@@ -7,3 +7,6 @@ pub mod opml_cmd;
 pub mod reader_cmd;
 pub mod settings_cmd;
 pub mod tag_cmd;
+
+pub mod search_cmd;
+pub mod topic_cmd;

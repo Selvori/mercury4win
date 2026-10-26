@@ -60,11 +60,11 @@ export function AgentSettings({ on_tags_changed, on_batch_active_change }: { on_
 
   return (
     <div className="flex min-h-0 flex-col">
-      <div className="border-b border-border px-6 py-4">
+      <div className="shrink-0 border-b border-border px-6 py-4">
         <LanguageSelect />
       </div>
       {/* Tab navigation */}
-      <div className="flex flex-nowrap gap-1 overflow-x-auto border-b border-border px-6 pt-4">
+      <div className="flex shrink-0 flex-nowrap gap-1 overflow-x-auto overflow-y-hidden border-b border-border px-6 pt-4">
         {tabs.map((opt) => (
           <Button
             key={opt.value}

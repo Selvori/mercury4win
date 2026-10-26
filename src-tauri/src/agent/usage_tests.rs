@@ -570,8 +570,11 @@ async fn m4w_012_report_history_timezone_boundaries_and_idempotent_write() {
 
 #[test]
 fn m4w_012_upgrade_v4_preserves_legacy_and_is_idempotent() {
-    let c = rusqlite::Connection::open_in_memory().unwrap();
-    c.execute_batch("CREATE TABLE settings(key TEXT PRIMARY KEY,value TEXT); INSERT INTO settings VALUES('schema_version','4'); CREATE TABLE agent_provider_profile(id TEXT PRIMARY KEY,is_archived INTEGER,name TEXT,base_url TEXT); CREATE TABLE agent_model_profile(id TEXT PRIMARY KEY,is_archived INTEGER,provider_id TEXT); CREATE TABLE llm_usage_event(id INTEGER PRIMARY KEY,task_run_id INTEGER,provider_name TEXT,model_name TEXT,agent_type TEXT,prompt_tokens INTEGER,completion_tokens INTEGER,total_tokens INTEGER,request_status TEXT,created_at TEXT); INSERT INTO agent_provider_profile VALUES('provider',0,'kept','https://fixture.test'); INSERT INTO agent_model_profile VALUES('model',0,'provider'); INSERT INTO llm_usage_event VALUES(1,NULL,'default','old','translation',0,0,0,'success','2026-10-12 00:00:00');").unwrap();
+    let c = crate::db::migrations::historical_fixture(4);
+    c.execute_batch("INSERT INTO agent_provider_profile(id,is_archived,name,base_url) VALUES('provider',0,'kept','https://fixture.test');
+        INSERT INTO agent_model_profile(id,is_archived,provider_id,name,model_name) VALUES('model',0,'provider','kept','old');
+        INSERT INTO llm_usage_event(id,task_run_id,provider_name,model_name,agent_type,prompt_tokens,completion_tokens,total_tokens,request_status,created_at)
+        VALUES(1,NULL,'default','old','translation',0,0,0,'success','2026-10-12 00:00:00');").unwrap();
     crate::db::migrations::run_migrations(&c).unwrap();
     crate::db::migrations::run_migrations(&c).unwrap();
     assert_eq!(
@@ -581,7 +584,7 @@ fn m4w_012_upgrade_v4_preserves_legacy_and_is_idempotent() {
             |r| r.get::<_, String>(0)
         )
         .unwrap(),
-        "5"
+        crate::db::migrations::SCHEMA_VERSION.to_string()
     );
     assert_eq!(c.query_row("SELECT request_phase,usage_availability,event_key,total_tokens FROM llm_usage_event WHERE id=1",[],|r|Ok((r.get::<_,String>(0)?,r.get::<_,String>(1)?,r.get::<_,Option<String>>(2)?,r.get::<_,i64>(3)?))).unwrap(),("legacy".into(),"legacy".into(),None,0));
     assert_eq!(

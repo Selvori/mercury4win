@@ -316,3 +316,120 @@
 - 基线 main `18218be`，工作区干净；Windows / PowerShell 7.6.7。核对实际目录 / Shell / Git 根 / 状态、STATUS、全部 Release 与项目说明，更新 v0.4.0 发布文案和附件列表；页面保留四个已上传的三平台安装包。
 - 统一 STATUS、测试说明、样例登记、专项记录与工作日志中的相关表述，保留原有验证结果、代码基线和未验收范围。项目配置、业务源码、测试实现和固定 OPML 样例没有变动。
 - 文本扫描、Release 内容与四个安装包的 API 检查、UTF-8 与 diff 检查通过。此次仅整理文档和发布页面，未重新构建或执行桌面测试；安装 / 升级与实际桌面验收状态保持。
+
+## 2026-10-24 / 25 — M4W-001 完整 Tauri 文章归属验收
+
+- 代码基线 `4b652fb`，首次工作区干净；Windows / PowerShell 7.6.7，完整 Tauri debug / WebView2 155.0.4283.62。核对实际 cwd / Shell / Git 根 / 状态、AGENTS / STATUS / ISSUES、原串行顺序与 reader_ownership 证据；读取 Computer Use 技能，实际使用 `@oai/sky` 观察及操作原生应用。没有用此前 DOM / mock 代替 native 结果。
+- 使用临时 Tauri override 建立独立 identifier `com.mercury4win.acceptance20261024`、空数据库与独立 WebView2 profile，先观察空库证明隔离。真实用户库仅通过 SQLite 只读连接提取必要 AI 配置，原样复制不透明凭据；只种入合成 A/B 文章。未改真实配置、订阅、笔记或历史结果，凭据及端点不进入文档 / 日志。
+- native 实际通过 A 草稿→B 保存→A、笔记关闭重开、隔离 SQLite 故障触发器导致保存失败 / 草稿与错误保留、移除触发器后重试正确落库。真实直连摘要成功；真实服务响应经 loopback 透传延迟后，实际通过摘要 / 静默翻译 / 标签 A→B 旧结果隔离及展示关闭重开。翻译 7/7 完整仅归属 A，标签 A 手工输入 / 推荐不污染 B。合计 11 次真实请求 / 4314 token；[逐项步骤、时间及脱敏持久证据](audits/native-acceptance-2026-10-24.md)。
+- 本次未修改产品源码；`npm.cmd run build` 及 `npm.cmd run tauri -- build --debug --no-bundle --config tmp/native-acceptance-2026-10-24/tauri.acceptance.json -- --locked --offline` 通过（保留既有 chunk 提示），最终 diff / UTF-8 / 证据 JSON 检查通过。未重跑 Rust / DOM 全套、安装包或其他平台。准备阶段的错误路径、缺少点击几何信息和命令引号 / 控制台编码问题均已核对并恢复，未计为产品失败。
+- M4W-001 最低关闭条件满足，更新 ISSUES 为已关闭，STATUS 同步当前验收进度。其余问题按原顺序后续分别验收，本项未扩展到取消 / 队列 / 跨重启完整恢复。隔离故障触发器已删除、路由已恢复直连、延迟代理已停止且 18741 无监听；隔离应用保留在 B 标签面板供下个串行项接手。未提交 / 推送 / 发布。
+
+## 2026-10-25 — M4W-016 native 净化验收及笔记排版修复
+
+- 基线 `4b652fb` 加保留的 001 验收文档；确认 cwd / PowerShell 7.6.7 / Git 根 / 状态，读取 STATUS / ISSUES / 净化 fixtures 和 Computer Use 规范。完整隔离 Tauri / WebView2 实际保存恶意笔记，关闭重开及编辑原文通过；仅 loopback 图片资源副本，原始 fixtures 未变。隔离 SQLite 只读核对两篇输入逐字持久化，用量仍为此前 11 次，无新 AI 请求。
+- 普通 Markdown 实际复现标题层级 / 列表标记 / 引用区分缺失及代码溢出：prose 没有对应插件样式。ReaderNote 复用已有 reader-content，仅增加 note-content 断行 / 局部横滚 / 表格 align 约束；未改摘要、净化策略、存储、IPC、Rust 或依赖。
+- lint / build、原始安全 jsdom 6 项、既有 reader_ownership 15 项（实际运行进程返回 0）及相同 override 完整 native 重建通过；build 保留已有 chunk 提示。临时 DOM 依赖旧目录不完整，补装固定版本；实际执行安全回归使用 Node 24.19.0，未改项目锁文件。
+- 重启复验时 Computer Use 返回用户物理 Escape 停止，立即停止全部 UI 操作，没有重试或绕过。修复后 native 排版、普通样例关闭重开 / 编辑与持久化展示未验收，016 保持待验证，下一步仍继续016，不启动005。[完整报告、失败和脱敏证据](audits/native-016-2026-10-25.md)。
+- 本项 loopback 18742 服务已停止且无监听，隔离 mercury 进程未运行，两篇合成笔记及忽略目录临时副本保留。未重跑 Rust / 全套回归，未提交 / 推送 / 发布。
+
+## 2026-10-25 — M4W-016 用户授权恢复与关闭
+
+- 用户明确恢复上次因物理 Escape 停止的 Computer Use。核对实际 cwd / Shell / Git 根 / 状态、最新技能及工具文档，保留 `4b652fb` 上全部未提交修改，只继续已构建隔离 exe 的复验断点；未新增产品源码或重跑已通过的构建、安全 6 项、归属 15 项。
+- 实际通过普通笔记修复后的标题 / 列表 / 引用 / 表格左右对齐 / 代码块独立横滚 / 图片 / 安全 HTML 排版、面板关闭重开与完整编辑原文。正常退出确认 mercury 进程数为 0，再完整重启，两篇已保存笔记展示正确，恶意原文仍完整；只读隔离库逐字比对两篇输入相等，用量保持 11 次，无新增 AI 请求。
+- 两段 UI 均全部等待调用返回后停止调用并 reset JavaScript 会话，无挂起控制调用；公开 sky API 无 end / release 接口和宿主释放确认，未声称 reset 能保证宿主释放。写记录期间没有持续 UI 调用。用户停止历史及首次排版失败保留，并追加恢复证据到[016 报告 / JSON / UIA](audits/native-016-2026-10-25.md)。
+- 016 最低条件满足，ISSUES 标为已关闭、STATUS 下一项005；本阶段未启动005。18742 loopback 图片服务已停止且无监听，隔离应用保留运行在 B 笔记，后续重新列窗，不复用句柄。diff / UTF-8 / 证据 JSON 通过；未提交 / 推送 / 发布，其他平台未验证。
+
+## 2026-10-25 — M4W-005 native Feed 来源与 F-001 验收关闭
+
+- 基线 `4b652fb` 加保留的001 / 016验收文档与笔记样式；Windows / PowerShell7.6.7 / 完整隔离Tauri debug / WebView2。核对cwd / Shell / Git / 状态、项目证据和Computer Use规范；额度中断后用户继续，重读更新版技能及三份规范，只补剩余partial与恢复，不重做已过路径。
+- native实际通过短显式Feed原文且不抓文章、teaser抓全文、503 / 连接中断 / 真停服临时导读与来源提示、不写成功缓存；恢复后通过按钮重试读全文并持久化。F-001原生首次11/11添加且11源在线同步成功，重复0添加 / 11跳过，已读 / 收藏 / 合成笔记 / 标签保持。
+- 选定11源原生保存导出，独立新identifier空库原生往返11/11、URL集合相同；第三独立库预置3源后F-001原生导入8添加 / 3跳过，11唯一URL、用户状态和外键检查通过。原隔离库没有搬动 / 清空；固定fixture与bootstrap未变，没有AI请求。
+- native复现空200响应被标成功，最小修改feed_cmd普通 / 流式导入映射SyncResult.error；新空响应 / 404明确失败、后续正常源继续、最终3/3完成。cargo check无warning、错误判定1项与既有005九项、定向格式 / diff、原 / roundtrip / partial三个override重建通过。直接测试exe首次0xc0000139未进harness，仓库run_rust脚本sidecar后实际通过；失败历史保留。无本项前端改动，未重复lint / build、全套Rust / DOM。
+- 完成后正常关partial、原override重建恢复identifier `com.mercury4win.acceptance20261024`与原窗口；A/B笔记长度463 / 2294、F-001十一源及此前11条用量保持。18745无监听 / 无本项服务；最后所有UI调用返回后reset，无挂起调用，未声称宿主释放保证。只写报告期间不继续UI。
+- [native报告 / 脱敏事实与UIA](audits/native-005-2026-10-25.md)及tests/feed_content / TESTING同步，最低条件满足，ISSUES关闭005、STATUS下一项008。本任务没有启动008，没有提交 / 推送 / 发布；其他平台和后续专项未验证。
+
+## 2026-10-25 — M4W-008 native 部分验收及控制中止记录
+
+- `4b652fb`加保留的001 / 016 / 005未提交记录、笔记样式与feed_cmd修复；Windows / PowerShell7.6.7 / 完整隔离Tauri / WebView2。核对cwd / Shell / Git / status，读取STATUS / ISSUES / Reader证据及Computer Use完整规范。只在隔离库增加feed10800 / entry10801–10805与scoped写入审计；原A/B笔记长度 / 时间和11条用量保持，无AI请求或日常库 / 凭据访问。
+- 无summary文章实际503后native原因 / 重试按钮可见、失败不写成功正文 / 缓存；恢复服务并点击按钮全文恢复。302最终URL + HTML相对base持久正确，WebView2实际请求并显示相对图片。正文普通链接点击后系统Edge请求正确目标并获200；Reader仍about:srcdoc。危险JS / file / data链接变普通文字且渲染HTML无这些href或script，未补点击；页内锚点被展开为绝对URL的语义待核对。
+- 读取Edge目标窗口状态时，Computer Use返回“could not determine the current browser URL on Windows with enough confidence to enforce policy”，终止本turn；精确全文保留于[报告](audits/native-008-2026-10-25.md)及[脱敏JSON / UIA](audits/native-008-2026-10-25-evidence.json)。没有用户物理Escape报告，不推断全部Windows或非浏览器控制不可用。立即停止全部CU，公开js_reset完成，无挂起调用或绕过；不宣称宿主释放保证。后续明确安排仅shell整理已有证据。
+- source1/1、Markdown3/1、render3/2/4三篇仍未native点击，分层重建 / 缓存命中 / 外观缓存 / 重启复用不足；目标页截图 / UIA未取得，008保持待验证，不启动006。无本项产品源码变化、不机械重跑历史Rust8项 / DOM / 构建；证据JSON、UTF-8、文档链接与diff检查收尾。
+- 核对PID10992命令行为008_fixture.py serve后停止，18748无监听。隔离应用保留、5篇样例 / scoped审计和忽略目录原始日志保留供续验；正式报告明确成功 / 未执行 / 工具中止范围，ISSUES / STATUS / tests/reader_pipeline同步。不提交 / 推送 / 发布。
+
+## 2026-10-26 — M4W-021 设置导航纵向滚动与裁切修复
+
+- 核对实际 cwd / PowerShell / Git 根与状态，读取项目状态、问题台账与已有导航回归；保留 `4b652fb` 上全部原有未提交改动。
+- 真实 Edge 156.0.4314.42 在生产组件中文任务配置页复现：导航高度 37px，内容 44px，按钮被裁切。AgentSettings 仅增加语言栏 / 导航栏禁止收缩及导航禁止纵向滚动，长内容继续独立滚动；共享 Dialog / Rust / 依赖未改。
+- 扩展既有 localization runner，实际通过中英文六个设置页 × 三种尺寸共 36 个布局场景、长内容滚动及既有键盘 / 窄窗口验证，完整 runner 8 组通过。测试 mock 补默认 Prompt 的 null 返回；初次复现失败和修复后结果保留，命令与临时证据见 [回归记录](../tests/localization/README.md#设置顶部导航高度修复)。lint / build 通过，保留已有 chunk 提示。
+- 新增 M4W-021 待验证并同步当前状态；完整 Tauri / WebView2、其他平台和真实非空配置未验收，未重跑 Rust / 全仓套件。无用户数据库 / 凭据访问，未提交 / 推送 / 发布。
+
+## 2026-10-26 — M4W-022 分段翻译保持阅读位置
+
+- 确认实际 cwd / PowerShell 7.6.7 / Git 根 / 状态并读取 STATUS、ISSUES 与相关证据；基线 `4b652fb`，保留任务开始前所有未提交改动。只读 HEAD ReaderPane 注入测试 bundle，进入翻译后重新滚到正文中段，视口下方一段完成即复现 scrollTop 10148→0。
+- ReaderPane 的同文章 / 同 Reader HTML 译文改为原文档内更新，新增 update_bilingual_document 验证结构 / 直接文字并按 source ID 增删或更新译文，使用可见块偏移补偿滚动。保留原文 DOM、图片、选区和焦点；表格 / 定义列表合法插入，仍用 textContent，文章切换按 ID 重建 iframe，sandbox / IPC / Rust 不变。
+- 新增 tests/translation_scroll 的生产组件真实 Edge 14 组通过：上下方 / 当前段、乱序 / 同次多段、前段更新、阅读译文与选择 / 焦点、缓存、原文、窄窗口和 T；文档及原文节点身份保持，视口偏移误差不超过 1 CSS px。原字体滚轮 Edge 8 组及翻译10 / 主题24 / 归属15 / Reader2 / 可访问性10，共61组 DOM 通过。Rust fixture 准备实际运行主题3项和翻译分段7项，均通过；lint无警告、build与diff通过，已有chunk提示保留。
+- 三个旧 DOM 脚手架读取静态 srcdoc 导致翻译 / 主题 / 归属初次断言失败，改读实时 contentDocument 后保留全部业务断言并通过；新增测试组件的 lint Fast Refresh 警告已消除。命令、历史失败、数值证据和边界见[专项记录](../tests/translation_scroll/README.md)。
+- ISSUES新增022待验证、STATUS同步，完整Tauri / WebView2实际Channel、真实AI和其他平台未验收，不改变原008串行验收断点；未重跑全仓Rust / 完整套件，未访问用户库或凭据，未提交 / 推送 / 发布。
+
+## 2026-10-26 — M4W-023 文章工具栏标题自适应
+
+- 基线 `4b652fb` 加开始任务前全部未提交改动；核对 cwd / PowerShell 7.6.7 / Git 根 / 状态，保留 ReaderPane 现有翻译增量及其他修改。
+- ReaderPane 标题容器使用 min-w-0 / flex-1，移除 max-w-md，继续单行省略并补完整标题 tooltip；主阅读区允许收缩，工具栏 / 标签组固定自身尺寸。只改变布局，无 Rust / IPC / 依赖修改。
+- npm.cmd run lint、npm.cmd run build、git diff --check 通过，构建保留已有 chunk 提示。实际 Edge 156.0.4314.42 中英文 × 五种阅读区宽度十个场景按钮完整且可命中，窄时省略 / 宽时完整；800px 打开笔记主区 474px 无溢出。设置 / 文摘窗口与 mock 浏览器入口通过，截图已查看。临时文摘 mock 首次遗漏 missing 数组导致打开断言超时，补齐后通过，无产品代码变更。
+- 证据与命令见 [布局验证](audits/reader-toolbar-2026-10-26.md)，新增023待验证并同步STATUS。完整 Tauri / WebView2、系统浏览器 / 文件导出与其他平台未验收，未重跑 Rust 或全套回归；未访问用户数据 / 凭据，未提交 / 推送 / 发布。
+
+## 2026-10-26 — 原版对照与产品创新机会评估
+
+- 核对 cwd / PowerShell 7.6.7 / Git 根 / 远程与状态，保留全部既有未提交改动；当前基线 `4b652fb` 加工作区，上游只读 `5b2e58e` / v1.4.32。
+- 阅读 STATUS、ISSUES、既有审查和 native 008 证据，对照两项目搜索、同步、凭据、相关文章、文摘及上游功能文档；在线辅助核对官方 Mercury README、SQLite FTS5 / Backup 文档。
+- 新增 [产品机会评估](audits/product-opportunities-2026-10-26.md)，区分已有能力、待验收实现与候选功能；建议以全文检索、主题对照 / 增量简报、段落证据卡构成演进主线，并列出实现边界与验收方法。所有方案为建议，未写入已接受决策，也未更改原问题状态或 native 验收顺序。
+- 本次只新增评估文档并追加日志；UTF-8、文档相对链接与 diff 检查通过。未运行构建、产品测试、性能基准或桌面操作；未修改产品源码、依赖或用户数据，未提交 / 推送。
+- 初次附加的替换字符扫描命中日志第98行；核对 HEAD 后确认是既有 SSE 乱码复现记录的原文，并非本次编码损坏，保留该证据。新报告与本次新增日志无替换字符；报告11个相对链接实际存在。
+
+## 2026-10-26 — 全文搜索与智能视图
+
+- 基线 `4b652fb` 加任务开始前全部未提交改动；核对 cwd / PowerShell 7.6.7 / Git 根 / 状态，UTF-8 读写，保留原 Feed、Reader、翻译、设置、样式和验收工作。用户明确选择新功能，旧 native 顺序不作为前置，未继续旧问题逐项验收。
+- 实现 Schema 6：FTS5 / 短词字面查询、可恢复索引 / 持久更新队列、正文和笔记回填 / 更新 / 隐藏删除、参数化组合条件、Unicode 安全片段、相关性 / 时区时间游标分页、SQLite 命名视图 CRUD / 动态相对日期。同步命令注册、TS DTO / IPC、侧边栏、搜索 / 筛选 / 保存界面与中英 64 个文案键。保持普通搜索 / 未读导航、文章 / 标签 / 收藏 / 批量 / 文摘行为；笔记和正文写入失效搜索。
+- 修正本轮回归发现的 dirty 触发器与外层 UPSERT 冲突，补真实 UPSERT / REPLACE 测试；旧用量迁移测试改为完整历史 V4 fixture，未修改 AI 逻辑。UI 补明确标签、未保存 / 校验 / 错误反馈、暗色文字和展开筛选后的结果空间，避免缓存命中 Reader 无条件重查列表干扰 j/k；最终复核补齐已保存视图内的当前范围恢复，并补先全库再恢复的作用域回归。
+- lint / build、cargo check --locked --offline、全仓 fmt 检查通过；build 保留已有 chunk 提示。11 项新增功能回归、显式 fixture / 性能通过；最新全库 library 为146通过 / 4失败 / 1忽略。四个 AI socket 取消超时单独运行仍失败，并在原样 git archive 的 `4b652fb` 相同环境重现，未扩展修复，不声称全套通过。
+- 新增生产浏览器9组、16种中英 / 主题 / 窗口 / 列表宽度布局通过，实际查看截图；既有分页6 / 筛选6 / 文摘7 / 可访问性10 / 标签10 / 归属15，共54组DOM通过。浏览器使用真实 Rust DTO，仅替换 native transport，未代替桌面证据。
+- 独立 identifier / 全新合成 V5 库，完整 Tauri debug 构建与 Windows WebView2 实操通过升级、四字段中文命中 / 安全标题 / 笔记跳转、创建 / 完整退出重启、笔记保存后活动结果4→3、七天Rust未读2条、视图名称 / 条件更新和再次重启、实际重建按钮。恢复任务时重新确认窗口与持久状态后补完重建，未把此前失败点击当通过。最终作用域修正构建补验2→全库3→恢复Rust2通过；最终140篇 / 140索引 / dirty0 / FK0 / Provider0 / 用量0，应用已退出、JS reset，无本项服务或挂起输入。
+- 合成内存库1万篇、每篇约1.2KB，初建2.130s；「方案」88.15ms、代码词37.83ms、全命中reader118.71ms、未命中0.46ms，均包含计数 / 排序 / 首100及片段。没有宣称磁盘大库或相对旧搜索的倍数加速。
+- [专项报告与证据](audits/search-views-2026-10-26.md)、[使用 / 复现](../tests/search_views/README.md)；STATUS及D-008同步，旧问题台账状态保持。Linux / macOS、安装升级及更大磁盘库未测；native未逐种重复浏览器全部矩阵。未访问日常用户库 / 凭据，未改依赖 / 固定OPML / bootstrap，未提交、推送或发布。
+
+## 2026-10-26 — 全文搜索与智能视图交付复核
+
+- 用户要求检查完成情况；核对 cwd / PowerShell 7.6.7 / Git 根与工作区，保留全部改动。聊天状态接口首次请求失败，改用读取聊天确认「实现全文搜索与智能视图」已 idle、最近执行 completed；核对当前源码的搜索、视图持久化、IPC 注册及专项报告 / 脱敏证据。
+- 本轮独立重跑 npm.cmd run lint / build、cargo check --locked --offline、cargo fmt --check，均通过，build 保留已有大 chunk 提示。运行 tests/reader_pipeline/run_rust.ps1 db::search_store::tests：12 passed / 0 failed / 1 ignored，其中11项业务回归实际通过，fixture入口无环境变量直接返回，性能项默认忽略；本轮未重新生成 fixture 或测性能。
+- 已有 Windows native 主要路径与9组浏览器 / 54组DOM结果属于执行对话的验证，本轮只检查记录、未重做UI。完整library的4项既有AI取消超时及原基线复现摘录保留，不声称全套通过；Linux / macOS、安装升级与大型磁盘库仍未验证。结论为新功能第一版已实现并有Windows主要路径证据，改动尚未提交 / 发布；未扩展修复旧问题。
+
+## 2026-10-26 — 搜索开关状态与智能视图设置统一
+
+- 基线为 `4b652fb` 加上述全部未提交改动；再次核对 cwd / PowerShell 7.6.7 / Git 根 / 状态并读 STATUS，保留既有功能和验证成果。
+- AppShell 独立维护搜索选中状态；Sidebar 采用现有导航的 accent 背景、字重及 aria-pressed / expanded，取消时清空当前选择并恢复中间空状态。普通来源 / 标签 / 收藏 / 智能视图导航同步取消搜索选中，避免「全部订阅源」与搜索双重高亮；可用 Space / Enter 操作。
+- 智能视图弹窗复用 DialogContent / Header / Title / Footer，统一24px内容留白、字号、表单和底部按钮区；重命名 / 另存为辅助分组，删除独立呈现，主操作与取消保留在页脚。筛选下拉框同步 Input 的高度、圆角、边框与焦点样式；新增中英2个说明键。
+- lint无警告、build通过（已有大chunk提示）；浏览器11组通过，覆盖搜索开关 / 导航清除、视图原有CRUD、四种中英亮暗弹窗截图、16种列表布局和原有业务断言；截图实际查看。既有组合筛选6组、可访问性10组通过。完整隔离Tauri debug构建通过，真实Windows / WebView2点击搜索选中、再次点击关闭中间视图、切换已保存视图、新弹窗排版和Escape关闭通过；未保存或删除任何隔离内容，结束正常关闭并reset JS。
+- [本次证据与边界](audits/search-views-2026-10-26.md#搜索开关与设置界面后续调整)。本项无Rust / Schema / IPC逻辑变更，未重跑Rust；native中英亮暗全矩阵及其他平台未重复。未访问日常用户库 / 凭据，未提交或推送。
+
+## 2026-10-26 — 订阅浏览不再自动展示全文搜索
+
+- 基线 `4b652fb` 加全部保留的未提交改动；核对cwd / PowerShell7.6.7 / Git根 / 状态并读STATUS，UTF-8读写。
+- AppShell明确搜索模式，EntryList默认普通浏览：直接点击订阅源、标签或收藏不挂载完整搜索表单，保留未读 / 标签模式和文章操作；查询也去除隐藏的关键词、日期、笔记等高级条件，避免只隐藏UI却继续过滤。智能视图默认紧凑名称栏，主动点击「编辑筛选」才展开完整条件，管理入口保持；新增中英1键。
+- lint / build、11组Edge浏览器和既有筛选6 / 分页6 / 文摘7 / 可访问性10，共29组DOM通过，保留既有chunk提示。筛选脚手架按显式搜索入口调整；非活动标签选项不再立即读取，改核对真实缓存失效后通过。新增浏览器核对有关键词 / 组合智能视图切到普通源的IPC不含隐藏条件，截图已查看。
+- 完整隔离Tauri debug构建通过，Windows / WebView2实际验证A直接137篇无搜索区、搜索无匹配词0篇后转B正常3篇、智能视图紧凑2篇及主动编辑恢复表单。未更改隔离内容，正常关闭 / 确认进程退出 / reset JS。[证据与命令](audits/search-views-2026-10-26.md#普通浏览与全文搜索分离)。STATUS和测试说明同步；无Rust / Schema / IPC协议变化，未重跑Rust，其他平台未验证，未访问用户库 / 凭据，未提交或推送。
+
+## 2026-10-26 — 主题追踪与增量简报及收尾
+
+- 基线 `4b652fb` 加全部保留的既有未提交改动，含全文搜索／智能视图。核对 cwd、PowerShell 7.6.7、Git 根和状态，默认 UTF-8；未改上游、依赖、固定 OPML、日常数据库或凭据，未提交／推送／发布。
+- 增加 Schema 7 专题／成员／运行／简报版本、独立 topic 任务和用量、冻结规则与资料快照、首次跨来源对照及成功基线增量、引用结构／原文定位校验、历史回看、独立用户判断和 Markdown 导出。接通双语专题入口、候选确认、列表多选加入、归组、状态／重试／取消及主题／窄窗口布局。
+- lint／build、Rust check／格式通过；专题 12、迁移 4、运行时 8 项通过；搜索模块 12 通过／1 忽略，专题浏览器 10 组含 12 种布局、搜索浏览器 11 组、既有文摘／分页／筛选 19 组 DOM 通过。完整 library 为 158 通过、4 项已在原基线复现的 socket 取消超时失败、1 忽略，没有将失败算作通过。
+- 完整隔离 Tauri debug 构建及 Windows／WebView2 主要路径通过：无 AI 管理、规则副本、首次／增量、非法引用拒绝、取消／重试、旧正文与当前正文各自映射、原生 Markdown 导出、重启及个人判断保留；V6→V7 保留文章／笔记／视图／收藏。4 个请求均为 loopback 受控响应，另预置中断运行验证启动恢复；未评估真实模型质量。
+- 验收中修正状态漏翻译、证据组辨识、时间显示及测试 fixture／取消后内存连接失真。两次中断历史保留；用户恢复授权后补完主要路径，最终按用户要求仅完成报告、状态／决策／日志、必要的 UTF-8／链接／diff 与进程检查，不重复构建、测试或额外 native 验收。
+- 收尾未发现隔离应用、Provider 进程或 18756 监听，Computer Use JS 已重置；合成库、导出和原始日志保留在忽略的 tmp 目录。旧问题状态不变。[专项报告和未验证边界](audits/topics-2026-10-26.md)、[数据库／请求证据](audits/topics-2026-10-26-evidence.json)、[使用与复验](../tests/topics/README.md)。
+
+## 2026-10-26 — 本地提交已实现与验收成果
+
+- 用户明确授权提交，保存当前整合的主题追踪／增量简报、全文搜索／智能视图、此前保留的 Feed／Reader／翻译／设置修复和对应测试、验收及项目记录。保留历史验证时的未提交基线说明，STATUS 同步当前提交状态。
+- 本轮仅核对 Git 差异、暂存文件范围和提交结果，不重复运行构建、测试或桌面验收；排除忽略的依赖、构建产物与隔离数据库。既有 4 项 socket 取消超时和真实模型质量等未验证边界继续以专项报告为准。
+- 仅本地 Git 提交，不推送、不创建标签或发布。

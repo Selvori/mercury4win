@@ -4,6 +4,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Sidebar } from "./sidebar";
+import { TopicWorkspace } from "@/features/topics/topic_workspace";
 import { StatusBar } from "./status_bar";
 import { ResizeHandle } from "./resize_handle";
 import { EntryList } from "@/features/entry/components/entry_list";
@@ -14,10 +15,11 @@ import { ReaderPane } from "@/features/reader/components/reader_pane";
 import { AgentSettings } from "@/features/agent/components/agent_settings";
 import { Dialog } from "@/components/ui/dialog";
 import { useKeyboardShortcuts } from "@/hooks/use_keyboard_shortcuts";
-import type { Entry } from "@/types";
+import type { Entry, SmartView } from "@/types";
 
 export function AppShell() {
   const { t } = useTranslation();
+  const [topics_active, set_topics_active] = useState(false);
   const [selected_feed_id, set_selected_feed_id] = useState<number | null | undefined>(undefined);
   const [selected_entry, set_selected_entry] = useState<Entry | null>(null);
   const [show_feed_editor, set_show_feed_editor] = useState(false);
@@ -27,6 +29,17 @@ export function AppShell() {
   const [tag_batch_active, set_tag_batch_active] = useState(false);
   const [sidebar_view, set_sidebar_view] = useState<"feeds" | "tags">("feeds");
   const [selected_tag_ids, set_selected_tag_ids] = useState<number[]>([]);
+
+  const [saved_view, set_saved_view] = useState<SmartView | null>(null);
+  const [search_active, set_search_active] = useState(false);
+  const [scope_revision, set_scope_revision] = useState(0);
+  const [note_request, set_note_request] = useState(0);
+  const open_view = (view: SmartView) => {
+    set_topics_active(false);
+    set_search_active(false);
+    set_saved_view(view); set_scope_revision((v) => v + 1); set_selected_feed_id(undefined);
+    set_selected_tag_ids([]); set_starred_only(false); set_selected_entry(null);
+  };
 
   const [starred_only, set_starred_only] = useState(false);
 
@@ -89,6 +102,9 @@ export function AppShell() {
   }, [entry_list_width]);
 
   const handle_select_tag = useCallback((tag_id: number) => {
+    set_topics_active(false);
+    set_search_active(false);
+    set_saved_view(null);
     set_selected_tag_ids((ids) => ids.includes(tag_id) ? ids.filter((id) => id !== tag_id) : ids.length < 5 ? [...ids, tag_id] : ids);
     set_selected_entry(null);
     set_selected_feed_id(undefined);
@@ -104,17 +120,32 @@ export function AppShell() {
   }, []);
 
   const handle_select_entry = useCallback((entry: Entry) => {
+    set_note_request(0);
     set_selected_entry(entry);
   }, []);
 
   const handle_select_feed = useCallback((id: number | null) => {
-    if (id !== selected_feed_id || starred_only || selected_tag_ids.length) {
+    set_topics_active(false);
+    set_search_active(false);
+    set_saved_view(null);
+    if (id !== selected_feed_id || starred_only || selected_tag_ids.length || saved_view) {
       set_selected_entry(null);
       set_selected_feed_id(id);
       set_selected_tag_ids([]);
       set_starred_only(false);
     }
-  }, [selected_feed_id, starred_only, selected_tag_ids]);
+  }, [selected_feed_id, starred_only, selected_tag_ids, saved_view]);
+
+  function toggle_search() {
+    set_topics_active(false);
+    set_search_active(!search_active);
+    set_saved_view(null);
+    set_selected_feed_id(search_active ? undefined : null);
+    set_selected_tag_ids([]);
+    set_starred_only(false);
+    set_selected_entry(null);
+    set_note_request(0);
+  }
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -130,6 +161,12 @@ export function AppShell() {
         {/* Left sidebar */}
         <div style={{ width: sidebar_width }} className="shrink-0 overflow-hidden">
           <Sidebar
+            topics_active={topics_active}
+            on_topics={() => { set_topics_active(true); set_search_active(false); set_saved_view(null); set_selected_feed_id(undefined); set_starred_only(false); }}
+            selected_view_id={search_active ? undefined : saved_view?.id}
+            on_select_view={open_view}
+            search_active={search_active}
+            on_search={toggle_search}
             selected_feed_id={selected_feed_id}
             on_select_feed={handle_select_feed}
             on_add_feed={() => { set_show_settings(false); set_show_feed_editor(true); }}
@@ -146,6 +183,9 @@ export function AppShell() {
             }}
             view={sidebar_view}
             on_change_view={(v) => {
+              set_topics_active(false);
+              set_search_active(false);
+              set_saved_view(null);
               if (v === "feeds") { set_selected_tag_ids([]); set_selected_entry(null); }
               if (v === "tags") { set_selected_feed_id(undefined); set_selected_entry(null); }
               set_starred_only(false);
@@ -154,6 +194,9 @@ export function AppShell() {
             selected_tag_ids={selected_tag_ids}
             starred_only={starred_only}
             on_select_starred={() => {
+              set_topics_active(false);
+              set_search_active(false);
+              set_saved_view(null);
               set_selected_feed_id(null); set_selected_tag_ids([]); set_selected_entry(null); set_starred_only(true); set_sidebar_view("feeds");
             }}
             on_select_tag={handle_select_tag}
@@ -161,6 +204,7 @@ export function AppShell() {
           />
         </div>
 
+        {topics_active ? <TopicWorkspace /> : <>
         {/* Sidebar | Entry splitter */}
         <ResizeHandle
           on_mouse_down={start_sidebar_resize}
@@ -170,6 +214,13 @@ export function AppShell() {
         {/* Middle — entry list */}
         <div style={{ width: entry_list_width }} className="shrink-0 overflow-hidden border-r border-border">
           <EntryList
+            key={saved_view ? `view-${saved_view.id}-${scope_revision}` : "navigation"}
+            saved_view={saved_view}
+            search_mode={search_active}
+            on_edit_search={() => set_search_active(true)}
+            on_view_saved={open_view}
+            on_view_deleted={() => handle_select_feed(null)}
+            on_select_note={(entry) => { set_selected_entry(entry); set_note_request((n) => n + 1); }}
             feed_id={selected_feed_id}
             tag_ids={selected_tag_ids.length ? selected_tag_ids : undefined}
             starred_only={starred_only}
@@ -189,7 +240,7 @@ export function AppShell() {
         {/* Right — reader area (fills remaining space) */}
         <main className="flex flex-1 flex-col overflow-hidden">
           {selected_entry ? (
-            <ReaderPane entry={selected_entry} on_select_entry={handle_select_entry} />
+            <ReaderPane note_request={note_request} entry={selected_entry} on_select_entry={handle_select_entry} />
           ) : (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
               <div className="text-center">
@@ -200,6 +251,7 @@ export function AppShell() {
           )}
           <StatusBar />
         </main>
+        </>}
       </div>
 
       {/* Dialogs */}

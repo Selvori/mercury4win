@@ -23,6 +23,7 @@ export function complete() { saved=snapshot(started.args.requestId); started.res
 let aliases=[{id:1,tag_id:1,alias_normalized:"rs",alias:"RS"}];
 export async function invoke(command:string,args:any={}) {
  calls.push({command,args});
+  if (command === "list_smart_views") return [];
  switch(command) {
  case "load_feeds":return [{id:1,title:"Fixture",feed_url:"https://fixture.test",entry_count:3,unread_count:3}];
  case "load_entries":return {entries:[],total:0,next_cursor:null};

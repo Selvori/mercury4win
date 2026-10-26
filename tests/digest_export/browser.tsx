@@ -67,13 +67,13 @@ async function run() {
   await click("digest.export"); assert(JSON.stringify(latest("export_multi_digest").args.entryIds)==="[2,1]", "Multi IPC order wrong");
   passed.push("Late preview is isolated by selection; multi defaults are opt-in and export_multi_digest preserves supplied order");
 
-  await reset(); await render("list"); await click("digest.multiple");
+  await reset(); await render("list"); await click("topics.selectMultiple");
   assert(useDigestSelectionStore.getState().selecting && !text().includes("entry.loadMore"),"Paging/mode not frozen");
   await settle(() => { const rows=host.querySelectorAll<HTMLElement>('[role="button"]'); rows[1].click(); rows[0].click(); document.dispatchEvent(new KeyboardEvent("keydown",{key:"j",bubbles:true})); });
   assert(navigation===0 && button("entry.markAllRead").disabled && button("entry.refresh").disabled,"Selection mutated Reader/actions");
   await click("digest.preview"); assert(JSON.stringify(latest("preview_digest").args.entryIds)==="[1,2]", "Checkbox click order used instead of list order");
   assert(!useDigestSelectionStore.getState().selecting,"Selection didn't exit on confirmation");
-  await click("digest.close"); await click("digest.multiple"); await render("list",2);
+  await click("digest.close"); await click("topics.selectMultiple"); await render("list",2);
   assert(!useDigestSelectionStore.getState().selecting && !host.querySelector('[data-digest-selecting="true"]'),"Scope change retained selection");
   passed.push("List mode freezes paging/keyboard/mutations, preserves Reader choice, exports list order and clears on scope navigation");
 

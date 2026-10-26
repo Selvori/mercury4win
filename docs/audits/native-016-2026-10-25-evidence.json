@@ -1,0 +1,106 @@
+{
+  "date_local": "2026-10-25",
+  "baseline": "4b652fb plus prior M4W-001 acceptance documents and M4W-016 note CSS repair",
+  "database_read_only_facts": {
+    "isolated_identifier": "com.mercury4win.acceptance20261024",
+    "notes": {
+      "normal": {
+        "entry_id": 10001,
+        "stored_equals_fixture": true,
+        "characters": 463
+      },
+      "malicious": {
+        "entry_id": 10002,
+        "stored_equals_fixture": true,
+        "characters": 2294
+      }
+    },
+    "usage_events": 11,
+    "test_triggers": 0
+  },
+  "fixture_resource_requests_loopback_only": [
+    {
+      "utc": "2026-10-24T16:21:39.074Z",
+      "method": "GET",
+      "path": "/safe.png"
+    },
+    {
+      "utc": "2026-10-24T16:22:46.013Z",
+      "method": "GET",
+      "path": "/safe.png"
+    },
+    {
+      "utc": "2026-10-24T16:23:25.112Z",
+      "method": "GET",
+      "path": "/image.png"
+    }
+  ],
+  "native_original_editor_text_matches_fixture_except_UIA_terminal_whitespace": true,
+  "native_raw_DOM_exported": false,
+  "native_layout_before_repair": "failed: headings/list markers/blockquote differentiation and code overflow",
+  "native_layout_after_repair": "passed after explicit user authorization to resume Computer Use",
+  "jsdom_safety_assertions_passed": 6,
+  "reader_ownership_assertions_passed": 15,
+  "product_issue_status": "closed",
+  "loopback_resource_server_stopped": true,
+  "initial_native_layout_after_repair": "not executed: user stopped Computer Use with physical Escape",
+  "resume": {
+    "same_code_and_build_no_source_changes": true,
+    "normal_repaired_layout_and_panel_close_reopen": "passed",
+    "normal_editor_original_matches_except_UIA_terminal_whitespace": true,
+    "complete_exit_facts": {
+      "MercuryProcessCount": 0,
+      "CheckedUTC": "2026-10-24T16:42:18.0482061Z"
+    },
+    "normal_and_malicious_persisted_previews_after_complete_restart": "passed",
+    "malicious_editor_original_after_complete_restart_matches_except_UIA_terminal_whitespace": true,
+    "final_database_read_only_facts": {
+      "isolated_identifier": "com.mercury4win.acceptance20261024",
+      "notes": {
+        "normal": {
+          "entry_id": 10001,
+          "stored_equals_fixture": true,
+          "characters": 463
+        },
+        "malicious": {
+          "entry_id": 10002,
+          "stored_equals_fixture": true,
+          "characters": 2294
+        }
+      },
+      "usage_events": 11,
+      "test_triggers": 0
+    },
+    "resource_requests_loopback_only": [
+      {
+        "utc": "2026-10-24T16:40:57.230752+00:00",
+        "method": "GET",
+        "path": "/image.png"
+      },
+      {
+        "utc": "2026-10-24T16:41:56.823155+00:00",
+        "method": "GET",
+        "path": "/safe.png"
+      },
+      {
+        "utc": "2026-10-24T16:42:48.560390+00:00",
+        "method": "GET",
+        "path": "/image.png"
+      },
+      {
+        "utc": "2026-10-24T16:43:01.406055+00:00",
+        "method": "GET",
+        "path": "/safe.png"
+      }
+    ],
+    "all_UI_calls_completed_before_each_segment_reset": true,
+    "javascript_sessions_reset_after_both_segments": true,
+    "public_sky_release_or_end_API_available": false,
+    "host_input_release_confirmation_available": false,
+    "final_window_title": "Mercury Acceptance 2026-10-24",
+    "final_cleanup": {
+      "FixtureResourceListenerCount": 0,
+      "MercuryProcessCount": 1
+    }
+  }
+}

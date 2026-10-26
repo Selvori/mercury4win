@@ -149,3 +149,15 @@ select {
   & figure { @apply my-6; }
   & figcaption { @apply text-sm text-muted-foreground mt-2; }
 }
+
+/* Notes use the existing content typography; prose alone has no CSS plugin. */
+.note-content {
+  overflow-wrap: anywhere;
+
+  & > :first-child { margin-top: 0; }
+  & pre { max-width: 100%; overflow-wrap: normal; }
+  & table { table-layout: fixed; }
+  & :is(th, td)[align="left"] { text-align: left; }
+  & :is(th, td)[align="center"] { text-align: center; }
+  & :is(th, td)[align="right"] { text-align: right; }
+}

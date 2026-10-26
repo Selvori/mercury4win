@@ -28,7 +28,10 @@ function assert(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
 }
 const text = () => host.textContent ?? "";
-const reader_text = () => text() + (host.querySelector<HTMLIFrameElement>("iframe")?.srcdoc ?? "");
+const reader_text = () => {
+  const frame = host.querySelector<HTMLIFrameElement>("iframe");
+  return text() + (frame?.contentDocument?.documentElement.outerHTML ?? frame?.srcdoc ?? "");
+};
 function button(label: string) {
   const found = [...host.querySelectorAll<HTMLButtonElement>("button")].find((item) => item.textContent?.trim() === label);
   assert(found, `button missing: ${label}`);

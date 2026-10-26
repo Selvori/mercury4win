@@ -48,3 +48,9 @@ Windows / PowerShell 7.6.5；HEAD `c90567bd1f0f93b0a7f6e4cc00a19b24520ac2de` 加
 `npm.cmd run lint` / `npm.cmd run build` 通过；M4W-001 原 15 项 Happy DOM 归属回归复测通过。初次安全回归发现严格 URL 正则也删除 checkbox type、ol start 和表格 align，现已为受限非 URL 属性增加专门配置并复测通过。
 
 未验证：真实浏览器、Tauri / WebView2 桌面、macOS / Linux。仓库已有浏览器连接为空，因此不以 jsdom 通过代替桌面验收；M4W-016 保留待验证。桌面验收应使用隔离应用数据，将两份 fixture 粘贴为笔记并保存 / 重开，检查净化展示、编辑原文与普通 Markdown 排版；不要使用用户真实数据库。
+
+## 2026-10-25 native 验收与排版修复
+
+完整隔离 Tauri / WebView2 实际通过恶意副本保存、关闭重开及编辑原文，SQLite 只读确认普通 / 恶意两篇输入完整持久化。native 仅将 example.com 资源替换为 loopback，原始 fixture 未改；原始 jsdom 6 项与归属 15 项当日通过。普通样例实际发现 prose 无样式导致标题 / 列表 / 引用 / 代码排版失败，最小复用已有 reader-content 和笔记局部约束后 lint / build / 同 override 重建通过。用户物理 Escape 停止 Computer Use，因此修复后 native 视觉排版尚未复验，M4W-016 保持待验证。详见[报告、失败与脱敏证据](../../docs/audits/native-016-2026-10-25.md)；不要把结构断言或构建通过记为已完成 native 排版验收。
+
+同日用户明确恢复授权后，仅继续上述断点，实际通过修复后的普通 Markdown 排版、关闭重开 / 编辑原文及完整退出重启后的两篇笔记持久展示，恶意原文仍完整；隔离库精确比对通过。未新增源码或重复构建 / 6 / 15 项回归，原中断与初始失败保留。M4W-016 最低条件已满足并关闭；native UIA 证据与原始 jsdom 结构断言的边界、其他平台未验证范围见同一报告。

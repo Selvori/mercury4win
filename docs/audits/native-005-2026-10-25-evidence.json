@@ -1,0 +1,581 @@
+{
+  "date": "2026-10-25",
+  "baseline": "4b652fb + retained M4W-001 / 016 records and note styles; M4W-005 feed_cmd fix",
+  "platform": "Windows / PowerShell 7.6.7 / complete Tauri debug / WebView2 155.0.4283.62",
+  "f001_initial": {
+    "at": "2026-10-25T00:49:07.954843+08:00",
+    "initial_f001_feeds": [
+      [
+        10002,
+        "https://antirez.com/rss",
+        "2026-10-24 16:48:06",
+        100
+      ],
+      [
+        10003,
+        "https://daringfireball.net/feeds/main",
+        "2026-10-24 16:48:13",
+        45
+      ],
+      [
+        10004,
+        "https://ericmigi.com/rss.xml",
+        "2026-10-24 16:48:16",
+        68
+      ],
+      [
+        10005,
+        "https://idiallo.com/feed.rss",
+        "2026-10-24 16:48:18",
+        10
+      ],
+      [
+        10007,
+        "https://krebsonsecurity.com/feed/",
+        "2026-10-24 16:48:21",
+        10
+      ],
+      [
+        10008,
+        "https://maurycyz.com/index.xml",
+        "2026-10-24 16:48:33",
+        5
+      ],
+      [
+        10010,
+        "https://pluralistic.net/feed/",
+        "2026-10-24 16:48:43",
+        30
+      ],
+      [
+        10012,
+        "https://simonwillison.net/atom/everything/",
+        "2026-10-24 16:48:47",
+        30
+      ],
+      [
+        10009,
+        "https://soulhacker.me/index.xml",
+        "2026-10-24 16:48:38",
+        23
+      ],
+      [
+        10006,
+        "https://www.jeffgeerling.com/blog.xml",
+        "2026-10-24 16:48:19",
+        20
+      ],
+      [
+        10011,
+        "https://www.seangoedecke.com/rss.xml",
+        "2026-10-24 16:48:46",
+        30
+      ]
+    ],
+    "state_entry_id": 10075,
+    "state_tag_id": 1,
+    "expected_note": "NATIVE005_DUPLICATE_KEEP_NOTE",
+    "urls": [
+      "https://antirez.com/rss",
+      "https://daringfireball.net/feeds/main",
+      "https://ericmigi.com/rss.xml",
+      "https://idiallo.com/feed.rss",
+      "https://www.jeffgeerling.com/blog.xml",
+      "https://krebsonsecurity.com/feed/",
+      "https://maurycyz.com/index.xml",
+      "https://soulhacker.me/index.xml",
+      "https://pluralistic.net/feed/",
+      "https://www.seangoedecke.com/rss.xml",
+      "https://simonwillison.net/atom/everything/"
+    ]
+  },
+  "fallback": {
+    "entries": [
+      {
+        "entry_id": 10377,
+        "guid": "native005-full",
+        "feed_content": "<h1>显式 Feed 正文</h1><p>NATIVE005_EXPLICIT_FULL 保留原文，短正文。</p>",
+        "feed_content_type": "text/html",
+        "content_html_present": true,
+        "markdown_present": true,
+        "successful_html_cache_rows": 1
+      },
+      {
+        "entry_id": 10378,
+        "guid": "native005-teaser",
+        "feed_content": null,
+        "feed_content_type": null,
+        "content_html_present": true,
+        "markdown_present": true,
+        "successful_html_cache_rows": 1
+      },
+      {
+        "entry_id": 10379,
+        "guid": "native005-failure",
+        "feed_content": null,
+        "feed_content_type": null,
+        "content_html_present": false,
+        "markdown_present": false,
+        "successful_html_cache_rows": 0
+      },
+      {
+        "entry_id": 10380,
+        "guid": "native005-offline",
+        "feed_content": null,
+        "feed_content_type": null,
+        "content_html_present": false,
+        "markdown_present": false,
+        "successful_html_cache_rows": 0
+      }
+    ],
+    "duplicate_state": [
+      [
+        10075,
+        1,
+        1,
+        "NATIVE005_DUPLICATE_KEEP_NOTE",
+        1
+      ]
+    ],
+    "f001_unique": [
+      [
+        11,
+        11
+      ]
+    ]
+  },
+  "recovery_export": {
+    "export_count": 11,
+    "unique_count": 11,
+    "same_f001_url_set": true,
+    "all_exported_outlines": [
+      {
+        "text": "<antirez>",
+        "title": "<antirez>",
+        "type": "rss",
+        "xmlUrl": "https://antirez.com/rss",
+        "htmlUrl": "http://antirez.com"
+      },
+      {
+        "text": "Daring Fireball",
+        "title": "Daring Fireball",
+        "type": "rss",
+        "xmlUrl": "https://daringfireball.net/feeds/main",
+        "htmlUrl": "https://daringfireball.net/"
+      },
+      {
+        "text": "Eric Migicovsky's Blog RSS Feed",
+        "title": "Eric Migicovsky's Blog RSS Feed",
+        "type": "rss",
+        "xmlUrl": "https://ericmigi.com/rss.xml",
+        "htmlUrl": "https://ericmigi.com"
+      },
+      {
+        "text": "Jeff Geerling",
+        "title": "Jeff Geerling",
+        "type": "rss",
+        "xmlUrl": "https://www.jeffgeerling.com/blog.xml",
+        "htmlUrl": "https://jeffgeerling.com"
+      },
+      {
+        "text": "Krebs on Security",
+        "title": "Krebs on Security",
+        "type": "rss",
+        "xmlUrl": "https://krebsonsecurity.com/feed/",
+        "htmlUrl": "https://krebsonsecurity.com"
+      },
+      {
+        "text": "Maurycy's Blog",
+        "title": "Maurycy's Blog",
+        "type": "rss",
+        "xmlUrl": "https://maurycyz.com/index.xml",
+        "htmlUrl": "https://maurycyz.com"
+      },
+      {
+        "text": "Paradigm X",
+        "title": "Paradigm X",
+        "type": "rss",
+        "xmlUrl": "https://soulhacker.me/index.xml",
+        "htmlUrl": ""
+      },
+      {
+        "text": "Pluralistic: Daily links from Cory Doctorow",
+        "title": "Pluralistic: Daily links from Cory Doctorow",
+        "type": "rss",
+        "xmlUrl": "https://pluralistic.net/feed/",
+        "htmlUrl": "https://pluralistic.net"
+      },
+      {
+        "text": "Simon Willison's Weblog",
+        "title": "Simon Willison's Weblog",
+        "type": "rss",
+        "xmlUrl": "https://simonwillison.net/atom/everything/",
+        "htmlUrl": "http://simonwillison.net/"
+      },
+      {
+        "text": "Software and Tech stories from an Insider - iDiallo.com",
+        "title": "Software and Tech stories from an Insider - iDiallo.com",
+        "type": "rss",
+        "xmlUrl": "https://idiallo.com/feed.rss",
+        "htmlUrl": "https://idiallo.com"
+      },
+      {
+        "text": "seangoedecke.com RSS feed",
+        "title": "seangoedecke.com RSS feed",
+        "type": "rss",
+        "xmlUrl": "https://www.seangoedecke.com/rss.xml",
+        "htmlUrl": "https://seangoedecke.com"
+      }
+    ],
+    "recovered_content": [
+      [
+        10377,
+        "native005-full",
+        59,
+        49,
+        1
+      ],
+      [
+        10378,
+        "native005-teaser",
+        2991,
+        2832,
+        1
+      ],
+      [
+        10379,
+        "native005-failure",
+        2992,
+        2833,
+        1
+      ],
+      [
+        10380,
+        "native005-offline",
+        2992,
+        2833,
+        1
+      ]
+    ],
+    "error_feeds": [
+      [
+        "http://127.0.0.1:18745/empty-after-fix.xml",
+        null,
+        0
+      ],
+      [
+        "http://127.0.0.1:18745/missing.xml",
+        null,
+        0
+      ],
+      [
+        "http://127.0.0.1:18745/feed.xml?after-errors",
+        "2026-10-24 16:54:43",
+        4
+      ]
+    ],
+    "no_ai_requests": true
+  },
+  "roundtrip_empty": {
+    "identifier": "com.mercury4win.acceptance005roundtrip20261025",
+    "feed_count": 0,
+    "entry_count": 0,
+    "provider_count": 0
+  },
+  "roundtrip_final": {
+    "at": "2026-10-25T01:01:26.528873+08:00",
+    "identifier": "com.mercury4win.acceptance005roundtrip20261025",
+    "url_set_matches_f001": true,
+    "feeds": [
+      [
+        "https://antirez.com/rss",
+        "2026-10-24 16:59:57",
+        100
+      ],
+      [
+        "https://daringfireball.net/feeds/main",
+        "2026-10-24 17:00:01",
+        45
+      ],
+      [
+        "https://ericmigi.com/rss.xml",
+        "2026-10-24 17:00:02",
+        68
+      ],
+      [
+        "https://www.jeffgeerling.com/blog.xml",
+        "2026-10-24 17:00:19",
+        20
+      ],
+      [
+        "https://krebsonsecurity.com/feed/",
+        "2026-10-24 17:00:25",
+        10
+      ],
+      [
+        "https://maurycyz.com/index.xml",
+        "2026-10-24 17:00:28",
+        5
+      ],
+      [
+        "https://soulhacker.me/index.xml",
+        "2026-10-24 17:00:30",
+        23
+      ],
+      [
+        "https://pluralistic.net/feed/",
+        "2026-10-24 17:00:37",
+        30
+      ],
+      [
+        "https://simonwillison.net/atom/everything/",
+        "2026-10-24 17:00:56",
+        30
+      ],
+      [
+        "https://idiallo.com/feed.rss",
+        "2026-10-24 17:00:58",
+        10
+      ],
+      [
+        "https://www.seangoedecke.com/rss.xml",
+        "2026-10-24 17:01:01",
+        30
+      ]
+    ]
+  },
+  "partial_before": {
+    "at": "2026-10-25T01:00:31.634943+08:00",
+    "target_identifier": "com.mercury4win.acceptance005partial20261025",
+    "production_schema_backup_source": "com.mercury4win.acceptance005roundtrip20261025",
+    "provider_count": 0,
+    "feeds": [
+      [
+        9,
+        "https://antirez.com/rss"
+      ],
+      [
+        10,
+        "https://daringfireball.net/feeds/main"
+      ],
+      [
+        11,
+        "https://ericmigi.com/rss.xml"
+      ]
+    ],
+    "state": [
+      [
+        20001,
+        1,
+        1,
+        "NATIVE005_PARTIAL_KEEP_NOTE",
+        1
+      ]
+    ],
+    "foreign_key_check": []
+  },
+  "local_http": [
+    {
+      "at": "2026-10-24T16:50:14Z",
+      "path": "/feed.xml",
+      "status": 200,
+      "bytes": 1260
+    },
+    {
+      "at": "2026-10-24T16:50:14Z",
+      "path": "/empty.xml",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "at": "2026-10-24T16:51:08Z",
+      "path": "/article/teaser",
+      "status": 200,
+      "bytes": 3207
+    },
+    {
+      "at": "2026-10-24T16:51:14Z",
+      "path": "/article/failure",
+      "status": 503,
+      "bytes": 21
+    },
+    {
+      "at": "2026-10-24T16:51:18Z",
+      "path": "/article/offline",
+      "status": 0,
+      "bytes": 0
+    },
+    {
+      "at": "2026-10-24T16:54:43Z",
+      "path": "/empty-after-fix.xml",
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "at": "2026-10-24T16:54:43Z",
+      "path": "/missing.xml",
+      "status": 404,
+      "bytes": 9
+    },
+    {
+      "at": "2026-10-24T16:54:43Z",
+      "path": "/feed.xml?after-errors",
+      "status": 200,
+      "bytes": 1260
+    },
+    {
+      "at": "2026-10-24T16:55:11Z",
+      "path": "/article/offline",
+      "status": 0,
+      "bytes": 0
+    },
+    {
+      "at": "2026-10-24T16:55:19Z",
+      "path": "/article/offline",
+      "status": 200,
+      "bytes": 3208
+    },
+    {
+      "at": "2026-10-24T16:55:28Z",
+      "path": "/article/failure",
+      "status": 503,
+      "bytes": 21
+    },
+    {
+      "at": "2026-10-24T16:55:35Z",
+      "path": "/article/failure",
+      "status": 200,
+      "bytes": 3208
+    }
+  ],
+  "partial_final": {
+    "at": "2026-10-25T05:55:29.802403+08:00",
+    "identifier": "com.mercury4win.acceptance005partial20261025",
+    "feeds": [
+      [
+        9,
+        "https://antirez.com/rss",
+        null,
+        1
+      ],
+      [
+        10,
+        "https://daringfireball.net/feeds/main",
+        null,
+        0
+      ],
+      [
+        11,
+        "https://ericmigi.com/rss.xml",
+        null,
+        0
+      ],
+      [
+        15,
+        "https://idiallo.com/feed.rss",
+        "2026-10-24 21:54:33",
+        10
+      ],
+      [
+        16,
+        "https://www.jeffgeerling.com/blog.xml",
+        "2026-10-24 21:54:35",
+        20
+      ],
+      [
+        17,
+        "https://krebsonsecurity.com/feed/",
+        "2026-10-24 21:54:36",
+        10
+      ],
+      [
+        18,
+        "https://maurycyz.com/index.xml",
+        "2026-10-24 21:54:39",
+        5
+      ],
+      [
+        19,
+        "https://soulhacker.me/index.xml",
+        "2026-10-24 21:54:43",
+        23
+      ],
+      [
+        20,
+        "https://pluralistic.net/feed/",
+        "2026-10-24 21:54:51",
+        30
+      ],
+      [
+        21,
+        "https://www.seangoedecke.com/rss.xml",
+        "2026-10-24 21:54:53",
+        30
+      ],
+      [
+        22,
+        "https://simonwillison.net/atom/everything/",
+        "2026-10-24 21:54:55",
+        30
+      ]
+    ],
+    "state": [
+      [
+        20001,
+        1,
+        1,
+        "NATIVE005_PARTIAL_KEEP_NOTE",
+        1
+      ]
+    ],
+    "url_set_matches_f001": true,
+    "native_added": 8,
+    "native_skipped": 3,
+    "foreign_key_check": []
+  },
+  "final_resources": {
+    "at": "2026-10-25T05:56:10.878494+08:00",
+    "restored_identifier": "com.mercury4win.acceptance20261024",
+    "restored_title": "Mercury Acceptance 2026-10-24",
+    "exe": "G:\\sth_interesting\\mercury4win\\src-tauri\\target\\debug\\mercury.exe",
+    "exe_modified_local": "2026-10-25T05:55:41.087524+08:00",
+    "exe_bytes": 501651202,
+    "retained_synthetic_notes": [
+      [
+        10001,
+        463
+      ],
+      [
+        10002,
+        2294
+      ]
+    ],
+    "original_f001_count": 11,
+    "usage_event_count": 11,
+    "loopback_18745_listener": false,
+    "no_pending_computer_use_calls": true,
+    "js_reset_after_final_ui": true,
+    "scope": "Only M4W-005; no commit, push or release.",
+    "original_total_feed_count": 17,
+    "original_synthetic_entry_ids": [
+      10001,
+      10002
+    ]
+  },
+  "checks": {
+    "cargo_check": "passed, 0 warning",
+    "direct_cargo_test": "initial executable loader failure 0xc0000139 before harness",
+    "run_rust_commands_feed_tests": {
+      "passed": 1,
+      "failed": 0
+    },
+    "run_rust_m4w_005_tests": {
+      "passed": 9,
+      "failed": 0
+    },
+    "rustfmt_feed_cmd": "passed",
+    "native_build_original_roundtrip_partial": "passed",
+    "not_rerun": "full Rust, DOM, frontend lint/build; no M4W-005 frontend changes"
+  },
+  "control_boundary": "Each synchronous UI call completed before js_reset; no end/release API or host release guarantee. Initial quota interruption retained; resumed only remaining partial and restoration."
+}

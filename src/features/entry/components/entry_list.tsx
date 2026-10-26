@@ -1,21 +1,29 @@
 // mercury4win/src/features/entry/components/entry_list.tsx
 // Entry list component with pagination, mark read/star/delete
 
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { DigestDialog } from "@/features/reader/components/digest_dialog";
+import { AddToTopic } from "@/features/topics/topic_editor";
 import { useDigestSelectionStore } from "@/stores/digest_selection_store";
 import { useKeyboardShortcuts } from "@/hooks/use_keyboard_shortcuts";
-import { Input } from "@/components/ui/input";
+import { SearchControls } from "./search_controls";
+import { search_filter_error } from "../lib/search_filter";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Loader2, CheckCheck, Star, Trash2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { load_entries, mark_read, mark_all_read_in_scope, mark_starred, delete_entry, sync_feed, sync_all_feeds } from "@/lib/tauri_bindings";
-import type { Entry, EntryFilter, EntryCursor, TagMatchMode } from "@/types";
+import type { Entry, EntryFilter, EntryCursor, SmartView, SearchPart } from "@/types";
 
 interface Props {
   feed_id: number | null | undefined;
+  search_mode?: boolean;
+  on_edit_search?: () => void;
+  saved_view?: SmartView | null;
+  on_view_saved?: (view: SmartView) => void;
+  on_view_deleted?: () => void;
+  on_select_note?: (entry: Entry) => void;
   tag_ids?: number[];
   starred_only?: boolean;
   on_clear_selection?: () => void;
@@ -24,19 +32,32 @@ interface Props {
   on_select_entry: (entry: Entry) => void;
 }
 
-export function EntryList({ feed_id, tag_ids, starred_only = false, selected_entry_id, on_select_entry, on_clear_selection, on_delete_entry }: Props) {
+export function EntryList({ search_mode = false, on_edit_search, saved_view, on_view_saved, on_view_deleted, on_select_note, feed_id, tag_ids, starred_only = false, selected_entry_id, on_select_entry, on_clear_selection, on_delete_entry }: Props) {
   const { t, i18n } = useTranslation();
   const query_client = useQueryClient();
-  const [search, set_search] = useState("");
-  const [unread_only, set_unread_only] = useState(false);
-  const [tag_mode, set_tag_mode] = useState<TagMatchMode>("any");
-  const filter: EntryFilter = {
-    feed_id: feed_id ?? undefined, tag_ids, starred_only, unread_only,
-    search: search.trim() || undefined, tag_mode,
-  };
+  const current_scope: EntryFilter = { feed_id: feed_id ?? undefined, tag_ids, starred_only };
+  const [options, set_options] = useState<EntryFilter>(() => saved_view?.filter ?? {});
+  const uses_search_filter = search_mode || !!saved_view;
+  const draft_filter: EntryFilter = saved_view ? options : search_mode ? { ...current_scope, ...options }
+    : { ...current_scope, unread_only: options.unread_only ?? false, tag_mode: options.tag_mode ?? "any" };
+  const base_key = JSON.stringify(current_scope);
+  useLayoutEffect(() => {
+    if (!saved_view) {
+      const base = JSON.parse(base_key) as EntryFilter;
+      set_options((previous) => ({ ...previous, ...base, feed_id: base.feed_id, tag_ids: base.tag_ids }));
+    }
+  }, [base_key, saved_view]);
+  const [applied_search, set_applied_search] = useState(draft_filter.search);
+  useEffect(() => {
+    const timer = setTimeout(() => set_applied_search(draft_filter.search), 250);
+    return () => clearTimeout(timer);
+  }, [draft_filter.search]);
+  const filter: EntryFilter = { ...draft_filter, search: uses_search_filter ? applied_search : undefined };
+  const filtering = uses_search_filter && (draft_filter.search ?? "") !== (applied_search ?? "");
   const scope_key = JSON.stringify(filter);
   const [digest_selection, set_digest_selection] = useState<{ scope: string; entries: Entry[]; ids: Set<number> } | null>(null);
   const [digest_ids, set_digest_ids] = useState<number[] | null>(null);
+  const [topic_ids, set_topic_ids] = useState<number[] | null>(null);
   const selecting = digest_selection?.scope === scope_key;
   const set_selecting = useDigestSelectionStore((s) => s.set_selecting);
   useLayoutEffect(() => {
@@ -61,8 +82,8 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
     }
     navigation_generation.current++; on_select_entry(entry);
   }
-  const enabled = feed_id !== undefined || !!tag_ids?.length || starred_only;
-  function change_filter(action: () => void) { action(); on_clear_selection?.(); }
+  const enabled = !!saved_view || feed_id !== undefined || !!tag_ids?.length || starred_only;
+  function change_filter(action: () => void) { navigation_generation.current++; action(); on_clear_selection?.(); }
   function invalidate_counts() {
     void query_client.invalidateQueries({ queryKey: ["entries"] });
     void query_client.invalidateQueries({ queryKey: ["feeds"] });
@@ -83,8 +104,9 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
         cursor: pageParam,
       }),
     getNextPageParam: (last_page) => last_page.next_cursor ?? undefined,
-    enabled,
+    enabled: enabled && !search_filter_error(filter),
     staleTime: 0,
+    refetchInterval: filter.recent_days ? 60_000 : false,
     gcTime: 0,
   });
 
@@ -129,6 +151,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
     onSuccess: invalidate_counts,
   });
   const show_entries = selecting ? digest_selection.entries : data?.pages.flatMap((page) => page.entries) ?? [];
+  const search_info = new Map(data?.pages.flatMap((page) => page.search_info ?? []).map((info) => [info.entry_id, info]));
   const selected = show_entries.find((entry) => entry.id === selected_entry_id);
   function navigate(direction: number) {
     const generation = ++navigation_generation.current;
@@ -146,7 +169,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
       });
     }
   }
-  useKeyboardShortcuts(enabled && !selecting ? {
+  useKeyboardShortcuts(enabled && !selecting && !filtering ? {
     on_down: () => navigate(1), on_up: () => navigate(-1),
     on_open: () => { if (selected) on_select_entry(selected); },
     on_toggle_read: () => { if (selected && !mark_read_mutation.isPending) mark_read_mutation.mutate({ ids: [selected.id], read: !selected.is_read }); },
@@ -164,52 +187,60 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
   }
 
   return (
-    <div className="flex h-full flex-col" data-digest-selecting={selecting}>
+    <div className="flex h-full flex-col text-foreground" data-digest-selecting={selecting} data-entry-mode={search_mode ? "search" : saved_view ? "view" : "browse"}>
       {digest_ids && <DigestDialog key={JSON.stringify(digest_ids)} entry_ids={digest_ids} multiple on_close={() => set_digest_ids(null)} />}
-      <div className="space-y-2 border-b border-border p-2">
-        <Input type="search" aria-label={t("entry.search")} placeholder={t("entry.search")} value={search}
-          onChange={(e) => change_filter(() => set_search(e.target.value))} />
-        <div className="flex flex-wrap items-center gap-1">
-          <Button size="sm" variant={unread_only ? "secondary" : "ghost"} aria-pressed={unread_only}
-            onClick={() => change_filter(() => set_unread_only(!unread_only))}>{t("entry.unreadOnly")}</Button>
+      {topic_ids && <AddToTopic ids={topic_ids} on_close={() => set_topic_ids(null)} />}
+      {(search_mode || saved_view) && <SearchControls compact={!search_mode} on_edit_filters={on_edit_search}
+        filter={draft_filter} current_scope={saved_view?.filter ?? current_scope} saved_view={saved_view}
+        on_change={(value) => change_filter(() => { set_options(value); set_digest_selection(null); })}
+        on_saved={on_view_saved} on_deleted={on_view_deleted} />}
+      <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border px-2 py-1">
+        {!search_mode && !saved_view && <>
+          <Button size="sm" variant={filter.unread_only ? "secondary" : "ghost"} aria-pressed={filter.unread_only ?? false}
+            onClick={() => change_filter(() => set_options((previous) => ({ ...previous, unread_only: !filter.unread_only })))}>{t("entry.unreadOnly")}</Button>
           {!!tag_ids?.length && <Button size="sm" variant="outline" aria-label={t("entry.tagMode")}
-            onClick={() => change_filter(() => set_tag_mode(tag_mode === "any" ? "all" : "any"))}>
-            {t(tag_mode === "any" ? "entry.tagAny" : "entry.tagAll")}
-          </Button>}
-          <Button size="sm" variant="ghost" disabled={selecting || refresh_mutation.isPending} onClick={() => refresh_mutation.mutate()}>{t("entry.refresh")}</Button>
-        </div>
+            onClick={() => change_filter(() => set_options((previous) => ({ ...previous, tag_mode: filter.tag_mode === "all" ? "any" : "all" })))}>{t(filter.tag_mode === "all" ? "entry.tagAll" : "entry.tagAny")}</Button>}
+        </>}
+        <Button size="sm" variant="ghost" disabled={selecting || refresh_mutation.isPending} onClick={() => refresh_mutation.mutate()}>{t("entry.refresh")}</Button>
+        <span role="status" className="text-xs text-muted-foreground">{filtering || isFetching && !isFetchingNextPage ? t("search.searching") : ""}</span>
       </div>
-      <div className="flex flex-wrap items-center gap-1 border-b border-border p-2">
+      <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border p-2">
         <span className="flex-1 text-xs text-muted-foreground">
           {t("entry.entriesCount", { count: data?.pages[0]?.total ?? 0 })}
         </span>
         {selecting ? <>
           <span className="text-xs">{t("digest.selected", { count: digest_selection.ids.size })}</span>
           <Button size="sm" variant="outline" onClick={() => set_digest_selection(null)}>{t("digest.cancelSelection")}</Button>
+          <Button size="sm" variant="outline" disabled={!digest_selection.ids.size} onClick={() => {
+            set_topic_ids(digest_selection.entries.filter((entry) => digest_selection.ids.has(entry.id)).map((entry) => entry.id));
+            set_digest_selection(null);
+          }}>{t("topics.addTo")}</Button>
           <Button size="sm" disabled={!digest_selection.ids.size} onClick={() => {
             set_digest_ids(digest_selection.entries.filter((entry) => digest_selection.ids.has(entry.id)).map((entry) => entry.id));
             set_digest_selection(null);
           }}>{t("digest.preview")}</Button>
-        </> : <Button size="sm" variant="outline" disabled={isFetching || !show_entries.length} onClick={() => {
+        </> : <Button size="sm" variant="outline" disabled={filtering || isFetching || !show_entries.length} onClick={() => {
           navigation_generation.current++;
           set_digest_selection({ scope: scope_key, entries: [...show_entries], ids: new Set() });
-        }}>{t("digest.multiple")}</Button>}
+        }}>{t("topics.selectMultiple")}</Button>}
         <Button
           variant="ghost"
           size="sm"
           className="h-7 text-xs"
           onClick={() => mark_all_read_mutation.mutate()}
-          disabled={selecting || mark_all_read_mutation.isPending || isLoading || !show_entries.length}
+          title={t("search.bulkHint")}
+          disabled={filtering || !!search_filter_error(filter) || selecting || mark_all_read_mutation.isPending || isLoading || isError || !show_entries.length}
         >
           <CheckCheck className="mr-1 h-3.5 w-3.5" />
           {t("entry.markAllRead")}
         </Button>
       </div>
+      {uses_search_filter && <p className="shrink-0 border-b border-border px-3 py-1 text-[11px] text-muted-foreground">{t("search.bulkHint")}</p>}
       {selecting && <p className="px-3 py-2 text-xs text-muted-foreground">{t("digest.selectionHint")}</p>}
 
       {(mark_read_mutation.isError || mark_all_read_mutation.isError || star_mutation.isError || delete_mutation.isError || refresh_mutation.isError) &&
         <p role="alert" className="px-3 py-2 text-sm text-destructive">{t("entry.actionFailed")}</p>}
-      <div className="flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto" aria-busy={filtering || isFetching}>
         {isLoading && <Loader2 className="mx-auto my-4 h-5 w-5 animate-spin" />}
         {!isLoading && !isError && !show_entries.length && <p className="p-4 text-sm text-muted-foreground">{t("entry.noEntries")}</p>}
         {show_entries.map((entry) => (
@@ -219,12 +250,12 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
             aria-label={entry.title || t("entry.untitled")}
             aria-pressed={selected_entry_id === entry.id}
             tabIndex={0}
-            onClick={() => choose_entry(entry)}
+            onClick={() => { if (!filtering) choose_entry(entry); }}
             onKeyDown={(e) => {
               if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229 || e.repeat) return;
               if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
                 e.preventDefault();
-                choose_entry(entry);
+                if (!filtering) choose_entry(entry);
               }
             }}
             className={cn(
@@ -244,7 +275,9 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                     entry.is_read && "text-muted-foreground",
                   )}
                 >
-                  {entry.title || t("entry.untitled")}
+                  {search_info.get(entry.id)?.hits.find((hit) => hit.field === "title")
+                    ? <Highlight parts={search_info.get(entry.id)!.hits.find((hit) => hit.field === "title")!.parts} />
+                    : entry.title || t("entry.untitled")}
                 </p>
                 <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
                   {entry.author && <span>{entry.author}</span>}
@@ -252,9 +285,18 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                     <span>{new Date(entry.published_at).toLocaleDateString(i18n.language)}</span>
                   )}
                 </div>
-                {entry.summary && (
+                {uses_search_filter && search_info.has(entry.id) && <div className="mt-1 space-y-1 text-xs">
+                  <p className="text-muted-foreground break-all">{search_info.get(entry.id)!.feed_title} · {t(search_info.get(entry.id)!.body_available ? "search.bodyAvailable" : "search.bodyMissing")}</p>
+                  {search_info.get(entry.id)!.hits.filter((hit) => hit.field !== "title").map((hit) => <div key={hit.field}>
+                    <span className="mr-1 rounded bg-secondary px-1 text-[11px] text-secondary-foreground">{t(`search.field_${hit.field}`)}</span>
+                    <span className="break-words text-muted-foreground"><Highlight parts={hit.parts} /></span>
+                    {hit.field === "note" && on_select_note && <Button size="sm" variant="outline" className="ml-1 mt-1 h-6 text-xs" disabled={selecting || filtering}
+                      onClick={(e) => { e.stopPropagation(); on_select_note(entry); }}>{t("search.openNote")}</Button>}
+                  </div>)}
+                </div>}
+                {(!filter.search?.trim() || !search_info.has(entry.id)) && entry.summary && (
                   <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                    {entry.summary}
+                    {search_info.get(entry.id)?.preview ?? entry.summary}
                   </p>
                 )}
               </div>
@@ -265,7 +307,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                   size="icon"
                   className={cn("h-6 w-6", entry.is_starred && "text-yellow-500")}
                   aria-label={t(entry.is_starred ? "entry.unstar" : "entry.star")}
-                  disabled={selecting || star_mutation.isPending}
+                  disabled={filtering || selecting || star_mutation.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     star_mutation.mutate({ id: entry.id, starred: !entry.is_starred });
@@ -278,7 +320,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                   size="icon"
                   className="h-6 w-6"
                   aria-label={t("entry.delete")}
-                  disabled={selecting || delete_mutation.isPending}
+                  disabled={filtering || selecting || delete_mutation.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     delete_mutation.mutate(entry.id);
@@ -298,7 +340,7 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
                   e.stopPropagation();
                   mark_read_mutation.mutate({ ids: [entry.id], read: !entry.is_read });
                 }}
-                disabled={selecting || mark_read_mutation.isPending}
+                disabled={filtering || selecting || mark_read_mutation.isPending}
                 title={t(entry.is_read ? "entry.markUnread" : "entry.markRead")}
                 aria-label={t(entry.is_read ? "entry.markUnread" : "entry.markRead")}
               >
@@ -330,4 +372,10 @@ export function EntryList({ feed_id, tag_ids, starred_only = false, selected_ent
       </div>
     </div>
   );
+}
+
+function Highlight({ parts }: { parts: SearchPart[] }) {
+  return <>{parts.map((part, index) => part.matched
+    ? <mark key={index} className="rounded-sm bg-primary/20 text-foreground">{part.text}</mark>
+    : <span key={index}>{part.text}</span>)}</>;
 }

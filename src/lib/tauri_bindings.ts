@@ -2,6 +2,7 @@
 // Type-safe Tauri invoke wrappers
 
 import { invoke } from "@tauri-apps/api/core";
+import type { Topic, TopicDetail } from "@/types/topic";
 import type { Channel } from "@tauri-apps/api/core";
 import type {
   Feed,
@@ -11,6 +12,7 @@ import type {
   ImportProgress,
   EntryPage,
   EntryFilter,
+  SmartView,
   EntryCursor,
   EntryDetail,
   EntryNote,
@@ -31,6 +33,16 @@ import type {
 } from "@/types";
 
 // ── Feed ──
+
+export const list_topics = () => invoke<Topic[]>("list_topics");
+export const topic_model_info = () => invoke<{ routes: { provider_name: string; model_name: string }[] }>("topic_model_info");
+export const load_topic = (id: number) => invoke<TopicDetail>("load_topic", { id });
+export const save_topic = (id: number | null, name: string, description: string, archived: boolean, rule: EntryFilter | null, rule_name: string | null) => invoke<number>("save_topic", { id, name, description, archived, rule, ruleName: rule_name });
+export const delete_topic = (id: number) => invoke<void>("delete_topic", { id });
+export const update_topic_members = (id: number, entry_ids: number[], remove = false, group_name: string | null = null) => invoke<void>("update_topic_members", { id, entryIds: entry_ids, remove, groupName: group_name });
+export const save_topic_notes = (id: number, notes: string) => invoke<void>("save_topic_notes", { id, notes });
+export const generate_topic_brief = (id: number, request_id: string, language: string, on_event: Channel<string>) => invoke<number | null>("generate_topic_brief", { id, requestId: request_id, language, onEvent: on_event });
+export const export_topic_brief = (id: number, brief_id: number, export_path: string) => invoke<void>("export_topic_brief", { id, briefId: brief_id, exportPath: export_path });
 
 export async function load_feeds(): Promise<FeedWithCounts[]> {
   return invoke("load_feeds");
@@ -73,7 +85,9 @@ export interface LoadEntriesParams extends EntryFilter {
 }
 
 function entry_filter_args(params: EntryFilter) {
+  const { cursor: _cursor, limit: _limit, ...filter } = params as LoadEntriesParams;
   return {
+    filter,
     feedId: params.feed_id ?? null,
     tagIds: params.tag_ids ?? null,
     unreadOnly: params.unread_only ?? false,
@@ -81,6 +95,19 @@ function entry_filter_args(params: EntryFilter) {
     search: params.search ?? null,
     tagMode: params.tag_mode ?? "any",
   };
+}
+
+export async function list_smart_views(): Promise<SmartView[]> {
+  return invoke("list_smart_views");
+}
+export async function save_smart_view(id: number | null, name: string, filter: EntryFilter): Promise<number> {
+  return invoke("save_smart_view", { id, name, filter });
+}
+export async function delete_smart_view(id: number): Promise<void> {
+  return invoke("delete_smart_view", { id });
+}
+export async function rebuild_search_index(): Promise<void> {
+  return invoke("rebuild_search_index");
 }
 
 export async function load_entries(

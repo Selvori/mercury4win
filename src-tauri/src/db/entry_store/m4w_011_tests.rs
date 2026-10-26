@@ -57,6 +57,7 @@ async fn all_any_and_all_filters_match_independent_sql_across_pages() {
             search: Some("  needle  ".into()),
             tag_ids: Some(vec![2, 1, 2]),
             tag_mode: mode,
+            ..Default::default()
         };
         let actual = ids(&pool, filter).await;
         let expected = pool.get().await.unwrap().interact(move |conn| {

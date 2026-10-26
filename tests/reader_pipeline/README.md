@@ -53,3 +53,9 @@ objdump 核对旧 `app_lib-19e54d3c249f8340.exe` 与新 exe 均无内嵌资源 m
 `run_rust.ps1` 把步骤变为可重复命令：由 cargo JSON 获取实际 lib 测试 exe，写相同 Common Controls 6 sidecar、刷新时间、设置并恢复当前进程 PATH，再执行过滤测试并返回真实退出码。仅影响 Git 忽略的构建产物，不修改全局 PATH、注册表、应用配置或用户文件；针对当前 Windows x64 GNU 环境。其他平台可直接使用 cargo test 对应过滤器。
 
 未验证：完整 Tauri IPC、真实浏览器/WebView2 的实际图片加载、系统浏览器打开、视觉排版、桌面重启和三平台运行；未执行全套 Rust 或全仓格式检查，本项定向格式通过不代表历史格式问题关闭。M4W-008 保持“待验证”。
+
+## 2026-10-25 native 部分验收
+
+历史段落保留当时2 / 2 / 4基线；当前生产版本为3 / 2 / 5。`4b652fb`加保留的001 / 016 / 005未提交改动，完整隔离Tauri / WebView2实际通过无导读503可见错误、真实按钮重试恢复且失败不落成功缓存；302最终地址 + HTML相对base、相对图片实际加载，正文链接点击使系统Edge请求正确目标并返回200。危险JS / file / data链接在native变普通文字，未补点击。
+
+浏览器目标页截图 / UIA因Computer Use当前URL策略检查终止而未取得；立即停止CU并reset，未报告物理Escape，也未泛化为全部Windows不可用。旧source / Markdown / render预置三篇尚未执行native动作，缓存命中 / 主题字体与重启复用仍未验证；此次source锚点被展开为绝对URL的语义需核对。最低关闭条件不足，M4W-008保持待验证。正式[报告](../../docs/audits/native-008-2026-10-25.md)、[脱敏事实](../../docs/audits/native-008-2026-10-25-evidence.json)及[UIA](../../docs/audits/native-008-ui-2026-10-25.txt)记录边界。仅本机18748测试服务已停止，隔离数据与scoped审计保留；无本项源码变更，未重复Rust / DOM / 构建。

@@ -1,0 +1,33 @@
+2026-10-26 Windows GNU library runner; baseline and classification in topics-2026-10-26.md.
+Command: ./tests/reader_pipeline/run_rust.ps1 -Filter ''
+
+failures:
+
+---- agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback stdout ----
+
+thread 'agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback' (32016) panicked at src\agent\configuration_tests.rs:482:10:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+
+---- agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests stdout ----
+
+thread 'agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests' (7848) panicked at src\agent\tag_batch_tests.rs:251:10:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+
+---- agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted stdout ----
+
+thread 'agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted' (38076) panicked at src\agent\usage_tests.rs:363:6:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+
+---- agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts stdout ----
+
+thread 'agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts' (39492) panicked at src\agent\usage_tests.rs:801:6:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+
+
+failures:
+    agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback
+    agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests
+    agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted
+    agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts
+
+test result: FAILED. 158 passed; 4 failed; 1 ignored; 0 measured; 0 filtered out; finished in 19.05s

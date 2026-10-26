@@ -18,6 +18,7 @@ function assert(value: unknown, message: string): asserts value { if (!value) th
 function button(name: string) { const b = [...host.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.textContent?.trim() === name || b.getAttribute("aria-label") === name); assert(b, `missing ${name}`); return b; }
 const text = () => host.textContent ?? "";
 const current = () => native.runs.at(-1)!;
+function frame_html() { const frame = host.querySelector<HTMLIFrameElement>("iframe")!; return frame.contentDocument?.documentElement.outerHTML ?? frame.srcdoc; }
 async function click(name: string) { await settle(() => button(name).click()); }
 async function render(entry: number | null, pane = false) { await settle(() => root.render(<StrictMode><QueryClientProvider client={client}>{entry === null ? null : pane ? <ReaderPane entry={{ id: entry, title: "fixture", url: null } as Entry}/> : <ReaderTranslation key={entry} entry_id={entry}/>}</QueryClientProvider></StrictMode>)); }
 
@@ -82,21 +83,21 @@ async function run() {
   await click("reader.translation");
   const iframe=host.querySelector<HTMLIFrameElement>("iframe")!;
   assert(iframe.getAttribute("sandbox")==="allow-same-origin", "iframe permissions expanded");
-  const main=new DOMParser().parseFromString(iframe.srcdoc,"text/html");
+  const main=new DOMParser().parseFromString(frame_html(),"text/html");
   assert(main.querySelectorAll("[data-translation-for]").length===values.length && main.querySelector("#current-reader-theme"), "production ReaderPane did not receive bilingual HTML with current theme");
   const silent = () => !host.querySelector(".cursor-col-resize") && !host.querySelector("[data-translation-for]") && !text().includes("translation.") && !text().includes("agentTask.");
   assert(silent() && native.runs.length === cached_count, "complete cache caused generation or displayed translation controls/status");
   await click("reader.notes"); assert(host.querySelector(".cursor-col-resize"), "notes lost their side panel");
   await settle(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "t", bubbles: true, cancelable: true })));
-  assert(silent() && host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes("data-translation-for") && native.runs.length === cached_count, "translation shortcut did not restore cache silently");
-  await click("reader.translation"); assert(!host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes("data-translation-for"), "return to original retained translation");
+  assert(silent() && frame_html().includes("data-translation-for") && native.runs.length === cached_count, "translation shortcut did not restore cache silently");
+  await click("reader.translation"); assert(!frame_html().includes("data-translation-for"), "return to original retained translation");
   passed.push("complete cache restores silently by click/T, without sidebar/controls/progress or API request; notes/sidebar, sandbox and original mode preserved");
 
   await render(7,true); const initial_runs = native.runs.length;
   await click("reader.translation"); const auto = current();
   assert(native.runs.length === initial_runs + 1 && auto.entry === 7 && silent(), "one selection did not start exactly one silent request under StrictMode");
   await settle(() => {native.emit(auto,{type:"segment",index:0,source_segment_id:native.document_for(7).source_segments[0].source_segment_id,text:"live title translation"});native.emit(auto,{type:"progress",segment:1,total:values.length});});
-  assert(host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes("live title translation") && silent() && !text().includes("1/"), "live translation or silent progress projection failed");
+  assert(frame_html().includes("live title translation") && silent() && !text().includes("1/"), "live translation or silent progress projection failed");
   await settle(() => client.invalidateQueries({queryKey:["translation_document",7]}));
   assert(native.runs.length === initial_runs + 1, "refetch started a duplicate request");
   await settle(() => {native.emit(auto,{type:"error",index:1,error:"silent segment failure"});native.finish(auto,"silent terminal failure");});
@@ -108,19 +109,19 @@ async function run() {
   const resume = current();
   assert(native.runs.length === initial_runs + 2 && resume.entry === 7 && silent(), "T did not resume partial result with one request");
   await settle(() => { native.seed(7,values);native.finish(resume); });
-  assert(host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes(values.at(-1)!) && silent(), "automatic result was not restored after completion");
+  assert(frame_html().includes(values.at(-1)!) && silent(), "automatic result was not restored after completion");
   passed.push("one-click/T starts/resumes automatically under StrictMode; streamed content and completion display silently; errors/refetches do not create retry loops");
 
   await render(8,true); const switched_runs = native.runs.length; await click("reader.translation"); const abandoned=current();
   await render(9,true);
-  assert(native.runs.length === switched_runs + 1 && !host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes("data-translation-for"), "article switch started generation or retained translation");
+  assert(native.runs.length === switched_runs + 1 && !frame_html().includes("data-translation-for"), "article switch started generation or retained translation");
   await settle(() => {native.emit(abandoned,{type:"segment",index:0,text:"STALE AUTO"});native.finish(abandoned,"STALE AUTO FAILURE");});
-  assert(!host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes("STALE"), "old automatic translation crossed article");
+  assert(!frame_html().includes("STALE"), "old automatic translation crossed article");
   await click("reader.translation"); const background=current(); await click("reader.translation"); await click("reader.translation");
   assert(current() === background && silent(), "reopening an active background run duplicated generation");
   await settle(() => {native.seed(9,values);native.finish(background);});
   await settle(() => client.invalidateQueries({queryKey:["agent_status","translation"]}));
-  assert(current() === background && host.querySelector<HTMLIFrameElement>("iframe")!.srcdoc.includes(values[0]), "background completion did not restore cache without a new request");
+  assert(current() === background && frame_html().includes(values[0]), "background completion did not restore cache without a new request");
   passed.push("article switch returns to original and rejects old stream; reopening a background run does not enqueue another generation");
   await render(null); client.clear(); native.fail_next_document(true); await render(6);
   assert(button("translation.translate").disabled && button("translation.start").disabled && text().includes("fixture fetch failed"), "fetch failure did not fail closed"); native.fail_next_document(false);

@@ -64,4 +64,14 @@ Rust 测试是仓库持久 `#[cfg(test)]` 模块 `src-tauri/src/feed/m4w_005_tes
 
 生产 `insert_feed` 在空内存库预置 3 个源、导入全部再新增 8 个、重复导入新增 0 个；预置已读 / 收藏 / 笔记 / 标签保持。生产导出器写临时 UTF-8 OPML，再由生产解析器读取，11 个 URL 集合相等并能写入另一空内存库。导出临时文件已删除，内存库随测试结束释放，未改固定样例或 bootstrap。
 
-这验证实际解析、存储和导出层；**没有调用完整 Tauri import_opml_stream、没有验证逐源进度 Channel、没有执行远程 11 源同步或文件对话框**。在线同步失败恢复使用本地文章响应，不将远程源可用性假定为通过。完整桌面 / 重启、Windows WebView2 排版、真实 AI 输入与其他平台尚未验证；M4W-005 保持“待验证”。
+这验证实际解析、存储和导出层；**当时没有调用完整 Tauri import_opml_stream、没有验证逐源进度 Channel、没有执行远程 11 源同步或文件对话框**。在线同步失败恢复使用本地文章响应，不将远程源可用性假定为通过。当时完整桌面 / 重启、Windows WebView2 排版、真实 AI 输入与其他平台尚未验证，保持待验证；后续 native 结果见下节。
+
+## 2026-10-25 native 验收与关闭
+
+`4b652fb` 加保留的 001 / 016 记录和笔记样式；Windows / PowerShell 7.6.7 / 完整隔离 Tauri debug / WebView2 155.0.4283.62。真实窗口通过显式短 RSS 正文不抓文章、teaser 抓全文、503 / 连接中断 / 停服导读回退不存成功缓存、按钮重试恢复全文；生产 Rust 9 项保留三格式和迁移 / 导出层覆盖，本次未重复其 native 多格式扩展。
+
+F-001 原生文件对话框首次 Channel 11/11 添加、11 源在线同步均成功；重复为 0 添加 / 11 跳过，合成用户状态保持。选定11源原生保存导出，新 identifier 空库再原生导入11/11，URL集合完全相等；另一个独立库预置3源后原生导入为8添加 / 3跳过，已读 / 收藏 / 笔记 / 标签保持。原应用完整退出重启订阅持久化，未清空原隔离库或修改F-001 / bootstrap。
+
+native 发现空响应被当作同步成功，`commands/feed_cmd.rs` 最小归一普通 / 流式导入的嵌套错误；修复后新空200响应与404明确红色错误，后续正常源继续、最终3/3完成。实际执行 `cargo check --locked --manifest-path src-tauri/Cargo.toml`、`./tests/reader_pipeline/run_rust.ps1 commands::feed_cmd::tests`（1通过）、相同脚本`m4w_005_tests`（9通过）、定向rustfmt与diff通过，三个隔离override重建通过。直接cargo测试新exe首次0xc0000139未进harness，脚本建立sidecar后实际通过；没有以编译替代native。
+
+最低条件满足，M4W-005已关闭；[逐源时间、失败历史、额度中断后恢复、命令及持久证据](../../docs/audits/native-005-2026-10-25.md)。没有新增AI请求、前端改动或依赖，未重复lint / build及全套回归；Linux / macOS与008链接 / 图片 / 分层缓存留后续。原identifier已恢复，18745无监听，最后UI段已reset且无挂起调用，未提交 / 推送 / 发布。

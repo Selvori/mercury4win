@@ -160,7 +160,9 @@ pub async fn import_opml(
             Ok((feed, was_inserted)) => {
                 if was_inserted {
                     // New feed: try initial sync
-                    if let Err(e) = use_cases::refresh_single(&pool, &client.0, feed.id).await {
+                    if let Err(e) = initial_sync_result(
+                        use_cases::refresh_single(&pool, &client.0, feed.id).await,
+                    ) {
                         errors.push(format!("{}: {}", entry.feed_url, e));
                     }
                     added += 1;
@@ -255,7 +257,9 @@ pub async fn import_opml_stream(
             Ok((feed, was_inserted)) => {
                 if was_inserted {
                     // New feed: try initial sync
-                    match use_cases::refresh_single(&pool, &client.0, feed.id).await {
+                    match initial_sync_result(
+                        use_cases::refresh_single(&pool, &client.0, feed.id).await,
+                    ) {
                         Ok(_) => {
                             let _ = on_progress.send(ImportProgress {
                                 status: "added".into(),
@@ -315,4 +319,43 @@ pub async fn import_opml_stream(
     });
 
     Ok(())
+}
+
+fn initial_sync_result(result: Result<SyncResult, String>) -> Result<(), String> {
+    result.and_then(|result| match result.error {
+        Some(error) => Err(error),
+        None => Ok(()),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::initial_sync_result;
+    use crate::db::models::SyncResult;
+
+    #[test]
+    fn import_initial_sync_preserves_embedded_and_transport_errors() {
+        assert_eq!(
+            initial_sync_result(Ok(SyncResult {
+                feed_id: 1,
+                new_entries: 0,
+                updated_entries: 0,
+                error: Some("Empty response body".into()),
+            })),
+            Err("Empty response body".into())
+        );
+        assert_eq!(
+            initial_sync_result(Err("Feed HTTP error: 503".into())),
+            Err("Feed HTTP error: 503".into())
+        );
+        assert_eq!(
+            initial_sync_result(Ok(SyncResult {
+                feed_id: 1,
+                new_entries: 2,
+                updated_entries: 0,
+                error: None,
+            })),
+            Ok(())
+        );
+    }
 }

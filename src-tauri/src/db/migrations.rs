@@ -202,7 +202,7 @@ CREATE TABLE settings (
 ";
 
 /// Current schema version. Increment when migrations are added.
-pub const SCHEMA_VERSION: i32 = 5;
+pub const SCHEMA_VERSION: i32 = 7;
 
 const MIGRATION_V3: &str = "
 CREATE TABLE agent_result_slot (
@@ -295,6 +295,24 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )?;
         tx.commit()?;
     }
+    if version < 6 {
+        let tx = conn.unchecked_transaction()?;
+        crate::db::search_store::migrate(&tx)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings(key,value) VALUES('schema_version','6')",
+            [],
+        )?;
+        tx.commit()?;
+    }
+    if version < 7 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(crate::db::topic_store::MIGRATION_V7)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings(key,value) VALUES('schema_version','7')",
+            [],
+        )?;
+        tx.commit()?;
+    }
     Ok(())
 }
 
@@ -302,7 +320,7 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 /// version marker while leaving later columns/tables in place.
 #[cfg(test)]
 pub(crate) fn historical_fixture(version: i32) -> Connection {
-    assert!((1..=3).contains(&version));
+    assert!((1..=6).contains(&version));
     let conn = Connection::open_in_memory().unwrap();
     conn.execute_batch("PRAGMA foreign_keys=ON").unwrap();
     conn.execute_batch(MIGRATION_V1).unwrap();
@@ -311,6 +329,18 @@ pub(crate) fn historical_fixture(version: i32) -> Connection {
     }
     if version >= 3 {
         conn.execute_batch(MIGRATION_V3).unwrap();
+    }
+    if version >= 4 {
+        conn.execute_batch(crate::db::tag_batch_store::MIGRATION_V4)
+            .unwrap();
+        crate::db::tag_store::migrate_normalization(&conn).unwrap();
+    }
+    if version >= 5 {
+        conn.execute_batch(crate::db::usage_store::MIGRATION_V5)
+            .unwrap();
+    }
+    if version >= 6 {
+        crate::db::search_store::migrate(&conn).unwrap();
     }
     conn.execute(
         "INSERT INTO settings(key,value) VALUES('schema_version',?1)",

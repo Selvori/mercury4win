@@ -37,6 +37,7 @@ export function ReaderNote({ entry_id }: Props) {
     },
     onSuccess: (_note, snapshot) => {
       query_client.invalidateQueries({ queryKey: ["notes", snapshot.entry_id] });
+      query_client.invalidateQueries({ queryKey: ["entries"] });
       finish_save(snapshot);
     },
     onError: (error, snapshot) => fail_save(snapshot, String(error)),
@@ -107,7 +108,7 @@ export function ReaderNote({ entry_id }: Props) {
           />
         ) : existing_note ? (
           <div
-            className="prose prose-sm dark:prose-invert max-w-none"
+            className="reader-content note-content prose prose-sm dark:prose-invert max-w-none text-sm"
             dangerouslySetInnerHTML={{
               __html: render_markdown(existing_note.markdown),
             }}

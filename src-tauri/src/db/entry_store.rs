@@ -18,7 +18,8 @@ pub enum TagMatchMode {
     All,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
 pub struct EntryFilter {
     pub feed_id: Option<i64>,
     pub unread_only: bool,
@@ -26,62 +27,14 @@ pub struct EntryFilter {
     pub search: Option<String>,
     pub tag_ids: Option<Vec<i64>>,
     pub tag_mode: TagMatchMode,
-}
-
-impl EntryFilter {
-    fn sql(&self) -> (Vec<String>, Vec<rusqlite::types::Value>) {
-        let mut conditions = vec!["e.is_deleted = 0".to_string()];
-        let mut values = vec![];
-        if let Some(id) = self.feed_id {
-            conditions.push(format!("e.feed_id = ?{}", values.len() + 1));
-            values.push(id.into());
-        }
-        if self.unread_only {
-            conditions.push("e.is_read = 0".into());
-        }
-        if self.starred_only {
-            conditions.push("e.is_starred = 1".into());
-        }
-        if let Some(q) = self
-            .search
-            .as_deref()
-            .map(str::trim)
-            .filter(|q| !q.is_empty())
-        {
-            let index = values.len() + 1;
-            conditions.push(format!(
-                "(e.title LIKE ?{index} OR e.summary LIKE ?{index})"
-            ));
-            values.push(format!("%{q}%").into());
-        }
-        let mut ids = self.tag_ids.clone().unwrap_or_default();
-        ids.sort_unstable();
-        ids.dedup();
-        if !ids.is_empty() {
-            match self.tag_mode {
-                TagMatchMode::Any => {
-                    let placeholders = (0..ids.len())
-                        .map(|i| format!("?{}", values.len() + i + 1))
-                        .collect::<Vec<_>>()
-                        .join(",");
-                    conditions.push(format!(
-                        "e.id IN (SELECT entry_id FROM entry_tag WHERE tag_id IN ({placeholders}))"
-                    ));
-                    values.extend(ids.into_iter().map(rusqlite::types::Value::from));
-                }
-                TagMatchMode::All => {
-                    for id in ids {
-                        conditions.push(format!(
-                            "e.id IN (SELECT entry_id FROM entry_tag WHERE tag_id = ?{})",
-                            values.len() + 1
-                        ));
-                        values.push(id.into());
-                    }
-                }
-            }
-        }
-        (conditions, values)
-    }
+    pub is_read: Option<bool>,
+    pub has_note: Option<bool>,
+    pub date_from: Option<String>,
+    pub date_to: Option<String>,
+    pub recent_days: Option<u32>,
+    pub search_field: super::search_store::SearchField,
+    pub exclude_title: bool,
+    pub sort: super::search_store::SearchSort,
 }
 
 pub struct EntryQueryParams {
@@ -91,103 +44,7 @@ pub struct EntryQueryParams {
 }
 
 pub async fn query_entries(pool: &Pool, params: &EntryQueryParams) -> Result<EntryPage, String> {
-    let filter = params.filter.clone();
-    let cursor = params.cursor.clone();
-    let limit = params.limit.clamp(1, 500);
-    let pool = pool.clone();
-
-    pool.get()
-        .await
-        .map_err(|e| e.to_string())?
-        .interact(move |conn| {
-            let (mut conditions, mut bind_values) = filter.sql();
-            // Count the entire filtered scope, independently of pagination.
-            let count_sql = format!("SELECT COUNT(*) FROM entry e WHERE {}", conditions.join(" AND "));
-            let total: i64 = {
-                let mut stmt = conn.prepare(&count_sql).map_err(|e| e.to_string())?;
-                let refs: Vec<&dyn rusqlite::types::ToSql> =
-                    bind_values.iter().map(|b| b as &dyn rusqlite::types::ToSql).collect();
-                stmt.query_row(refs.as_slice(), |row| row.get(0))
-                    .map_err(|e| e.to_string())?
-            };
-
-            // SQLite puts NULL dates last in DESC order. Use the same complete
-            // ordering tuple, including NULL, rather than insertion order alone.
-            if let Some(c) = cursor {
-                let id_index = bind_values.len() + 1;
-                bind_values.push(c.id.into());
-                if let Some(published_at) = c.published_at {
-                    let date_index = bind_values.len() + 1;
-                    bind_values.push(published_at.into());
-                    conditions.push(format!(
-                        "(e.published_at < ?{date_index} OR (e.published_at = ?{date_index} AND e.id < ?{id_index}) OR e.published_at IS NULL)"
-                    ));
-                } else {
-                    conditions.push(format!("(e.published_at IS NULL AND e.id < ?{id_index})"));
-                }
-            }
-            let where_clause = conditions.join(" AND ");
-
-            // Paginated query
-            let query_sql = format!(
-                "SELECT e.id, e.feed_id, e.guid, e.url, e.title, e.author,
-                        e.published_at, e.summary, e.is_read, e.is_starred,
-                        e.is_deleted, e.created_at, e.feed_content, e.feed_content_type
-                 FROM entry e
-                 WHERE {}
-                 ORDER BY e.published_at DESC, e.id DESC
-                 LIMIT ?{}",
-                where_clause,
-                bind_values.len() + 1
-            );
-            bind_values.push((i64::from(limit) + 1).into());
-
-            let mut stmt = conn.prepare(&query_sql).map_err(|e| e.to_string())?;
-            let refs: Vec<&dyn rusqlite::types::ToSql> =
-                bind_values.iter().map(|b| b as &dyn rusqlite::types::ToSql).collect();
-
-            let rows = stmt
-                .query_map(refs.as_slice(), |row| {
-                    Ok(Entry {
-                        id: row.get(0)?,
-                        feed_id: row.get(1)?,
-                        guid: row.get(2)?,
-                        url: row.get(3)?,
-                        title: row.get(4)?,
-                        author: row.get(5)?,
-                        published_at: row.get(6)?,
-                        summary: row.get(7)?,
-                        is_read: row.get::<_, i32>(8)? != 0,
-                        is_starred: row.get::<_, i32>(9)? != 0,
-                        is_deleted: row.get::<_, i32>(10)? != 0,
-                        created_at: row.get(11)?,
-                        feed_content: row.get(12)?,
-                        feed_content_type: row.get(13)?,
-                    })
-                })
-                .map_err(|e| e.to_string())?;
-
-            let entries: Result<Vec<_>, _> = rows.collect();
-            let mut entries = entries.map_err(|e| e.to_string())?;
-            let has_more = entries.len() > limit as usize;
-            entries.truncate(limit as usize);
-            let next_cursor = if has_more {
-                entries.last().map(|e| EntryCursor {
-                    published_at: e.published_at.clone(),
-                    id: e.id,
-                })
-            } else {
-                None
-            };
-
-            Ok(EntryPage {
-                entries,
-                next_cursor,
-                total,
-            })
-        })
-        .await
-        .map_err(|e| e.to_string())?
+    super::search_store::query_entries(pool, params).await
 }
 
 pub async fn get_entry_detail(pool: &Pool, entry_id: i64) -> Result<Option<EntryDetail>, String> {
@@ -450,13 +307,23 @@ pub async fn mark_all_read_in_scope(pool: &Pool, filter: &EntryFilter) -> Result
         .await
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
-            let (conditions, values) = filter.sql();
+            let tx = rusqlite::Transaction::new_unchecked(
+                conn,
+                rusqlite::TransactionBehavior::Immediate,
+            )
+            .map_err(|e| e.to_string())?;
+            if !super::search_store::terms(&filter).is_empty() {
+                super::search_store::refresh_locked(&tx)?;
+            }
+            let compiled = super::search_store::compile(&filter, &chrono::Utc::now().to_rfc3339())?;
+            let (conditions, values) = (compiled.conditions, compiled.values);
             let sql = format!(
                 "UPDATE entry AS e SET is_read = 1 WHERE {}",
                 conditions.join(" AND ")
             );
-            conn.execute(&sql, rusqlite::params_from_iter(values))
+            tx.execute(&sql, rusqlite::params_from_iter(values))
                 .map_err(|e| e.to_string())?;
+            tx.commit().map_err(|e| e.to_string())?;
             Ok::<(), String>(())
         })
         .await

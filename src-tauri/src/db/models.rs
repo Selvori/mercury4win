@@ -51,12 +51,17 @@ pub struct Entry {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntryCursor {
+    #[serde(default)]
+    pub score: Option<i64>,
+    #[serde(default)]
+    pub anchor: Option<String>,
     pub published_at: Option<String>,
     pub id: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntryPage {
+    pub search_info: Vec<super::search_store::SearchInfo>,
     pub entries: Vec<Entry>,
     pub next_cursor: Option<EntryCursor>,
     pub total: i64,

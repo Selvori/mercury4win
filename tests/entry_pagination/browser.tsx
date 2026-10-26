@@ -32,11 +32,11 @@ async function render(feed_id: number | null | undefined, tag_ids?: number[]) {
 async function run() {
   await render(1);
   assert(rows().length === 100 && host.textContent?.includes("entry.entriesCount:237"), "first page/count wrong");
-  assert(transport.calls[0].args.cursor === null && transport.calls[0].args.feedId === 1, "first IPC args wrong");
+  assert(transport.calls.find((call) => call.command === "load_entries")!.args.cursor === null && transport.calls.find((call) => call.command === "load_entries")!.args.feedId === 1, "first IPC args wrong");
   transport.hold_once();
   await click("entry.loadMore");
   assert(rows().length === 100 && button("entry.loadingMore").disabled, "pending page hid rows or allows duplicate clicks");
-  const call = transport.calls.at(-1)!;
+  const call = transport.calls.findLast((call) => call.command === "load_entries")!;
   const boundary = transport.ordered()[99];
   assert(call.args.cursor.id === boundary.id && call.args.cursor.published_at === boundary.published_at, "wrapper lost composite cursor");
   await settle(() => transport.pending!());
@@ -84,7 +84,7 @@ async function run() {
   results.push("initial failure/retry differs from successful empty list; unset scope does not fetch");
 
   await render(undefined, [7]);
-  assert(transport.calls.at(-1)!.args.feedId === null && JSON.stringify(transport.calls.at(-1)!.args.tagIds) === "[7]", "tag scope IPC mapping wrong");
+  assert(transport.calls.findLast((call) => call.command === "load_entries")!.args.feedId === null && JSON.stringify(transport.calls.findLast((call) => call.command === "load_entries")!.args.tagIds) === "[7]", "tag scope IPC mapping wrong");
   results.push("tag scope query preserves existing filter mapping through production IPC wrapper");
 }
 run().then(() => finish({ passed: results })).catch((error) => finish({ passed: results, error: String(error.stack || error) }));

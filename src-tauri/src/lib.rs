@@ -46,6 +46,8 @@ pub fn run() {
                 )
                 .expect("interact failed")
                 .expect("migration failed");
+                tauri::async_runtime::block_on(conn.interact(|conn| conn.execute("UPDATE topic_run SET status='interrupted',error='Application stopped before completion',finished_at=datetime('now') WHERE status='running'", [])))
+                    .expect("interact failed").expect("topic recovery failed");
             }
 
             let _ = app.manage(pool);
@@ -55,6 +57,15 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            commands::topic_cmd::list_topics,
+            commands::topic_cmd::topic_model_info,
+            commands::topic_cmd::save_topic,
+            commands::topic_cmd::delete_topic,
+            commands::topic_cmd::load_topic,
+            commands::topic_cmd::update_topic_members,
+            commands::topic_cmd::save_topic_notes,
+            commands::topic_cmd::generate_topic_brief,
+            commands::topic_cmd::export_topic_brief,
             // Feed
             commands::feed_cmd::load_feeds,
             commands::feed_cmd::add_feed,
@@ -74,6 +85,10 @@ pub fn run() {
             commands::entry_cmd::mark_all_read_in_feed,
             commands::entry_cmd::mark_all_read_in_scope,
             commands::entry_cmd::load_entry_detail,
+            commands::search_cmd::list_smart_views,
+            commands::search_cmd::save_smart_view,
+            commands::search_cmd::delete_smart_view,
+            commands::search_cmd::rebuild_search_index,
             // Tags
             commands::tag_cmd::list_tags,
             commands::tag_cmd::add_tag,

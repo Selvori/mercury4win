@@ -2,6 +2,7 @@
 
 export type { Feed, FeedWithCounts, SyncResult, ImportResult, ImportProgress } from "./feed";
 export type { Entry, EntryFilter, TagMatchMode, EntryCursor, EntryPage, EntryDetail, EntryTagInfo, EntryNote } from "./entry";
+export type { SearchPart, SearchHit, SearchInfo, SmartView } from "./entry";
 export type {
   ProviderProfile,
   ModelProfile,

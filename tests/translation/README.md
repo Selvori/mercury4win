@@ -127,3 +127,7 @@ git diff --check
 Rust 7 + 7 = 14 项；DOM 10 + 15 + 24 + 8 + 7 = 64 组。新的15来源提取边界覆盖所有标题等级、引用、单元格嵌套、图注 / 定义及正文外区域；生产请求 / 缓存测试如前。DOM检查实际 Rust 10来源 fixture、表格重解析安全与无重复、button / T 直接启动、缓存免调用、StrictMode一次、流式 / 完成展示、失败无循环、部分恢复、文章隔离、后台重开、失败来源不调用、延迟语言 / 来源 / Reader、主题字体及已有 runtime / persistence契约。没有移除或放宽旧回调拒收断言。check零warning；build保留已有 >500kB chunk提示；所有上述最终检查通过。
 
 真实API调用已由用户授权，但本项根因可通过生产分段、loopback Provider HTTP、真实临时 SQLite 和 DOM重解析完整验证，因此没有读取实际凭据 / 数据库或调用真实付费API。未验证 native Tauri / WebView2 真实IPC / 排版 / 滚动、具体真实Provider的长段输出与目标文章、其他平台或完整全仓套件；桌面验收应覆盖点击 / T、标题 / 引用 / 表格、长文、窄窗口、切文章 / 重开和无AI配置。
+
+## 2026-10-26 分段翻译保持阅读位置
+
+M4W-022 将同文章译文投影改为 iframe 内增量更新，并按可见内容块补偿上方新增高度；不再为每段导航 srcDoc。真实 Edge 旧代码复现 scrollTop 10148→0，修复后新增14组、字体滚轮8组和相关61组DOM通过；主题3项 / 翻译分段7项Rust fixture准备、lint / build通过。当前脚手架读取实时 iframe 文档，保留全部原业务断言。完整命令、初次失败和桌面边界见[专项记录](../translation_scroll/README.md)；完整Tauri / WebView2与真实Provider未复验，004及022仍待验证。前文整篇srcDoc记录属于当时实现。

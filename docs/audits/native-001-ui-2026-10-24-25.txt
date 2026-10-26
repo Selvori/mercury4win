@@ -1,0 +1,117 @@
+# Native UI accessibility evidence
+Selected stable observations; transition screenshots were inspected through @oai/sky.
+The application has only synthetic A/B fixture data. The accessibility tree can lag a transition screenshot; stable observations below are used for text evidence.
+
+2026-10-24T12:06:44.236Z A summary panel initial
+34 主要
+60 切换按钮 阅读 Description: 阅读
+61 切换按钮 笔记 Description: 笔记
+62 切换按钮 摘要 Description: 摘要
+63 切换按钮 翻译 Description: 翻译
+64 切换按钮 标签 Description: 标签
+65 标题 Native A — COBALT_BALLOON
+66 按钮 导出文摘
+67 按钮 在浏览器中打开 Description: 在浏览器中打开
+68 按钮 阅读设置 Description: 阅读设置
+91 文档 阅读内容 Description: 阅读内容
+110 文档 Value: about:srcdoc ID: RootWebArea
+111 文章
+112 标题 Native A COBALT_BALLOON
+126 文本 笔记
+128 按钮 编辑
+133 文本 A_DRAFT_COBALT — 仅属于文章 A，保留未保存草稿。
+37 文本 就绪
+
+2026-10-24T12:10:00.578Z B still selected; response order checked against proxy log
+34 主要
+60 切换按钮 阅读 Description: 阅读
+61 切换按钮 笔记 Description: 笔记
+62 切换按钮 摘要 Description: 摘要
+63 切换按钮 翻译 Description: 翻译
+64 切换按钮 标签 Description: 标签
+65 标题 Native B — ORANGE_SUBMARINE
+66 按钮 导出文摘
+67 按钮 在浏览器中打开 Description: 在浏览器中打开
+68 按钮 阅读设置 Description: 阅读设置
+91 文档 阅读内容 Description: 阅读内容
+192 文档 Value: about:srcdoc ID: RootWebArea
+193 文章
+194 标题 Native B ORANGE_SUBMARINE
+201 文本 摘要
+202 按钮 (disabled) 生成
+203 切换按钮 (disabled) 简短
+204 切换按钮 (disabled) 中等
+205 切换按钮 (disabled) 详细
+206 复选框 (settable, string) 自动摘要
+209 状态
+210 文本 正在执行…
+211 按钮 取消任务
+212 文本 正在生成摘要...
+37 文本 就绪
+
+2026-10-24T12:10:26.469Z B reopened summary completion check
+34 主要
+60 切换按钮 阅读 Description: 阅读
+61 切换按钮 笔记 Description: 笔记
+62 切换按钮 摘要 Description: 摘要
+63 切换按钮 翻译 Description: 翻译
+64 切换按钮 标签 Description: 标签
+65 标题 Native B — ORANGE_SUBMARINE
+66 按钮 导出文摘
+67 按钮 在浏览器中打开 Description: 在浏览器中打开
+68 按钮 阅读设置 Description: 阅读设置
+91 文档 阅读内容 Description: 阅读内容
+192 文档 Value: about:srcdoc ID: RootWebArea
+193 文章
+194 标题 Native B ORANGE_SUBMARINE
+213 文本 摘要
+214 按钮 生成
+215 切换按钮 简短
+216 切换按钮 中等
+217 切换按钮 详细
+218 复选框 (settable, string) 自动摘要
+225 标题 Native B — ORANGE_SUBMARINE
+226 文本 该文本是一个名为“ORANGE_SUBMARINE”的合成测试夹具，描述了一艘橙色潜艇观测站在虚构珊瑚岛下测量水深、盐度和洋流，并每分钟记录一次温度。文中重复列举了六轮模拟测量数据，旨在明确这些操作仅属于模拟场景且不包含任何私人数据。
+37 文本 就绪
+
+2026-10-24T16:11:38.379Z B unchanged after more A translation segments
+32 主要
+61 切换按钮 阅读 Description: 阅读
+62 切换按钮 笔记 Description: 笔记
+63 切换按钮 摘要 Description: 摘要
+64 切换按钮 翻译 Description: 翻译
+65 切换按钮 标签 Description: 标签
+66 标题 Native B — ORANGE_SUBMARINE
+67 按钮 导出文摘
+68 按钮 在浏览器中打开 Description: 在浏览器中打开
+69 按钮 阅读设置 Description: 阅读设置
+91 文档 阅读内容 Description: 阅读内容
+92 文档 Value: about:srcdoc ID: RootWebArea
+93 文章
+94 标题 Native B ORANGE_SUBMARINE
+35 文本 就绪
+
+2026-10-24T16:13:37.721Z B tags final after A delayed real tagging success
+32 主要
+61 切换按钮 阅读 Description: 阅读
+62 切换按钮 笔记 Description: 笔记
+63 切换按钮 摘要 Description: 摘要
+64 切换按钮 翻译 Description: 翻译
+65 切换按钮 标签 Description: 标签
+66 标题 Native B — ORANGE_SUBMARINE
+67 按钮 导出文摘
+68 按钮 在浏览器中打开 Description: 在浏览器中打开
+69 按钮 阅读设置 Description: 阅读设置
+91 文档 阅读内容 Description: 阅读内容
+184 文档 Value: about:srcdoc ID: RootWebArea
+185 文章
+186 标题 Native B ORANGE_SUBMARINE
+197 文本 标签
+198 按钮 智能推荐
+199 编辑 (settable, string) 添加标签... Description: 添加标签...
+200 按钮 (disabled) 添加标签...
+201 文本 推荐标签（点击应用）：
+202 按钮 Native
+203 按钮 ORANGE
+204 按钮 SUBMARINE
+35 文本 就绪

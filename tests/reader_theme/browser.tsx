@@ -24,7 +24,7 @@ function assert(value: unknown, message: string): asserts value { if (!value) th
 function button(name: string) { const b = [...host.querySelectorAll<HTMLButtonElement>("button")].find((b) => b.getAttribute("aria-label") === name || b.textContent?.trim() === name); assert(b, `Missing ${name}`); return b; }
 function select(label: string) { const l = [...host.querySelectorAll("label")].find((l) => l.textContent === label); assert(l?.htmlFor, `Missing label ${label}`); const s = document.getElementById(l.htmlFor); assert(s instanceof HTMLSelectElement, `Missing select ${label}`); return s; }
 async function choose(label: string, value: string) { await settle(() => { const s = select(label); s.value = value; s.dispatchEvent(new Event("change", { bubbles: true })); }); }
-function frame_html() { const f = host.querySelector("iframe"); assert(f, "Missing iframe"); return f.srcdoc; }
+function frame_html() { const f = host.querySelector("iframe"); assert(f, "Missing iframe"); return f.contentDocument?.documentElement.outerHTML ?? f.srcdoc; }
 function current_head() { return new DOMParser().parseFromString(frame_html(), "text/html").head.innerHTML; }
 function latest_request() { return native.commands.findLast((c) => c.command === "build_reader_content")!.args; }
 export function Shell({ entry }: { entry: number }) { useTheme(); return <ReaderPane entry={{ id: entry, title: `Article ${entry}`, url: null } as Entry} />; }

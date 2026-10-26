@@ -49,3 +49,20 @@ git diff --check
 2026-10-13，HEAD f732ee7 加保留的中文化修改；Windows / Edge 155。原导航在英文 1200px 窗口将 Tag Library 放到第二行，新增布局检查实际失败后再修复。AgentSettings 减少按钮横向留白并使用不换行 / 水平滚动导航；常规窗口六个入口完全显示，窄窗口保持单行。
 
 沿用上面的 lint / build、浏览器和 diff 命令，最新 runner 7 组通过，覆盖中英 1200 / 800 / 600px 的同排坐标、正常宽度无滚动以及最后入口的键盘和点击访问。目录 C:/Users/Selvori/AppData/Local/Temp/mercury4win-localization-OpgVC9，含 settings-en.png / settings-zh-Hans.png；截图已复核。此次未改 Rust、未重跑 Rust / 全套 DOM，native Tauri / WebView2 未验收。完整历史证据见中文化审查最后章节。
+
+## 设置顶部导航高度修复
+
+2026-10-26；基线 `4b652fb` 加保留的 native 验收记录、feed_cmd 与笔记样式未提交修改，以及本次设置布局增量。Windows / PowerShell 7.6.7、Node 24.12.0、Edge 156.0.4314.42。
+
+新增浏览器布局断言先在未修复的生产组件上失败：中文 1200×800，任务配置页导航 clientHeight=37 / scrollHeight=44，按钮底部超出导航，复现用户截图的纵向滚动和裁切。原因是 flex 列中顶部导航允许收缩，而 overflow-x:auto 会使另一个轴的 visible 计算为 auto。修复语言栏 / 导航栏 shrink-0，并明确导航 overflow-y-hidden；保留窄窗口水平滚动，下方长内容独立纵向滚动。
+
+```powershell
+npm.cmd run lint
+npm.cmd run build
+node tests/localization/run_browser.mjs "$env:TEMP/mercury4win-settings-layout-runtime/node_modules/playwright-core/index.mjs" 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
+git diff --check
+```
+
+旧临时 Playwright 目录已不完整，先检查实际文件，再在新临时目录通过 `npm.cmd install --prefix "$env:TEMP/mercury4win-settings-layout-runtime" --no-save --package-lock=false playwright-core` 安装 1.64.1；未修改项目依赖或锁文件。首次布局断言实际失败，修复后 runner 8 组通过；补齐 mock 的默认 Prompt 返回 null 后再次 8 组通过。覆盖中英文六个设置页 × 1200×800 / 800×600 / 600×400 共 36 个布局场景：导航无纵向溢出、按钮和语言栏完整、内容底部不超出窗口；长 Prompt 内容可独立滚动，原有窄窗口最后入口点击 / Tab 检查保留。
+
+lint / build 通过，build 保留既有 >500kB chunk 提示。最终结果与截图在 `C:/Users/Selvori/AppData/Local/Temp/mercury4win-localization-HJY2Cb`（result.json、settings-long-zh-Hans.png / settings-long-en.png）；真实浏览器使用生产 App / CSS，native transport 为合成内存 fixture，外部网络拦截。完整 Tauri / WebView2、其他平台与非空真实配置尚未验收，M4W-021 保持待验证。未访问用户数据库或凭据，未重跑 Rust / 全仓套件，未提交 / 推送。

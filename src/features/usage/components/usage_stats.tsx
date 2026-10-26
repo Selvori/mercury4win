@@ -18,7 +18,7 @@ export function UsageStats({ context, on_clear }: { context?: UsageContext; on_c
   const groups = [...(data?.groups ?? [])].sort((a, b) => b.metrics[metric] - a.metrics[metric] || a.label.localeCompare(b.label, i18n.language));
   const group_max = Math.max(1, ...groups.map(g => g.metrics[metric]));
   const max = Math.max(1, ...(data?.daily.map(d => d.metrics[metric]) ?? []));
-  const group_label = (label: string) => dimension === "agent" ? t(`settings.agentType${label.charAt(0).toUpperCase()}${label.slice(1)}`, { defaultValue: label }) : label;
+  const group_label = (label: string) => dimension === "agent" ? label === "topic" ? t("topics.title") : t(`settings.agentType${label.charAt(0).toUpperCase()}${label.slice(1)}`, { defaultValue: label }) : label;
   const percent = (value: number) => totals?.request_count ? `${(value / totals.request_count * 100).toFixed(1)}%` : "—";
   return <div className="mx-auto max-w-4xl space-y-4">
     <h3 className="text-lg font-semibold">{t("usage.title")}</h3>

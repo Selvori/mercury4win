@@ -29,11 +29,13 @@ export function compose_bilingual_document(
     if (["TH", "TD", "CAPTION"].includes(block.tagName)) block.append(translation);
     else if (block.tagName === "DT") {
       const definition = doc.createElement("dd");
+      definition.dataset.translationWrapper = source.source_segment_id;
       definition.append(translation);
       block.after(definition);
     } else block.after(translation);
   }
   const style = doc.createElement("style");
+  style.id = "mercury-bilingual-style";
   style.textContent = ".mercury-translation{white-space:pre-wrap;border-left:3px solid currentColor;padding:0.4em 0.8em;margin:0.5em 0 1.5em;opacity:.85}";
   doc.head.append(style);
   return `<!doctype html>${doc.documentElement.outerHTML}`;

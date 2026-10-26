@@ -1,0 +1,250 @@
+2026-10-26 native UIA excerpts. Recorder timestamps below are UTC.
+Synthetic acceptance window only; unrelated native file-dialog folder listings omitted.
+
+2026-10-26T09:19:20.681Z
+28 切换按钮 Original view Description: Original view
+
+2026-10-26T09:19:27.965Z
+64 按钮 取消
+
+2026-10-26T09:21:16.425Z
+83 切换按钮 Original view Description: Original view
+103 标题 本地推理证据跟踪
+109 文本 已纳入 0 篇 · 0 篇正文缺失
+115 按钮 (disabled) 生成主题对照
+
+2026-10-26T09:22:06.696Z
+83 切换按钮 Original view Description: Original view
+103 标题 本地推理证据跟踪
+109 文本 已纳入 4 篇 · 0 篇正文缺失
+115 按钮 生成主题对照
+152 文本 证据组
+165 文本 证据组
+178 文本 证据组
+191 文本 证据组
+
+2026-10-26T09:22:39.692Z
+83 切换按钮 Original view Description: Original view
+103 标题 本地推理证据跟踪
+109 文本 已纳入 4 篇 · 0 篇正文缺失
+115 按钮 生成主题对照
+196 文本 No enabled compatible model configured for summary. Configure a model in Settings.
+152 文本 证据组
+165 文本 证据组
+178 文本 证据组
+191 文本 证据组
+
+2026-10-26T09:22:58.440Z
+83 切换按钮 Original view Description: Original view
+103 标题 本地推理证据跟踪
+109 文本 已纳入 4 篇 · 0 篇正文缺失
+115 按钮 生成主题对照
+196 文本 No enabled compatible model configured for summary. Configure a model in Settings.
+
+2026-10-26T09:23:02.623Z
+83 切换按钮 Original view Description: Original view
+103 标题 本地推理证据跟踪
+109 文本 已纳入 4 篇 · 0 篇正文缺失
+115 按钮 生成主题对照
+196 文本 No enabled compatible model configured for summary. Configure a model in Settings.
+199 编辑 (settable, string) 我的判断 Value: 我的判断：转载不算独立证据；CPU 与 GPU 条件应分开。此文字不能被重新生成覆盖。
+
+2026-10-26T09:24:38.660Z
+28 切换按钮 Original view Description: Original view
+
+2026-10-26T09:26:48.822Z
+28 切换按钮 Original view Description: Original view
+61 标题 本地推理证据跟踪
+67 文本 已纳入 4 篇 · 0 篇正文缺失
+73 按钮 生成主题对照
+87 文本 证据组
+100 文本 证据组
+113 文本 证据组
+126 文本 证据组
+
+2026-10-26T09:27:05.665Z
+28 切换按钮 Original view Description: Original view
+61 标题 本地推理证据跟踪
+67 文本 已纳入 4 篇 · 0 篇正文缺失
+144 文本 基线 #1 · 2026-10-26 09:27:01
+73 按钮 (disabled) 生成增量简报
+146 组合框 (settable, string) 简报版本 Value: #1 · 2026-10-26 09:27:01
+
+2026-10-26T09:27:23.319Z
+174 标题 原文证据与冻结正文
+
+2026-10-26T09:28:00.353Z
+205 标题 原文证据与冻结正文
+
+2026-10-26T09:29:04.191Z
+229 切换按钮 Original view Description: Original view
+247 标题 本地推理证据跟踪
+253 文本 已纳入 4 篇 · 0 篇正文缺失
+255 文本 基线 #1 · 2026-10-26 09:27:01
+260 按钮 (disabled) 生成增量简报
+263 组合框 (settable, string) 简报版本 Value: #1 · 2026-10-26 09:27:01
+
+2026-10-26T09:32:54.504Z
+229 切换按钮 Original view Description: Original view
+247 标题 本地推理证据跟踪
+253 文本 已纳入 4 篇 · 0 篇正文缺失
+255 文本 基线 #1 · 2026-10-26 09:27:01
+260 按钮 (disabled) 生成增量简报
+440 文本 Markdown 已导出。
+263 组合框 (settable, string) 简报版本 Value: #1 · 2026-10-26 09:27:01
+
+2026-10-26T09:33:43.160Z
+229 切换按钮 Original view Description: Original view
+
+2026-10-26T09:37:53.318Z
+528 切换按钮 Original view Description: Original view
+
+2026-10-26T09:39:28.330Z
+528 切换按钮 Original view Description: Original view
+607 标题 本地推理证据跟踪
+613 文本 已纳入 8 篇 · 1 篇正文缺失
+615 文本 基线 #1 · 2026-10-26 09:27:01
+620 按钮 生成增量简报
+636 文本 证据组
+649 文本 证据组
+662 文本 证据组
+675 文本 证据组
+688 文本 证据组
+701 文本 证据组
+714 文本 证据组
+727 文本 证据组
+
+2026-10-26T09:40:00.873Z
+528 切换按钮 Original view Description: Original view
+607 标题 本地推理证据跟踪
+613 文本 已纳入 8 篇 · 1 篇正文缺失
+615 文本 基线 #1 · 2026-10-26 09:27:01
+620 按钮 生成增量简报
+745 文本 Invalid citation article ID: 999
+636 文本 证据组
+649 文本 证据组
+662 文本 证据组
+675 文本 证据组
+688 文本 证据组
+701 文本 证据组
+714 文本 证据组
+727 文本 证据组
+
+2026-10-26T09:40:37.684Z
+528 切换按钮 Original view Description: Original view
+607 标题 本地推理证据跟踪
+613 文本 已纳入 8 篇 · 1 篇正文缺失
+615 文本 基线 #1 · 2026-10-26 09:27:01
+620 按钮 取消
+636 文本 证据组
+649 文本 证据组
+662 文本 证据组
+675 文本 证据组
+688 文本 证据组
+701 文本 证据组
+714 文本 证据组
+727 文本 证据组
+
+2026-10-26T09:40:59.616Z
+528 切换按钮 Original view Description: Original view
+607 标题 本地推理证据跟踪
+613 文本 已纳入 8 篇 · 1 篇正文缺失
+615 文本 基线 #1 · 2026-10-26 09:27:01
+620 按钮 生成增量简报
+636 文本 证据组
+649 文本 证据组
+662 文本 证据组
+675 文本 证据组
+688 文本 证据组
+701 文本 证据组
+714 文本 证据组
+727 文本 证据组
+
+2026-10-26T09:41:24.318Z
+528 切换按钮 Original view Description: Original view
+607 标题 本地推理证据跟踪
+613 文本 已纳入 8 篇 · 1 篇正文缺失
+615 文本 基线 #1 · 2026-10-26 09:27:01
+620 按钮 取消
+751 组合框 (settable, string) 简报版本 Value: #1 · 2026-10-26 09:27:01
+
+2026-10-26T09:44:17.350Z
+22 切换按钮 Original view Description: Original view
+40 标题 本地推理证据跟踪
+46 文本 已纳入 8 篇 · 1 篇正文缺失
+48 文本 基线 #2 · 2026-10-26 09:41:24
+53 按钮 (disabled) 生成增量简报
+56 组合框 (settable, string) 简报版本 Value: #2 · 2026-10-26 09:41:24
+
+2026-10-26T09:45:26.460Z
+22 切换按钮 Original view Description: Original view
+40 标题 本地推理证据跟踪
+46 文本 已纳入 8 篇 · 1 篇正文缺失
+48 文本 基线 #2 · 2026-10-26 09:41:24
+53 按钮 (disabled) 生成增量简报
+56 组合框 (settable, string) 简报版本 Value: #1 · 2026-10-26 09:27:01
+
+2026-10-26T09:46:21.430Z
+116 标题 原文证据与冻结正文
+123 文本 这是历史正文快照。当前资料已变化或不再纳入；打开当前文章可能无法定位同一文字。下方仍高亮保存的旧片段。
+124 组 Independent test on GPU A measured 32 tokens per second with long context.
+125 文本 Independent test on GPU A measured 32 tokens per second with long context.
+
+2026-10-26T09:46:57.487Z
+116 标题 原文证据与冻结正文
+123 文本 这是历史正文快照。当前资料已变化或不再纳入；打开当前文章可能无法定位同一文字。下方仍高亮保存的旧片段。
+125 文本 Independent test on GPU A measured 32 tokens per second with long context.
+
+2026-10-26T09:47:42.241Z
+137 标题 Independent test Description: Independent test
+145 文本 Revision: independent test on GPU A measured 37 tokens per second after driver correction.
+
+2026-10-26T09:48:50.669Z
+42 切换按钮 Changed upstream view Description: Changed upstream view
+
+2026-10-26T09:51:27.039Z
+42 切换按钮 Changed upstream view Description: Changed upstream view
+64 标题 本地推理证据跟踪
+70 文本 已纳入 8 篇 · 1 篇正文缺失
+72 文本 基线 #2 · 2026/10/26 17:41:24
+77 按钮 (disabled) 生成增量简报
+86 文本 已用于上次成功简报
+91 文本 证据组 1
+94 文本 证据组
+100 文本 已用于上次成功简报
+105 文本 证据组 1
+108 文本 证据组
+114 文本 已用于上次成功简报
+119 文本 证据组 2
+122 文本 证据组
+128 文本 已用于上次成功简报
+133 文本 证据组 3
+136 文本 证据组
+142 文本 已用于上次成功简报
+147 文本 证据组 4
+150 文本 证据组
+156 文本 已用于上次成功简报
+161 文本 证据组 5
+164 文本 证据组
+170 文本 已用于上次成功简报
+175 文本 证据组 6
+178 文本 证据组
+184 文本 已用于上次成功简报
+189 文本 证据组 7
+192 文本 证据组
+
+2026-10-26T09:52:40.988Z
+42 切换按钮 Changed upstream view Description: Changed upstream view
+64 标题 本地推理证据跟踪
+70 文本 已纳入 8 篇 · 1 篇正文缺失
+72 文本 基线 #2 · 2026/10/26 17:41:24
+77 按钮 (disabled) 生成增量简报
+211 编辑 (settable, string) 我的判断 Value: 我的判断：转载不算独立证据；CPU 与 GPU 条件应分开。此文字不能被重新生成覆盖。
+
+2026-10-26T09:54:43.210Z
+28 切换按钮 Original view Description: Original view
+
+2026-10-26T09:55:01.139Z
+28 切换按钮 Original view Description: Original view
+50 文本 5 篇
+87 文本 A measured 32 tokens per second with long context.

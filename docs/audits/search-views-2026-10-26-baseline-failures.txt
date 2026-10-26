@@ -1,0 +1,59 @@
+
+running 1 test
+
+thread 'agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback' (6640) panicked at src\agent\configuration_tests.rs:482:10:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback ... FAILED
+
+failures:
+
+failures:
+    agent::configuration::tests::m4w_009_actual_cancellation_drops_request_without_fallback
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 136 filtered out; finished in 3.02s
+
+
+running 1 test
+
+thread 'agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted' (52132) panicked at src\agent\usage_tests.rs:363:6:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted ... FAILED
+
+failures:
+
+failures:
+    agent::usage::tests::m4w_012_cancel_socket_flush_and_waiting_cancellation_not_counted
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 136 filtered out; finished in 3.02s
+
+
+running 1 test
+
+thread 'agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts' (35868) panicked at src\agent\usage_tests.rs:798:6:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts ... FAILED
+
+failures:
+
+failures:
+    agent::usage::tests::m4w_012_translation_parallel_cancel_records_only_started_attempts
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 136 filtered out; finished in 3.02s
+
+
+running 1 test
+
+thread 'agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests' (7608) panicked at src\agent\tag_batch_tests.rs:251:10:
+called `Result::unwrap()` on an `Err` value: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests ... FAILED
+
+failures:
+
+failures:
+    agent::tag_batch::tests::production_batch_requests_progress_no_writes_and_cancel_stops_future_requests
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 136 filtered out; finished in 3.03s

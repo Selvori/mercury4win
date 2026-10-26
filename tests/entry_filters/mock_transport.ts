@@ -20,6 +20,7 @@ export function filtered(args: Record<string, any>) {
 }
 export async function invoke(command: string, args: Record<string, any> = {}) {
   calls.push({ command, args });
+  if (command === "list_smart_views") return [];
   if (command === "load_entries") {
     if (hold_next) { hold_next = false; await new Promise<void>((resolve) => { pending = resolve; }); pending = undefined; }
     const all = filtered(args), cursor = args.cursor as EntryCursor | null;

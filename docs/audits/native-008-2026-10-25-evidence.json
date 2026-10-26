@@ -1,0 +1,601 @@
+{
+  "date": "2026-10-25",
+  "code_baseline": "4b652fb + retained M4W-001/016/005 records, note styles and feed_cmd fix; no M4W-008 product changes",
+  "platform": "Windows / PowerShell 7.6.7 / complete Tauri debug / WebView2 155.0.4283.62",
+  "result": "partial; M4W-008 remains pending validation",
+  "snapshots": [
+    {
+      "at": "2026-10-25T05:59:46+0800",
+      "label": "seed",
+      "content": [
+        {
+          "entry_id": 10803,
+          "readability_version": 1,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10804,
+          "readability_version": 3,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10805,
+          "readability_version": 3,
+          "markdown_version": 2,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": true,
+            "STALE_MARKDOWN": false
+          },
+          "markdown_urls": []
+        }
+      ],
+      "cache": [
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        }
+      ],
+      "audit": [],
+      "notes": [
+        {
+          "entry_id": 10001,
+          "length": 463,
+          "updated_at": "2026-10-24 16:23:25"
+        },
+        {
+          "entry_id": 10002,
+          "length": 2294,
+          "updated_at": "2026-10-24 16:21:39"
+        }
+      ],
+      "usage_count": 11
+    },
+    {
+      "at": "2026-10-25T06:00:52+0800",
+      "label": "failure",
+      "content": [
+        {
+          "entry_id": 10803,
+          "readability_version": 1,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10804,
+          "readability_version": 3,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10805,
+          "readability_version": 3,
+          "markdown_version": 2,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": true,
+            "STALE_MARKDOWN": false
+          },
+          "markdown_urls": []
+        }
+      ],
+      "cache": [
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        }
+      ],
+      "audit": [],
+      "notes": [
+        {
+          "entry_id": 10001,
+          "length": 463,
+          "updated_at": "2026-10-24 16:23:25"
+        },
+        {
+          "entry_id": 10002,
+          "length": 2294,
+          "updated_at": "2026-10-24 16:21:39"
+        }
+      ],
+      "usage_count": 11
+    },
+    {
+      "at": "2026-10-25T06:02:16+0800",
+      "label": "partial-final",
+      "content": [
+        {
+          "entry_id": 10801,
+          "readability_version": 3,
+          "markdown_version": 2,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": false
+          },
+          "markdown_urls": [
+            "http://127.0.0.1:18748/assets/base/next.html",
+            "http://127.0.0.1:18748/assets/base/#section",
+            "http://127.0.0.1:18748/assets/base/badge.svg"
+          ]
+        },
+        {
+          "entry_id": 10802,
+          "readability_version": 3,
+          "markdown_version": 2,
+          "document_base_url": "http://127.0.0.1:18748/error",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": false
+          },
+          "markdown_urls": [
+            "http://127.0.0.1:18748/next.html",
+            "http://127.0.0.1:18748/error#section",
+            "http://127.0.0.1:18748/badge.svg"
+          ]
+        },
+        {
+          "entry_id": 10803,
+          "readability_version": 1,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10804,
+          "readability_version": 3,
+          "markdown_version": 1,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": false,
+            "STALE_MARKDOWN": true
+          },
+          "markdown_urls": []
+        },
+        {
+          "entry_id": 10805,
+          "readability_version": 3,
+          "markdown_version": 2,
+          "document_base_url": "http://127.0.0.1:18748/assets/base/",
+          "markers": {
+            "REDIRECT_BASE_NATIVE": false,
+            "ERROR_RETRY_RECOVERED": false,
+            "SOURCE_REBUILT": false,
+            "CLEANED_REBUILT": false,
+            "MARKDOWN_RENDERED": true,
+            "STALE_MARKDOWN": false
+          },
+          "markdown_urls": []
+        }
+      ],
+      "cache": [
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10803,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10804,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 5,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "classic-dark:serif:22",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10805,
+          "theme_id": "paper-light:system:18",
+          "reader_render_version": 4,
+          "updated_at": "2001-01-01 00:00:00",
+          "stale_sentinel": true,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10802,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2026-10-24 22:01:05",
+          "stale_sentinel": false,
+          "unsafe_href_or_script": false
+        },
+        {
+          "entry_id": 10801,
+          "theme_id": "classic-light:sans-serif:16",
+          "reader_render_version": 5,
+          "updated_at": "2026-10-24 22:01:13",
+          "stale_sentinel": false,
+          "unsafe_href_or_script": false
+        }
+      ],
+      "audit": [
+        {
+          "seq": 1,
+          "at": "2026-10-24 22:01:05",
+          "table_name": "content",
+          "operation": "insert",
+          "entry_id": 10802,
+          "cache_key": null
+        },
+        {
+          "seq": 2,
+          "at": "2026-10-24 22:01:05",
+          "table_name": "content_html_cache",
+          "operation": "insert",
+          "entry_id": 10802,
+          "cache_key": "classic-light:sans-serif:16"
+        },
+        {
+          "seq": 3,
+          "at": "2026-10-24 22:01:13",
+          "table_name": "content",
+          "operation": "insert",
+          "entry_id": 10801,
+          "cache_key": null
+        },
+        {
+          "seq": 4,
+          "at": "2026-10-24 22:01:13",
+          "table_name": "content_html_cache",
+          "operation": "insert",
+          "entry_id": 10801,
+          "cache_key": "classic-light:sans-serif:16"
+        }
+      ],
+      "notes": [
+        {
+          "entry_id": 10001,
+          "length": 463,
+          "updated_at": "2026-10-24 16:23:25"
+        },
+        {
+          "entry_id": 10002,
+          "length": 2294,
+          "updated_at": "2026-10-24 16:21:39"
+        }
+      ],
+      "usage_count": 11
+    }
+  ],
+  "http": [
+    {
+      "at": "2026-10-25T06:00:47+0800",
+      "path": "/error",
+      "status": 503,
+      "bytes": 29,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    },
+    {
+      "at": "2026-10-25T06:00:48+0800",
+      "path": "/error",
+      "status": 503,
+      "bytes": 29,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    },
+    {
+      "at": "2026-10-25T06:01:05+0800",
+      "path": "/error",
+      "status": 200,
+      "bytes": 3282,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    },
+    {
+      "at": "2026-10-25T06:01:05+0800",
+      "path": "/badge.svg",
+      "status": 404,
+      "bytes": 18,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0"
+    },
+    {
+      "at": "2026-10-25T06:01:13+0800",
+      "path": "/start",
+      "status": 302,
+      "bytes": 8,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    },
+    {
+      "at": "2026-10-25T06:01:13+0800",
+      "path": "/redirect/deep/article.html",
+      "status": 200,
+      "bytes": 3300,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    },
+    {
+      "at": "2026-10-25T06:01:13+0800",
+      "path": "/assets/base/badge.svg",
+      "status": 200,
+      "bytes": 188,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0"
+    },
+    {
+      "at": "2026-10-25T06:01:24+0800",
+      "path": "/assets/base/next.html",
+      "status": 200,
+      "bytes": 115,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0"
+    },
+    {
+      "at": "2026-10-25T06:01:24+0800",
+      "path": "/favicon.ico",
+      "status": 404,
+      "bytes": 18,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0"
+    }
+  ],
+  "control_stop": {
+    "exact_tool_error": "Computer Use has been stopped for this turn because it could not determine the current browser URL on Windows with enough confidence to enforce policy. Stop your work and send a final message noting why Computer Use ended.",
+    "physical_escape_reported": false,
+    "scope": "Current Computer Use turn, browser URL policy verification; no conclusion about all Windows or non-browser app control",
+    "after_stop": "No further Computer Use call; public node_repl js_reset completed; no end/release API or host-release guarantee"
+  },
+  "cleanup": {
+    "server_pid": 10992,
+    "port": 18748,
+    "binding": "127.0.0.1",
+    "stopped_after_command_line_verified": true,
+    "remaining_listeners": 0,
+    "isolated_app_running": true,
+    "fixtures_and_scoped_audit_retained": true
+  },
+  "not_run": [
+    "native old-source/Markdown/render rebuild",
+    "native cache hit",
+    "native appearance cache identities",
+    "browser destination screenshot/UIA",
+    "native dangerous-text click",
+    "M4W-006",
+    "new Rust/DOM/frontend checks"
+  ]
+}

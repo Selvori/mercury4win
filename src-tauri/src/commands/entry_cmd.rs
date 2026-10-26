@@ -9,6 +9,7 @@ use tauri::State;
 #[tauri::command]
 pub async fn load_entries(
     pool: State<'_, Pool>,
+    filter: Option<EntryFilter>,
     feed_id: Option<i64>,
     unread_only: Option<bool>,
     starred_only: Option<bool>,
@@ -21,14 +22,15 @@ pub async fn load_entries(
     entry_store::query_entries(
         &pool,
         &EntryQueryParams {
-            filter: EntryFilter {
+            filter: filter.unwrap_or(EntryFilter {
                 feed_id,
                 unread_only: unread_only.unwrap_or(false),
                 starred_only: starred_only.unwrap_or(false),
                 search,
                 tag_ids,
                 tag_mode: tag_mode.unwrap_or_default(),
-            },
+                ..Default::default()
+            }),
             cursor,
             limit: limit.unwrap_or(50),
         },
@@ -67,6 +69,7 @@ pub async fn mark_all_read_in_feed(pool: State<'_, Pool>, feed_id: i64) -> Resul
 #[tauri::command]
 pub async fn mark_all_read_in_scope(
     pool: State<'_, Pool>,
+    filter: Option<EntryFilter>,
     feed_id: Option<i64>,
     unread_only: Option<bool>,
     starred_only: Option<bool>,
@@ -76,14 +79,15 @@ pub async fn mark_all_read_in_scope(
 ) -> Result<(), String> {
     entry_store::mark_all_read_in_scope(
         &pool,
-        &EntryFilter {
+        &filter.unwrap_or(EntryFilter {
             feed_id,
             unread_only: unread_only.unwrap_or(false),
             starred_only: starred_only.unwrap_or(false),
             search,
             tag_ids,
             tag_mode: tag_mode.unwrap_or_default(),
-        },
+            ..Default::default()
+        }),
     )
     .await
 }

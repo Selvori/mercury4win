@@ -52,5 +52,6 @@ export async function invoke(command: string, args: Record<string, any>) {
     entries.find((e) => e.id === args.entryId)!.is_deleted = true;
     return;
   }
+  if (command === "load_feeds" || command === "list_tags") return [];
   throw new Error(`Unexpected IPC: ${command}`);
 }

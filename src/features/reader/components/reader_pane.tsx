@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { build_reader_content } from "@/lib/tauri_bindings";
 import { useAppStore } from "@/stores/app_store";
-import type { Entry } from "@/types";
+import type { Entry, EntryFilter } from "@/types";
 import { useState, useRef, useCallback, useEffect, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ReaderNote } from "./reader_note";
@@ -28,15 +28,17 @@ import { ReaderTagging } from "./reader_tagging";
 import { FontSettingsDialog } from "./font_settings_dialog";
 import { DigestDialog } from "./digest_dialog";
 import { useDigestSelectionStore } from "@/stores/digest_selection_store";
+import { update_bilingual_document } from "../lib/update_bilingual_document";
 
 interface Props {
   entry: Entry;
+  note_request?: number;
   on_select_entry?: (entry: Entry) => void;
 }
 
 type Panel = "reader" | "notes" | "summary" | "translation" | "tags";
 
-export function ReaderPane({ entry, on_select_entry }: Props) {
+export function ReaderPane({ entry, on_select_entry, note_request }: Props) {
   const digest_selecting = useDigestSelectionStore((s) => s.selecting);
   const query_client = useQueryClient();
   const { t } = useTranslation();
@@ -45,6 +47,7 @@ export function ReaderPane({ entry, on_select_entry }: Props) {
     set_bilingual((previous) => html ? { entry_id, html, reader_html } : previous?.entry_id === entry_id ? null : previous);
   }, []);
   const [panel, set_panel] = useState<Panel>("reader");
+  useEffect(() => { if (note_request) set_panel("notes"); }, [note_request]);
   useLayoutEffect(() => {
     set_panel((current) => current === "translation" ? "reader" : current);
     set_bilingual(null);
@@ -111,6 +114,7 @@ export function ReaderPane({ entry, on_select_entry }: Props) {
   });
   useEffect(() => {
     if (!reader_updated_at || isFetching) return;
+    void query_client.invalidateQueries({ queryKey: ["entries"], predicate: (query) => Boolean((query.queryKey[1] as EntryFilter | undefined)?.search?.trim()) });
     // Reader reconstruction can finish after a result's initial source lookup.
     void query_client.invalidateQueries({ queryKey: ["summary_result", entry.id] });
     void query_client.invalidateQueries({ queryKey: ["latest_summary", entry.id] });
@@ -136,15 +140,31 @@ export function ReaderPane({ entry, on_select_entry }: Props) {
   });
 
   const show_side_panel = panel === "notes" || panel === "summary" || panel === "tags";
+  const display_html = panel === "translation" && bilingual?.entry_id === entry.id
+    && bilingual.reader_html === reader_html ? bilingual.html : reader_html;
+  const frame_ref = useRef<HTMLIFrameElement>(null);
+  const loaded_frame = useRef<{ doc: Document; reader_html: string; entry_id: number } | null>(null);
+  const update_translation = useCallback(() => {
+    const frame = frame_ref.current;
+    if (!frame || !reader_html || !display_html) return;
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    if (loaded_frame.current?.doc !== doc || loaded_frame.current.reader_html !== reader_html
+      || loaded_frame.current.entry_id !== entry.id) return;
+    if (!update_bilingual_document(doc, display_html) && frame.srcdoc !== display_html) {
+      frame.srcdoc = display_html;
+    }
+  }, [entry.id, reader_html, display_html]);
+  useLayoutEffect(update_translation, [update_translation]);
 
   return (
     <div className="flex h-full" inert={digest_selecting}>
       {/* Main reader area */}
-      <div className="flex h-full flex-col flex-1 overflow-hidden">
+      <div className="flex h-full min-w-0 flex-col flex-1 overflow-hidden">
         {/* Toolbar */}
-        <div className="flex items-center gap-1.5 border-b border-border px-3 py-1.5">
+        <div className="flex shrink-0 items-center gap-1.5 border-b border-border px-3 py-1.5">
           {/* Panel tabs */}
-          <div className="flex items-center gap-0.5 rounded-md border border-border bg-muted/50 p-0.5 mr-2">
+          <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border bg-muted/50 p-0.5 mr-2">
             {panel_options.map((opt) => (
               <Button
                 key={opt.value}
@@ -163,8 +183,8 @@ export function ReaderPane({ entry, on_select_entry }: Props) {
               </Button>
             ))}
           </div>
-          <div className="flex-1 flex items-center gap-2">
-            <h2 className="text-sm font-medium truncate max-w-md">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-sm font-medium truncate" title={entry.title || t("entry.untitled")}>
               {entry.title || t("entry.untitled")}
             </h2>
           </div>
@@ -233,13 +253,17 @@ export function ReaderPane({ entry, on_select_entry }: Props) {
             </div>
           ) : (
             <iframe
-              srcDoc={panel === "translation" && bilingual?.entry_id === entry.id && bilingual.reader_html === reader_html ? bilingual.html : reader_html}
+              key={entry.id}
+              ref={frame_ref}
+              srcDoc={reader_html}
               className="h-full w-full border-0"
               sandbox="allow-same-origin"
               title={t("readerPane.readerContent")}
               onLoad={(e) => {
                 const doc = e.currentTarget.contentDocument;
                 if (!doc) return;
+                loaded_frame.current = { doc, reader_html, entry_id: entry.id };
+                update_translation();
                 // Route in-article link clicks to the system browser
                 doc.addEventListener("keydown", (event) => {
                   if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.repeat || event.altKey) return;

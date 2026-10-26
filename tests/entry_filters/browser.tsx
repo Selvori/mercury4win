@@ -11,6 +11,7 @@ const client = new QueryClient({ defaultOptions: { queries: { retry:false, gcTim
 const results:string[]=[];
 const pause=()=>new Promise((resolve)=>setTimeout(resolve,30));
 async function settle(action:()=>unknown=()=>{}) { await act(async()=>{ action();await pause(); }); await act(async()=>{await pause();}); }
+async function settle_search(action:()=>unknown) { await settle(action); await act(async()=>{ await new Promise((resolve)=>setTimeout(resolve,270)); }); await settle(); }
 function assert(value:unknown,message:string):asserts value { if(!value) throw new Error(message); }
 const rows=()=>[...host.querySelectorAll<HTMLElement>('[role="button"]')];
 function button(label:string) { const b=[...host.querySelectorAll<HTMLButtonElement>('button')].find((b)=>b.textContent?.includes(label) || b.getAttribute('aria-label')===label); assert(b,`missing ${label}`); return b; }
@@ -24,8 +25,10 @@ async function run() {
   await click('feed.allFeeds');
   assert(rows().length===100,'all entries first page missing');
   await click('entry.loadMore'); assert(rows().length===200,'second page missing');
-  await settle(()=>input('Article 23')); assert(last_load().cursor===null && last_load().search==='Article 23' && rows().length===9,'search/filter cursor reset failed');
-  await settle(()=>input('')); assert(rows().length===100,'returning filter retained old pages');
+  assert(!host.querySelector('input[type="search"]'),'plain feed must not show full search');
+  await click('search.title');
+  await settle_search(()=>input('Article 23')); assert(last_load().cursor===null && last_load().search==='Article 23' && rows().length===9,'search/filter cursor reset failed');
+  await settle_search(()=>input('')); assert(rows().length===100,'returning filter retained old pages');
   await click('entry.unreadOnly'); assert(last_load().unreadOnly===true,'unread not wired');
   await click('sidebar.starred'); assert(last_load().starredOnly===true && last_load().unreadOnly===true,'starred navigation did not combine unread');
   results.push('production AppShell search/unread/starred navigation and scope changes reset pagination');
@@ -39,7 +42,7 @@ async function run() {
   await settle(()=>tags()[5].click());
   assert(last_load().tagIds.length===5 && tags()[5].getAttribute('aria-disabled')==='true' && host.textContent?.includes('entry.tagLimit'),'5 tag limit not communicated');
   for(let i=4;i>=2;i--) await settle(()=>tags()[i].click());
-  await settle(()=>input('Article 12'));
+  assert(!host.querySelector('input[type="search"]'),'tag navigation must leave search mode');
   const scope={...last_load()}; delete scope.cursor; delete scope.limit;
   const matches=transport.filtered(scope).map((e)=>e.id);
   await key('A',{shiftKey:true});
@@ -49,7 +52,7 @@ async function run() {
   assert(transport.entries.filter((e)=>e.is_read).every((e)=>matches.includes(e.id)),'bulk touched other scopes');
   results.push('production multi-select Any/All, visible 5-tag cap and exact combined bulk-read IPC scope');
 
-  await settle(()=>input('')); await click('entry.unreadOnly');
+  await click('entry.unreadOnly');
   await click('sidebar.feeds'); await click('feed.allFeeds');
   await settle(()=>rows()[0].click()); const first=transport.entries.find((e)=>e.id===237)!;
   await key('m'); assert(first.is_read,'m not wired'); await key('m'); assert(!first.is_read,'m not reversible');
@@ -64,7 +67,7 @@ async function run() {
   assert(!host.textContent?.includes('translation.translateArticle'),'silent translation exposed obsolete controls');
   await key('t'); assert(button('reader.reader').getAttribute('aria-pressed') === 'true','translation toggle did not return to reader');
   const count=transport.calls.filter((c)=>c.command==='mark_read').length;
-  await key('m',{},host.querySelector('input[type="search"]')!);
+  const input_guard=document.createElement('input');host.append(input_guard);await key('m',{},input_guard);input_guard.remove();
   const edit=document.createElement('div');edit.setAttribute('contenteditable','true');const child=document.createElement('span');edit.append(child);host.append(edit);
   await key('m',{},child);edit.remove();
   await key('m',{ctrlKey:true});await key('m',{altKey:true});await key('m',{isComposing:true});
@@ -89,7 +92,7 @@ async function run() {
   await settle(()=>selected()!.querySelector<HTMLButtonElement>('[aria-label="entry.delete"]')!.click());
   assert(!host.querySelector('iframe') && host.textContent?.includes('app.welcome'),'delete did not clear Reader');
   assert(transport.calls.filter((c)=>c.command==='load_feeds').length>before.feeds,'delete did not refresh feeds');
-  assert(client.getQueryCache().findAll({queryKey:['tags']}).every((q)=>q.state.isInvalidated),'delete did not invalidate tags');
+  const tag_cache=client.getQueryCache().findAll({queryKey:['tags']});assert(tag_cache.length>0 && tag_cache.every((q)=>q.state.isInvalidated),'delete did not invalidate inactive tag options');
   results.push('delete clears selected Reader, refreshes feeds and invalidates tag counts');
   const detail=await load_entry_detail(12);
   assert(detail.entry.id===12 && detail.feed_title==='Two' && detail.entry.feed_content==='<p>Feed text</p>' && detail.tags.length===2 && detail.has_note,'actual Rust detail JSON/production wrapper contract failed');

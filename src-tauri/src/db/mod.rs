@@ -11,3 +11,7 @@ pub mod tag_store;
 pub mod usage_store;
 
 pub mod tag_batch_store;
+
+pub mod search_store;
+pub mod smart_view_store;
+pub mod topic_store;

@@ -98,6 +98,53 @@ try {
       assert.equal(await last.getAttribute("aria-pressed"), "true");
     }
   }
+  for (const language of ["zh-Hans", "en"]) {
+    await page.getByRole("dialog").getByRole("combobox", { name: /^(界面语言|Language)$/ }).selectOption(language);
+    await ready(language);
+    for (const viewport of [{ width: 1200, height: 800 }, { width: 800, height: 600 }, { width: 600, height: 400 }]) {
+      await page.setViewportSize(viewport);
+      const tabs = page.getByRole("dialog").locator("button[aria-pressed]");
+      for (let index = 0; index < 6; index++) {
+        await tabs.nth(index).click();
+        const layout = await tabs.nth(index).evaluate(button => {
+          const nav = button.parentElement;
+          const content = nav.nextElementSibling;
+          const language = nav.previousElementSibling;
+          const dialog = nav.closest('[role="dialog"]');
+          const nav_box = nav.getBoundingClientRect();
+          const buttons = [...nav.children].map(tab => tab.getBoundingClientRect());
+          return {
+            nav_height: nav.clientHeight, nav_scroll_height: nav.scrollHeight,
+            buttons_fit: buttons.every(box => box.top >= nav_box.top && box.bottom <= nav_box.bottom),
+            language_fits: language.scrollHeight <= language.clientHeight + 1,
+            content_bottom: content.getBoundingClientRect().bottom,
+            dialog_bottom: dialog.getBoundingClientRect().bottom,
+          };
+        });
+        const label = `${language} ${viewport.width}×${viewport.height} tab ${index}`;
+        if (layout.nav_scroll_height > layout.nav_height + 1 || !layout.buttons_fit) {
+          await page.screenshot({ path: path.join(output, "settings-nav-clipped.png") });
+        }
+        assert(layout.nav_scroll_height <= layout.nav_height + 1, `${label}: navigation scrolls vertically: ${JSON.stringify(layout)}`);
+        assert(layout.buttons_fit, `${label}: navigation buttons are clipped`);
+        assert(layout.language_fits, `${label}: language selector is clipped`);
+        assert(layout.content_bottom <= layout.dialog_bottom + 1 && layout.dialog_bottom <= viewport.height, `${label}: content overflows dialog`);
+      }
+      // Scrolling long prompt content must leave both header rows in place.
+      await tabs.nth(4).click();
+      const scroll = await tabs.nth(4).evaluate(button => {
+        const nav = button.parentElement;
+        const content = nav.nextElementSibling;
+        const before = nav.getBoundingClientRect().top;
+        content.scrollTop = content.scrollHeight;
+        return { before, after: nav.getBoundingClientRect().top, top: content.scrollTop, overflow: content.scrollHeight - content.clientHeight };
+      });
+      assert.equal(scroll.before, scroll.after);
+      if (viewport.height <= 600) assert(scroll.top > 0 && scroll.overflow > 0, "Long Settings content must scroll independently");
+    }
+    await page.screenshot({ path: path.join(output, `settings-long-${language}.png`) });
+  }
+  passed.push("All six Settings tabs keep navigation/language fully visible at 1200×800, 800×600 and 600×400 in both languages; long content scrolls independently");
   await page.keyboard.press("Escape");
   await page.setViewportSize({ width: 1200, height: 800 });
   passed.push("English/Chinese Settings tabs stay on one row at 1200/800/600px; normal dialog fits all tabs and last tab remains keyboard accessible");
