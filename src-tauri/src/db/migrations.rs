@@ -202,7 +202,7 @@ CREATE TABLE settings (
 ";
 
 /// Current schema version. Increment when migrations are added.
-pub const SCHEMA_VERSION: i32 = 7;
+pub const SCHEMA_VERSION: i32 = 8;
 
 const MIGRATION_V3: &str = "
 CREATE TABLE agent_result_slot (
@@ -313,6 +313,15 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         )?;
         tx.commit()?;
     }
+    if version < 8 {
+        let tx = conn.unchecked_transaction()?;
+        tx.execute_batch(crate::db::topic_auto_store::MIGRATION_V8)?;
+        tx.execute(
+            "INSERT OR REPLACE INTO settings(key,value) VALUES('schema_version','8')",
+            [],
+        )?;
+        tx.commit()?;
+    }
     Ok(())
 }
 
@@ -320,7 +329,7 @@ pub fn run_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 /// version marker while leaving later columns/tables in place.
 #[cfg(test)]
 pub(crate) fn historical_fixture(version: i32) -> Connection {
-    assert!((1..=6).contains(&version));
+    assert!((1..=7).contains(&version));
     let conn = Connection::open_in_memory().unwrap();
     conn.execute_batch("PRAGMA foreign_keys=ON").unwrap();
     conn.execute_batch(MIGRATION_V1).unwrap();
@@ -341,6 +350,10 @@ pub(crate) fn historical_fixture(version: i32) -> Connection {
     }
     if version >= 6 {
         crate::db::search_store::migrate(&conn).unwrap();
+    }
+    if version >= 7 {
+        conn.execute_batch(crate::db::topic_store::MIGRATION_V7)
+            .unwrap();
     }
     conn.execute(
         "INSERT INTO settings(key,value) VALUES('schema_version',?1)",

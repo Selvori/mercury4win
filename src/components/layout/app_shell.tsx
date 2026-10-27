@@ -204,7 +204,7 @@ export function AppShell() {
           />
         </div>
 
-        {topics_active ? <TopicWorkspace /> : <>
+        {topics_active ? <TopicWorkspace on_configure={() => set_show_settings(true)} /> : <>
         {/* Sidebar | Entry splitter */}
         <ResizeHandle
           on_mouse_down={start_sidebar_resize}

@@ -11,4 +11,5 @@ pub mod translation_segments;
 pub mod tag_batch;
 
 pub mod topic;
+pub mod topic_auto;
 pub mod usage;

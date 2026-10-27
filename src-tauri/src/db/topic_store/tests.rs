@@ -92,7 +92,7 @@ fn fresh_historical_1_through_6_and_idempotent_migration() {
                 |r| r.get::<_, String>(0)
             )
             .unwrap(),
-            "7"
+            super::super::migrations::SCHEMA_VERSION.to_string()
         );
         assert_eq!(
             c.query_row("SELECT count(*) FROM entry", [], |r| r.get::<_, i64>(0))
@@ -280,10 +280,240 @@ async fn scope_limits_are_explicit_and_no_truncation() {
     let mut i = snapshot(&p, id).await;
     assert!(topic::check_scope(&i).is_err());
     i.sources[0].body = "文".repeat(100_001);
-    assert!(topic::check_scope(&i).is_err());
+    assert!(topic::check_scope(&i).is_ok());
+    let request = topic::request(&i, None, "zh-Hans", "controlled-model");
+    let request = serde_json::to_value(request).unwrap();
+    assert!(request.get("max_tokens").is_none());
     i.sources[0].body = "Safe available body".into();
     i.sources = vec![i.sources[0].clone(); 41];
     assert!(topic::check_scope(&i).is_err());
+}
+
+#[tokio::test]
+async fn citation_whitespace_maps_back_to_exact_frozen_utf8_bytes() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let mut input = snapshot(&p, id).await;
+    input.sources[0].body = "前言🙂\nRust\u{a0}生态\t版本\r\n发布完成，细节如下。\n后记".into();
+    let quote = "Rust 生态 版本 发布完成，细节如下。";
+    assert!(
+        input.sources[0].body.find(quote).is_none(),
+        "old literal matcher reproduces Quote not found"
+    );
+    let mut raw: serde_json::Value = serde_json::from_str(&wire(&input)).unwrap();
+    raw["claims"][0]["citations"][0]["quote"] = quote.into();
+    let result = topic::validate(&raw.to_string(), &input).unwrap();
+    let citation = &result.claims[0].citations[0];
+    assert_eq!(
+        citation.quote,
+        "Rust\u{a0}生态\t版本\r\n发布完成，细节如下。"
+    );
+    assert_eq!(
+        &input.sources[0].body[citation.start..citation.end],
+        citation.quote
+    );
+    assert!(citation.start > "前言".len());
+    assert!(result
+        .warnings
+        .iter()
+        .any(|w| w == "citation_whitespace_normalized"));
+    assert_eq!(citation.content_version, input.sources[0].content_version);
+}
+#[tokio::test]
+async fn citation_normalization_rejects_ambiguity_rewriting_and_oversized_source_span() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let mut input = snapshot(&p, id).await;
+    for (body, quote, expected) in [
+        (
+            "Rust\t生态正式发布。 Rust\n生态正式发布。".to_string(),
+            "Rust 生态正式发布。",
+            "Ambiguous",
+        ),
+        (
+            "Rust ecosystem release is available.".to_string(),
+            "Rust ecosystem release is unavailable.",
+            "Quote not found",
+        ),
+        (
+            "Original detailed reporting is available.".to_string(),
+            "Original detailed reporting…available.",
+            "Quote not found",
+        ),
+        (
+            format!("Rust{}生态正式发布。", " ".repeat(4000)),
+            "Rust 生态正式发布。",
+            "4000 bytes",
+        ),
+        ("aaaaaaaaa".to_string(), "aaaaaaaa", "Ambiguous"),
+    ] {
+        input.sources[0].body = body;
+        let mut raw: serde_json::Value = serde_json::from_str(&wire(&input)).unwrap();
+        raw["claims"][0]["citations"][0]["quote"] = quote.into();
+        assert!(topic::validate(&raw.to_string(), &input)
+            .unwrap_err()
+            .contains(expected));
+    }
+}
+#[test]
+fn supplied_passages_preserve_complete_text_and_bounded_utf8_excerpts() {
+    for count in [0, 1, 7, 8, 799, 800, 801, 807, 808, 1601, 4000] {
+        let body = "文🙂x\n".chars().cycle().take(count).collect::<String>();
+        let passages = topic::citation_passages(&body);
+        assert_eq!(passages.iter().map(|p| p.text).collect::<String>(), body);
+        for (index, p) in passages.iter().enumerate() {
+            assert_eq!(p.passage_id, index + 1);
+            assert!(p.text.len() <= 4000);
+            assert!(!p.text.is_empty());
+        }
+        assert_eq!(
+            serde_json::to_value(&passages).unwrap(),
+            serde_json::to_value(topic::citation_passages(&body)).unwrap()
+        );
+    }
+}
+#[tokio::test]
+async fn supplied_passage_ids_resolve_repeated_text_without_model_copying() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let mut input = snapshot(&p, id).await;
+    input.sources[0].body = "来源🙂".repeat(900);
+    let passages = topic::citation_passages(&input.sources[0].body);
+    assert!(passages.len() > 2);
+    let mut raw: serde_json::Value = serde_json::from_str(&wire(&input)).unwrap();
+    raw["claims"][0]["citations"] = serde_json::json!([{"entry_id":1,"passage_id":2}]);
+    let result = topic::validate(&raw.to_string(), &input).unwrap();
+    let citation = &result.claims[0].citations[0];
+    assert_eq!(citation.start, passages[0].text.len());
+    assert_eq!(citation.quote, passages[1].text);
+    assert_eq!(
+        &input.sources[0].body[citation.start..citation.end],
+        citation.quote
+    );
+    for invalid in [
+        serde_json::json!({"entry_id":1,"passage_id":0}),
+        serde_json::json!({"entry_id":1,"passage_id":999}),
+        serde_json::json!({"entry_id":999,"passage_id":1}),
+        serde_json::json!({"entry_id":1,"passage_id":1,"quote":"Fabricated original quotation"}),
+        serde_json::json!({"entry_id":1}),
+    ] {
+        raw["claims"][0]["citations"] = serde_json::json!([invalid]);
+        assert!(topic::validate(&raw.to_string(), &input).is_err());
+    }
+}
+
+#[tokio::test]
+async fn duplicate_passage_keys_preserve_all_frozen_source_locations() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let mut input = snapshot(&p, id).await;
+    input.sources[0].body = format!("{}{}", "首段原文。".repeat(160), "第二段原文。".repeat(150));
+    for (keys, count) in [
+        ("\"passage_id\":1,\"passage_id\":1", 1),
+        ("\"passage_id\":1,\"passage_id\":2", 2),
+    ] {
+        let raw = format!(
+            r#"{{"claims":[{{"kind":"overview","text":"Connected source summary.","citations":[{{"entry_id":1,{keys}}}]}},{{"kind":"uncertain","text":"Further checking is needed.","citations":[]}}]}}"#
+        );
+        let result = topic::validate(&raw, &input).unwrap();
+        assert_eq!(result.claims[0].citations.len(), count);
+        for cite in &result.claims[0].citations {
+            assert_eq!(cite.quote, input.sources[0].body[cite.start..cite.end]);
+        }
+    }
+}
+
+#[tokio::test]
+async fn duplicate_passage_normalization_rejects_invalid_or_ambiguous_citations() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let input = snapshot(&p, id).await;
+    let mut invalid = vec![
+        r#""entry_id":1,"passage_id":1,"passage_id":999"#.to_string(),
+        r#""entry_id":1,"passage_id":1,"passage_id":null"#.to_string(),
+        r#""entry_id":1,"passage_id":1,"passage_id":"1""#.to_string(),
+        r#""entry_id":1,"passage_id":1,"passage_id":[1]"#.to_string(),
+        r#""entry_id":1,"passage_id":1,"passage_id":2,"quote":"Fabricated quote""#.to_string(),
+        r#""entry_id":1,"entry_id":999,"passage_id":1"#.to_string(),
+        r#""entry_id":1,"passage_id":1,"unknown":1"#.to_string(),
+        r#""entry_id":1,"quote":null,"quote":"Another quote""#.to_string(),
+    ];
+    invalid.push(format!(
+        "\"entry_id\":1,{}",
+        vec!["\"passage_id\":1"; 21].join(",")
+    ));
+    for cite in invalid {
+        let raw = format!(
+            r#"{{"claims":[{{"kind":"overview","text":"A source report.","citations":[{{{cite}}}]}},{{"kind":"uncertain","text":"More checking needed.","citations":[]}}]}}"#
+        );
+        assert!(topic::validate(&raw, &input).is_err(), "{raw}");
+    }
+}
+
+#[tokio::test]
+async fn manual_long_context_is_sent_complete_without_a_token_cap() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    db(&p, |c| {
+        c.execute(
+            "UPDATE entry SET feed_content=?1,feed_content_type='text/plain' WHERE id=1",
+            [format!(
+                "Unique original report. {}",
+                "Complete background text. ".repeat(8000)
+            )],
+        )
+        .unwrap();
+        Ok(())
+    })
+    .await
+    .unwrap();
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let d = detail(&p, id).await.unwrap();
+    let original = d.input.sources[0].body.clone();
+    assert!(original.chars().count() > 160000);
+    topic::check_scope(&d.input).unwrap();
+    let raw = r#"{"claims":[{"kind":"overview","text":"A report with documented background.","citations":[{"entry_id":1,"passage_id":1}]},{"kind":"open_questions","text":"Independent checking is needed.","citations":[]}]}"#;
+    let (url, server, _ready) = server(raw.into(), "200 OK", std::time::Duration::ZERO).await;
+    let config = configuration(&p, url).await;
+    let request = uuid::Uuid::new_v4().to_string();
+    start_run(&p, request.clone(), d.input.clone(), serde_json::json!({}))
+        .await
+        .unwrap();
+    let channel = Channel::new(|_| Ok(()));
+    let rt = runtime::create_runtime();
+    let client = reqwest::Client::builder().no_proxy().build().unwrap();
+    runtime::execute(
+        &rt,
+        runtime::TaskType::Topic,
+        id,
+        &request,
+        &channel,
+        || {
+            topic::generate(
+                &p,
+                &client,
+                d.input,
+                None,
+                config,
+                request.clone(),
+                "en".into(),
+                &channel,
+            )
+        },
+    )
+    .await
+    .unwrap();
+    let sent = server.await.unwrap();
+    assert!(sent.get("max_tokens").is_none());
+    let payload: serde_json::Value =
+        serde_json::from_str(sent["messages"][1]["content"].as_str().unwrap()).unwrap();
+    assert_eq!(payload["current"]["sources"][0]["body"], original);
+    assert_eq!(detail(&p, id).await.unwrap().history.len(), 1);
 }
 
 #[tokio::test]
@@ -511,6 +741,7 @@ async fn controlled_http_first_incremental_invalid_failure_retry_and_usage() {
     assert!(md.contains("https://publication.test/release"));
     assert!(md.contains("UTF-8 bytes"));
     assert!(md.contains("Baseline: Some(1)"));
+    assert!(md.contains("No available body; full text not analyzed."));
 }
 
 #[tokio::test]
@@ -544,6 +775,35 @@ async fn sqlite_reopen_preserves_versions_body_quotes_and_notes() {
     assert!(!d.changed);
     drop(p);
     let _ = std::fs::remove_file(path);
+}
+
+#[tokio::test]
+async fn markdown_reads_as_article_with_end_references_and_no_model_identity() {
+    let p = fixture().await;
+    let id = create(&p).await;
+    members(&p, id, vec![1], false, None).await.unwrap();
+    let input = snapshot(&p, id).await;
+    commit_fixture(&p, input).await;
+    let mut brief = detail(&p, id).await.unwrap().history.remove(0);
+    brief.model = serde_json::json!({"model":"PRIVATE_MODEL_LABEL","route":{"provider_name":"PRIVATE_PROVIDER_LABEL"},"language":"zh-Hans"});
+    let mut paragraph = brief.result.claims[0].clone();
+    paragraph.kind = "details".into();
+    paragraph.text = "下一段承接前文，进一步说明这次变化。".into();
+    brief.result.claims.insert(1, paragraph);
+    let md = topic::markdown(&brief, "独立备注");
+    let refs = md.find("## 来源与引文").unwrap();
+    assert!(md.find("下一段承接前文").unwrap() < refs);
+    assert!(!md[..refs].contains("UTF-8 bytes"));
+    assert!(!md[..refs].contains("## overview"));
+    assert!(!md.contains("PRIVATE_MODEL_LABEL"));
+    assert!(!md.contains("PRIVATE_PROVIDER_LABEL"));
+    assert_eq!(
+        md.matches(&brief.result.claims[0].citations[0].quote)
+            .count(),
+        1
+    );
+    assert!(md[refs..].contains("UTF-8 bytes"));
+    assert!(md.contains("独立备注"));
 }
 
 #[test]

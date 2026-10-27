@@ -12,6 +12,7 @@ export function complete() { if (pending) { pending.channel.onmessage(JSON.strin
 export async function invoke(command: string, args: any = {}) {
   calls.push({ command, args });
   if (command === "list_topics") return [structuredClone(data.topic)];
+  if (command === "topic_status") return structuredClone(data);
   if (command === "load_topic") { if (mode === "load_error") throw new Error("controlled load error"); return structuredClone(data); }
   if (command === "topic_model_info") return { routes: mode === "no_model" ? [] : [{ provider_name: "Fixture", model_name: "controlled-model" }] };
   if (command === "load_entries") return structuredClone(fixture.entries);

@@ -37,11 +37,14 @@ import type {
 export const list_topics = () => invoke<Topic[]>("list_topics");
 export const topic_model_info = () => invoke<{ routes: { provider_name: string; model_name: string }[] }>("topic_model_info");
 export const load_topic = (id: number) => invoke<TopicDetail>("load_topic", { id });
-export const save_topic = (id: number | null, name: string, description: string, archived: boolean, rule: EntryFilter | null, rule_name: string | null) => invoke<number>("save_topic", { id, name, description, archived, rule, ruleName: rule_name });
+export const topic_status = (id: number) => invoke<Pick<TopicDetail, "topic" | "automatic" | "changed">>("topic_status", { id });
+export const save_topic = (id: number | null, name: string, description: string, archived: boolean, rule: EntryFilter | null, rule_name: string | null, mode?: "automatic" | "manual") => invoke<number>("save_topic", { id, name, description, archived, rule, ruleName: rule_name, mode });
+export const topic_feedback = (id: number, entry_id: number, reason: "unrelated" | "skip" | null) => invoke<void>("topic_feedback", { id, entryId: entry_id, reason });
+export const mark_topic_read = (id: number, brief_id: number) => invoke<void>("mark_topic_read", { id, briefId: brief_id });
 export const delete_topic = (id: number) => invoke<void>("delete_topic", { id });
 export const update_topic_members = (id: number, entry_ids: number[], remove = false, group_name: string | null = null) => invoke<void>("update_topic_members", { id, entryIds: entry_ids, remove, groupName: group_name });
 export const save_topic_notes = (id: number, notes: string) => invoke<void>("save_topic_notes", { id, notes });
-export const generate_topic_brief = (id: number, request_id: string, language: string, on_event: Channel<string>) => invoke<number | null>("generate_topic_brief", { id, requestId: request_id, language, onEvent: on_event });
+export const generate_topic_brief = (id: number, request_id: string, language: string, on_event: Channel<string>, recheck = false) => invoke<number | null>("generate_topic_brief", { id, requestId: request_id, language, onEvent: on_event, recheck });
 export const export_topic_brief = (id: number, brief_id: number, export_path: string) => invoke<void>("export_topic_brief", { id, briefId: brief_id, exportPath: export_path });
 
 export async function load_feeds(): Promise<FeedWithCounts[]> {
