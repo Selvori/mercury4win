@@ -1,7 +1,7 @@
 param(
     [string]$HappyDomPath = (Join-Path $env:TEMP 'mercury4win-reader-tests/node_modules/happy-dom/lib/index.js'),
     [string]$JsdomPath = (Join-Path $env:TEMP 'mercury4win-markdown-tests/node_modules/jsdom/lib/api.js'),
-    [string]$SafeNodePath = 'C:/Users/Selvori/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe',
+    [string]$SafeNodePath = (Get-Command node -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source,
     [string]$OutputDirectory = (Join-Path $env:TEMP ('mercury4win-dom-validation-' + (Get-Date -Format 'yyyyMMdd-HHmmss')))
 )
 $ErrorActionPreference = 'Stop'

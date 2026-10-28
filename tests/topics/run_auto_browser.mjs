@@ -80,7 +80,7 @@ try {
   } passed.push("6 expanded advanced editors / no token budget control / footer hit targets / name validation");
   await page.setViewportSize({ width: 1100, height: 760 });
   await page.evaluate(() => { window.topic_test.store.getState().set_locale("zh-Hans"); window.topic_test.transport.reset(); window.topic_test.transport.set_mode("no_information"); window.topic_test.client.invalidateQueries(); });
-  await page.getByRole("button", { name: "生成简报", exact: true }).click(); await page.getByText("暂无值得补充的新信息。本批资料已检查；成功简报基线保持。", { exact: true }).waitFor();
+  await page.getByRole("button", { name: "生成简报", exact: true }).click(); await page.getByText("暂无值得补充的新信息。", { exact: true }).waitFor();
   assert.equal(await page.getByRole("button", { name: "重新检查选文", exact: true }).isEnabled(), true);
   await page.evaluate(() => window.topic_test.transport.set_mode("ok"));
   await page.getByRole("button", { name: "重新检查选文", exact: true }).click();
@@ -91,10 +91,10 @@ try {
   await page.getByRole("button", { name: "生成简报", exact: true }).click();
   await page.getByText("已检查批次未选出新信息，仍有 13 篇候选待判断。可继续生成，无需手动添加文章。", { exact: true }).waitFor();
   assert.equal(await page.getByRole("button", { name: "生成简报", exact: true }).isEnabled(), true);
-  assert.equal(await page.getByText("暂无值得补充的新信息。本批资料已检查；成功简报基线保持。", { exact: true }).count(), 0);
+  assert.equal(await page.getByText("暂无值得补充的新信息。", { exact: true }).count(), 0);
   passed.push("remaining candidates are distinguished from exhausted no-information results");
   await page.evaluate(() => { window.topic_test.transport.reset(); window.topic_test.transport.set_mode("no_information_late"); window.topic_test.client.invalidateQueries(); });
-  await page.getByRole("button", { name: "生成简报", exact: true }).click(); await page.getByText("暂无值得补充的新信息。本批资料已检查；成功简报基线保持。", { exact: true }).waitFor();
+  await page.getByRole("button", { name: "生成简报", exact: true }).click(); await page.getByText("暂无值得补充的新信息。", { exact: true }).waitFor();
   passed.push("no-information status recovers from saved run even if channel phase is absent");
   await page.evaluate(() => { window.topic_test.transport.reset(); window.topic_test.transport.set_mode("no_model"); window.topic_test.client.invalidateQueries(); });
   await page.getByRole("button", { name: "配置 AI 模型" }).click(); assert.equal(await page.title(), "Configure model");

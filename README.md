@@ -1,218 +1,138 @@
-# mercury4win
+<p align="center">
+  <img src="src-tauri/icons/128x128@2x.png" alt="mercury4win 图标" width="96" height="96" />
+</p>
 
-**本地优先、开源、跨平台 RSS 阅读器** — 基于 Tauri v2（Rust + React 19），所有数据 100% 本地 SQLite 存储，集成 OpenAI 兼容 API 实现 AI 摘要、翻译与智能标签。
+<h1 align="center">mercury4win</h1>
 
-本项目基于仅支持 macOS 的 [Mercury](https://github.com/neolee/mercury) 开发，以 Tauri v2、Rust 和 React 实现 Windows、Linux 与 macOS 多平台支持。原始 Mercury 采用 Swift / SwiftUI，其功能设计、业务逻辑及文档是本项目的开发参考；本项目的功能实现情况以当前代码为准。
+<p align="center">
+  <strong>订阅你关心的内容，把阅读积累成自己的知识。</strong>
+</p>
 
-> v0.4.0 · MIT License · Windows / macOS / Linux
+<p align="center">
+  本地优先的桌面 RSS 阅读器，支持 AI 摘要、双语翻译、主题检索与专题简报。
+</p>
 
-开发记录从 [docs/README.md](docs/README.md) 进入；当前实现与验证状态见 [项目状态](docs/STATUS.md)，已知差异见 [问题台账](docs/ISSUES.md)。下方功能概览不代表所有用户流程已验收。固定 RSS 导入样例及验证方法见 [测试约定](docs/TESTING.md)。
+<p align="center">
+  <a href="https://github.com/Selvori/mercury4win/releases/latest"><img src="https://img.shields.io/github/v/release/Selvori/mercury4win?style=flat-square&label=release" alt="最新发布版本" /></a>
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-4f6b95?style=flat-square" alt="Windows、Linux 与 macOS" />
+  <img src="https://img.shields.io/badge/license-MIT-3d8b65?style=flat-square" alt="MIT 许可证" />
+</p>
 
----
+<p align="center">
+  <a href="https://github.com/Selvori/mercury4win/releases">下载安装</a> ·
+  <a href="#开始使用">开始使用</a> ·
+  <a href="#功能亮点">功能亮点</a> ·
+  <a href="https://github.com/Selvori/mercury4win/issues">反馈问题</a>
+</p>
 
-## 功能概览
+mercury4win 把订阅、阅读、整理和回顾放在同一个桌面应用里：用 RSS 汇集信息，留下笔记和标签，再按需要借助自己的模型理解文章、寻找相关内容，或把持续关注的话题整理成简报。
 
-| 功能 | 说明 |
-|------|------|
-| Feed 订阅管理 | RSS/Atom/JSON Feed 解析、添加、编辑、删除、批量同步 |
-| OPML 导入/导出 | 支持 OPML 1.0/1.1/2.0，完整 UI 对话框 |
-| 条目列表 | 游标分页、关键词搜索、未读筛选、已读/星标/删除 |
-| 三栏可拖拽布局 | 侧边栏 / 条目列表 / 阅读器，自由拖拽调整宽度 |
-| 阅读器模式 | 4 层内容管道 — 正文提取 → Markdown → GFM 渲染 → 主题 CSS |
-| 笔记 | Markdown 编辑保存，逐篇文章独立笔记 |
-| AI 摘要 | 流式 SSE，3 级详细度（brief/medium/detailed），切换后自动重新生成 |
-| AI 翻译 | 分段并发翻译，上下文传递保持连贯，支持多种 prompt 策略 |
-| AI 智能标签 | LLM 分析文章内容建议标签，一键应用 |
-| 标签管理 | 标签库搜索、重命名、删除、合并、批量打标 |
-| 文摘导出 | 单篇/多篇导出，Markdown/HTML 格式，Handlebars 模板引擎 |
-| Provider 管理 | OpenAI 兼容 API，多 Provider + 多 Model，Agent Profile 独立配置 |
-| Prompt 模板 | YAML 模板 + `{{key}}` 替换 + `{{#cond}}` 条件渲染，支持自定义上传 |
-| 用量统计 | 7d/30d/90d Token 用量展示 |
+无需注册应用账户，也无需配置 AI，就能使用订阅、阅读、搜索、笔记和手动标签。文章、阅读状态、笔记及 AI 结果保存在本机 SQLite 数据库中。
 
----
+项目基于 [neolee/mercury](https://github.com/neolee/mercury) 的理念与功能设计开发，以 **Tauri、Rust 和 React** 实现 Windows、Linux 与 macOS 桌面支持。项目名称为 **mercury4win**，安装后的应用名称仍为 **Mercury**。
 
-## 技术架构
+## 功能亮点
 
-```
-┌────────────────────────────────────────────────┐
-│  React 19 + TypeScript                         │
-│  (Tailwind CSS v4 · shadcn/ui · TanStack Query │
-│   Zustand · i18next)                           │
-├────────────────────────────────────────────────┤
-│  Tauri v2 IPC Bridge (40+ Commands)            │
-├────────────────────────────────────────────────┤
-│  Rust Backend                                  │
-│  ┌──────────┬──────────┬──────────┬─────────┐  │
-│  │ Feed Sync│ Reader   │ AI Agent │ Digest  │  │
-│  │ Parser   │ Pipeline │ Runtime  │ Export  │  │
-│  └──────────┴──────────┴──────────┴─────────┘  │
-├────────────────────────────────────────────────┤
-│  SQLite (WAL · deadpool-sqlite · 17 tables)    │
-└────────────────────────────────────────────────┘
-```
+### 从订阅开始，专注阅读
 
-### 大模型中立的 AI 架构
+- **汇集信息来源**：支持 RSS、Atom、JSON Feed，以及 OPML 订阅导入与导出。
+- **舒适的阅读空间**：正文提取、可调三栏布局、阅读主题与字体设置，支持浅色、深色及跟随系统主题。
+- **保留自己的理解**：为文章写 Markdown 笔记，用收藏、已读状态和标签组织内容。
+- **中英文界面**：支持简体中文与英文切换。
 
-所有 AI 功能通过统一的 OpenAI 兼容 API 协议调用，天然支持：
+### 找回读过的内容
 
-- **云端服务**：OpenAI、Anthropic、Groq、Together AI、DeepSeek 等
-- **本地模型**：Ollama、LM Studio、vLLM、LocalAI 等任何提供 `/v1/chat/completions` 端点的服务
-- **Agent Profile**：每种任务类型（Summary/Translation/Tagging）可独立配置首选模型和目标语言
+- **本地全文搜索**：查找标题、订阅摘要、已保存正文与笔记，组合来源、标签、日期及阅读状态等条件。
+- **智能视图**：保存常用筛选规则，让符合条件的文章集中展示。
+- **AI 主题检索**：用一句话描述想找的内容。先展示关键词初步命中，再由 AI 继续核验相关性，逐步更新结果；支持暂停与恢复。
 
----
+AI 主题检索处理符合筛选条件的**最新 100 篇文章**，不足 100 篇时取全部；普通关键词搜索不受此范围限制。初步命中会明确标注尚未经 AI 核验，AI 检索依据本地已有资料，不会自动补抓全文。
 
-## 快速开始
+### 按需要，让 AI 帮你读
 
-### 前置条件
+- **文章摘要**：流式生成，可选择目标语言和摘要详细程度。
+- **双语翻译**：按段落对照阅读原文与译文。
+- **智能标签**：获取文章标签建议，也可批量处理并审核新标签提议。
+- **模型自由配置**：通过 OpenAI 兼容接口接入云端服务或本地模型，为摘要、翻译和标签分别设置首选及备用模型。
+- **提示词与用量**：支持自定义 Prompt 模板，查看按服务商、模型和任务划分的 Token 用量。
 
-| 工具 | 版本 | 检查 |
-|------|------|------|
-| Node.js | ≥ 18 | `node --version` |
-| Rust | ≥ 1.77.2 | `rustc --version` |
-| Git | 任意 | `git --version` |
+### 持续关注一个主题
 
-**Linux 额外依赖**：`sudo apt install libwebkit2gtk-4.1-dev libgtk-3-dev`
+创建一个专题，例如“本地大模型的最新进展”，让 AI 从已有订阅资料中选取相关文章，整理成可连续阅读的信息简报。后续有候选更新时，可一键生成下一期。
 
-Windows 和 macOS 无需额外安装。
+简报保留来源与原文片段，支持查看历史、添加专题备注和导出 Markdown；也可以手动维护专题文章。专题生成与 AI 主题检索使用摘要任务配置的模型。
 
-### 运行
+### 把阅读成果带走
 
-```bash
-git clone git@github.com:Selvori/mercury4win.git
-cd mercury4win
-npm install
-npx tauri dev
-```
+将单篇或多篇文章导出为 Markdown 文摘，按需附上摘要与笔记；单篇还支持纯文本格式，也可自定义导出模板。订阅列表可独立导出为 OPML，方便迁移到其他阅读器。
 
-首次运行会编译 Rust 依赖（300+ crates，5-15 分钟），之后增量编译只需几秒。
+## 下载安装
 
-### 开发命令
+前往 **[GitHub Releases](https://github.com/Selvori/mercury4win/releases)**，选择对应系统的安装包，并阅读该版本的发布说明。
 
-```bash
-npm run dev        # 仅前端开发（不含 Rust 后端）
-npx tauri dev      # 完整 Tauri 开发模式
-npx tsc -b         # TypeScript 类型检查
-npm run lint       # oxlint 代码检查
-npx tauri build    # 构建发布版本
-```
+| 平台 | 安装包 | 安装方式 |
+| --- | --- | --- |
+| Windows | `.exe` / `.msi` | 运行安装程序，按提示完成安装 |
+| Linux | `.deb` | 使用系统软件安装器或包管理器安装 |
+| macOS | `.dmg` | 打开磁盘映像，将 Mercury 拖入“应用程序” |
 
-### 构建产物
+具体可用平台、处理器架构与安装包以对应版本附件为准。
 
-```
-src-tauri/target/release/
-├── mercury.exe                              (49 MB)
-└── bundle/
-    ├── nsis/Mercury_0.4.0_x64-setup.exe     (11 MB)
-    └── msi/Mercury_0.4.0_x64_en-US.msi      (16 MB)
-```
+Windows 运行依赖 WebView2，Linux 依赖 WebKitGTK 4.1 / GTK3；macOS 配置的最低系统版本为 12.0，实际兼容性以发布包为准。
 
----
+## 开始使用
 
-## 使用指南
+### 1. 添加订阅
 
-### AI 功能配置
+在侧边栏的订阅源区域选择添加订阅，输入 Feed 地址；已有订阅列表时，可直接导入 OPML 文件。完成同步后，选择文章开始阅读。
 
-AI 功能（摘要/翻译/标签）需要配置 OpenAI 兼容 API Key：
+导入时会检查订阅源并尝试获取文章，首次失败后自动重试一次；最终失败的条目不会作为新订阅留在侧边栏。网站限流、公共 RSSHub 实例限制或源站不可用时，可检查地址与网络后重试。
 
-1. 点击侧边栏 **Settings** → **Providers** → **Add Provider**
-2. 填写 Provider 名称、Base URL（如 `https://api.openai.com/v1`）、API Key
-3. 切换到 **Models** 标签，选择 Provider 后添加 Model（如 `gpt-4o-mini`）
-4. 切换到 **Profiles** 标签，为每种任务类型选择模型和目标语言
-5. 不配置 AI 也可正常使用所有非 AI 功能
+### 2. 配置 AI（可选）
 
-### 阅读器面板
+1. 打开 **设置 → 服务商**，添加服务商名称、Base URL 和 API Key。
+2. 在 **模型** 中选择服务商，添加其支持的模型标识，并使用测试功能检查连接。
+3. 在 **任务配置** 中，为摘要、翻译和标签选择模型及默认选项。
+4. 打开文章使用摘要或翻译，或进入 **全文搜索 / 主题追踪** 使用 AI 检索与简报。
 
-阅读器顶部工具栏提供五个面板切换按钮：Reader、Notes、Summary、Translation、Tags。点击对应按钮即可打开/收起侧面板。所有面板宽度可通过拖拽分隔条自由调整。
+Base URL 填写接口的基础地址，应用会追加 `/chat/completions`。例如，若完整请求地址为 `https://example.com/v1/chat/completions`，这里填写 `https://example.com/v1`。
 
----
+本地模型同样需要提供兼容接口；地址、模型名称与鉴权要求以所用服务为准。主题检索与专题简报依赖结构化输出，模型的指令遵循能力、上下文长度和响应速度会影响结果。
 
-## 项目结构
+### 3. 建立自己的阅读方式
 
-```
-├── src/                          # React 前端
-│   ├── components/layout/        # AppShell, Sidebar, StatusBar, ResizeHandle
-│   ├── components/ui/            # shadcn/ui 组件 (Button, Dialog, Input 等)
-│   ├── features/
-│   │   ├── agent/components/     # AI Provider/Model/Profile/Prompt 配置 UI
-│   │   ├── entry/components/     # 条目列表
-│   │   ├── feed/components/      # Feed 管理, OPML 导入导出
-│   │   ├── reader/components/    # 阅读器, 摘要, 翻译, 笔记, 标签面板
-│   │   ├── tags/components/      # 标签库管理
-│   │   └── usage/components/     # Token 用量统计
-│   ├── hooks/                    # 面板拖拽
-│   ├── i18n/                     # en.json, zh-Hans.json
-│   ├── lib/                      # Tauri IPC 绑定, 工具函数
-│   ├── stores/                   # Zustand (主题, 语言)
-│   └── types/                    # TypeScript 类型定义
-├── src-tauri/                    # Rust 后端
-│   ├── src/
-│   │   ├── commands/             # 40+ Tauri IPC 命令
-│   │   ├── db/                   # 数据层 (连接池, 迁移, 模型, 7 个 store)
-│   │   ├── feed/                 # Feed 解析, 同步, OPML
-│   │   ├── reader/               # 内容管道, 主题 CSS
-│   │   ├── agent/                # AI 运行时, Provider, 模板引擎, 密钥存储
-│   │   ├── digest/               # Handlebars 导出模板
-│   │   └── utils/                # 路径工具
-│   └── resources/                # YAML Prompt 模板, HBS 导出模板, Bootstrap OPML
-├── package.json
-├── vite.config.ts
-└── tsconfig.json
-```
+- 想回顾文章：添加收藏、标签或 Markdown 笔记。
+- 想反复查看同类内容：在全文搜索中组合条件，保存为智能视图。
+- 想长期跟进话题：进入主题追踪，创建专题并在需要时生成更新简报。
+- 想整理到其他工具：使用文章文摘或专题的导出功能。
 
-### 数据库 Schema (17 表)
+## 数据与隐私
 
-**核心**：`feed`, `entry`, `content`, `content_html_cache`, `entry_note`
-**标签系统**：`tag`, `tag_alias`, `entry_tag`
-**AI 配置**：`agent_provider_profile`, `agent_model_profile`, `agent_profile`
-**AI 运行时**：`agent_task_run`, `llm_usage_event`
-**翻译**：`translation_result`, `translation_segment`
-**摘要**：`summary_result`
-**系统**：`settings`
+**本地保存，按功能联网。** 应用无需账户，数据库 `mercury.db` 位于系统分配的应用数据目录中。
 
----
+| 操作 | 联网与数据范围 |
+| --- | --- |
+| 订阅同步与正文获取 | 访问对应订阅源、文章网站；加载远程图片等资源也可能联网 |
+| 普通搜索、笔记和手动标签 | 在本地处理，无需 AI 服务 |
+| AI 摘要、翻译、标签与专题简报 | 将任务所需的文章资料、提示词等发送到你配置的模型服务 |
+| AI 主题检索 | 发送查询与相关元数据，以及候选文章的标题、摘要和已有正文；仅明确请求检索笔记或选中笔记字段时发送笔记 |
 
-## 技术栈明细
+使用云端模型时，相关数据由所选服务商按其规则处理，费用由该服务商计收。使用本地模型时，请确认接口实际指向本机或你信任的服务。
 
-### Rust 后端
+API Key 当前以 **XOR 混淆文件**保存在本机，尚未接入系统钥匙串或强加密存储。分享日志、备份或问题附件时，请移除凭据与私人阅读数据。
 
-| 库 | 用途 |
-|----|------|
-| tauri 2 | 桌面运行时 |
-| rusqlite + deadpool-sqlite | SQLite (WAL, 连接池 8) |
-| feed-rs | RSS/Atom/JSON Feed 解析 |
-| opml | OPML 1.0/1.1/2.0 |
-| decruft + htmd + comrak | 内容提取 → Markdown → GFM 渲染 |
-| reqwest + futures-util | HTTP 客户端 + SSE 流式 |
-| handlebars + serde_yaml | 导出模板 + Prompt 模板 |
-| tokio | 异步运行时 |
-| sha2 + hex | 翻译缓存哈希 |
+OPML 只包含订阅列表，不是完整数据备份。如需备份全部阅读资料，请先完全退出应用，再复制应用数据目录；其中可能包含凭据，应妥善保存。
 
-### React 前端
+## 反馈与贡献
 
-| 库 | 用途 |
-|----|------|
-| React 19 + TypeScript 6 | UI 框架 |
-| Tailwind CSS v4 | 样式 |
-| shadcn/ui + Lucide React | 组件库 + 图标 |
-| TanStack Query 5 | 服务端状态缓存 |
-| Zustand 5 | 全局状态 (主题/语言) |
-| i18next + react-i18next | 国际化 |
-| @mozilla/readability | 前端内容提取回退 |
-| marked | Markdown 渲染 |
+欢迎通过 [GitHub Issues](https://github.com/Selvori/mercury4win/issues) 提交问题与建议，或提交 Pull Request 改进代码、文档和跨平台体验。
 
-### 项目规模
+反馈问题时，请附上应用版本、操作系统、复现步骤、预期与实际结果。AI 相关问题可补充服务商接口类型、模型标识和脱敏错误信息；订阅问题可提供可公开访问的 Feed 地址。
 
-| 指标 | 数值 |
-|------|------|
-| Rust 源文件 | 47 |
-| TypeScript/TSX 源文件 | 44 |
-| 数据库表 | 17 |
-| Tauri IPC 命令 | 40+ |
-| 发布二进制 | 49 MB |
-| 安装包 | ~11 MB (NSIS) / ~16 MB (MSI) |
+## 许可与致谢
 
----
+项目声明采用 **MIT** 许可证。
 
-## License
+感谢 [neolee/mercury](https://github.com/neolee/mercury) 提供的产品理念、功能设计与业务语义参考。原项目采用 Swift / SwiftUI，专注原生 macOS 体验；本项目使用 Tauri / Rust / React 实现多平台版本，并继续发展本地搜索、智能视图与主题追踪功能。
 
-MIT
+也感谢 Tauri、React、SQLite 及所有依赖项目的维护者。

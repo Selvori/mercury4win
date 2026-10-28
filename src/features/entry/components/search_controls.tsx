@@ -62,10 +62,6 @@ export function SearchControls({ compact = false, on_edit_filters, filter, curre
   const busy = save.isPending || remove.isPending;
   const active_tags = filter.tag_ids ?? [];
   const filter_error = search_filter_error(ai_active ? { ...filter, search: null } : filter);
-  const describe_scope = (understood: EntryFilter) => [understood.feed_id != null ? feeds.data?.find((f) => f.id === understood.feed_id)?.title ?? t("search.source") : t("search.allFeeds"),
-    understood.recent_days ? t("search.lastDays", { count: understood.recent_days }) : null, understood.starred_only ? t("search.starredOnly") : null,
-    understood.is_read != null ? t(understood.is_read ? "search.read" : "search.unread") : null, understood.has_note != null ? t(understood.has_note ? "search.hasNote" : "search.noNote") : null,
-    understood.date_from, understood.date_to, t(`search.field_${understood.search_field ?? "all"}`), t(`search.${understood.sort ?? "relevance"}`), ...(understood.tag_ids ?? []).map((id) => tags.data?.find((tag) => tag.id === id)?.name ?? `#${id}`)].filter(Boolean).join(" · ");
   const extras = Boolean(filter.is_read != null || filter.unread_only || filter.starred_only || filter.has_note != null || active_tags.length || filter.feed_id != null || filter.recent_days || filter.date_from || filter.date_to || filter.exclude_title || (filter.search_field && filter.search_field !== "all"));
   return <div className="max-h-[50%] shrink-0 space-y-2 overflow-y-auto border-b border-border p-2 text-foreground">
     <div className="flex items-center gap-2 text-xs font-medium">
@@ -77,11 +73,11 @@ export function SearchControls({ compact = false, on_edit_filters, filter, curre
         onClick={() => { set_name(saved_view?.name ?? ""); save.reset(); remove.reset(); set_editing(true); }}><BookmarkPlus className="h-4 w-4" /></Button>
     </div>
     {!compact && <>
-    <Button size="sm" variant={natural ? "secondary" : "ghost"} aria-expanded={natural} aria-controls={`${id}-natural`} onClick={() => set_natural(!natural)}>{t("search.natural.title")}</Button>
-    {ai_active && <div id={`${id}-natural`}><NaturalFilter filter={filter} scope={ai_scope} compact={!natural} describe_scope={describe_scope}
-      on_restore={on_change}
-      on_apply={(scope) => { set_saved_message(false); on_ai_scope?.(scope); }} on_exit={() => { set_natural(false); on_ai_scope?.(null); }} /></div>}
-    {ai_active && <p className="text-[11px] text-muted-foreground">{t("search.natural.cannotSave")}</p>}
+    <Button size="sm" variant="outline" className={ai_active ? "border-primary bg-accent text-accent-foreground" : undefined} aria-expanded={natural} aria-controls={`${id}-natural`}
+      onClick={() => { set_natural(!natural); if (natural) on_ai_scope?.(null); }}>{t("search.natural.title")}</Button>
+    {ai_active && <div id={`${id}-natural`}><NaturalFilter filter={filter} scope={ai_scope} compact={!natural}
+      on_apply={(scope) => { set_saved_message(false); on_ai_scope?.(scope); }} /></div>}
+    {!ai_active && <>
     {!ai_active && <Input id={`${id}-search`} type="search" value={filter.search ?? ""} maxLength={1000}
       placeholder={t("search.placeholder")} onChange={(e) => patch({ search: e.target.value })} />}
     {filter_error && <p role="alert" className="text-xs text-destructive">{t(filter_error)}</p>}
@@ -100,7 +96,7 @@ export function SearchControls({ compact = false, on_edit_filters, filter, curre
     </div>
     <div className="flex items-center gap-2 text-xs">
       <label htmlFor={`${id}-sort`} className="shrink-0">{t("search.sort")}</label>
-      <select id={`${id}-sort`} className={select_style} value={filter.sort ?? ai_scope?.filter.sort ?? (ai_active ? "relevance" : "newest")} onChange={(e) => patch({ sort: e.target.value as EntryFilter["sort"] })}>
+      <select id={`${id}-sort`} className={select_style} value={filter.sort ?? "newest"} onChange={(e) => patch({ sort: e.target.value as EntryFilter["sort"] })}>
         <option value="relevance">{t("search.relevance")}</option><option value="newest">{t("search.newest")}</option><option value="oldest">{t("search.oldest")}</option>
       </select>
     </div>
@@ -169,6 +165,7 @@ export function SearchControls({ compact = false, on_edit_filters, filter, curre
     </div>}
     {!advanced && !ai_active && <p className="text-[11px] leading-relaxed text-muted-foreground">{t("search.coverageShort")}</p>}
     {saved_message && <p role="status" className="text-xs">{t("search.saved")}</p>}
+    </>}
     </>}
     <Dialog open={editing} onOpenChange={(open) => { if (!busy) set_editing(open); }} aria_label={t("search.saveView")}>
       <DialogContent className="min-h-0 overflow-y-auto">

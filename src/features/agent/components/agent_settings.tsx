@@ -106,7 +106,7 @@ function ProvidersTab({ open_report }: { open_report: OpenReport }) {
   const [new_name, set_new_name] = useState("");
   const [new_url, set_new_url] = useState("");
   const [new_key, set_new_key] = useState("");
-  const [test_model, set_test_model] = useState("gpt-4o-mini");
+  const [test_model, set_test_model] = useState("deepseek-flash");
   const [feedback, set_feedback] = useState<{ kind: "success" | "error"; message: string } | null>(null);
 
   const { data: providers, isLoading } = useQuery({
@@ -159,7 +159,7 @@ function ProvidersTab({ open_report }: { open_report: OpenReport }) {
     set_new_name("");
     set_new_url("");
     set_new_key("");
-    set_test_model("gpt-4o-mini");
+    set_test_model("deepseek-flash");
     set_feedback(null);
   }
 
@@ -168,7 +168,7 @@ function ProvidersTab({ open_report }: { open_report: OpenReport }) {
     set_new_name(provider.display_name || provider.name);
     set_new_url(provider.base_url);
     set_new_key(""); // Don't show existing key
-    set_test_model("gpt-4o-mini");
+    set_test_model("deepseek-flash");
     set_feedback(null);
     set_show_add(true);
   }

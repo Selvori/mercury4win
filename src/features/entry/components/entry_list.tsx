@@ -204,16 +204,16 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
         on_change={(value) => change_filter(() => { set_options(value); set_digest_selection(null); })}
         on_saved={on_view_saved} on_deleted={on_view_deleted} />}
       {ai_scope && data?.pages.some((page) => page.ai_stale) && <p role="alert" className="shrink-0 border-b border-border p-2 text-xs text-destructive">{t("search.natural.staleResults")}</p>}
-      <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border px-2 py-1">
+      {(!search_mode || filtering || isFetching && !isFetchingNextPage) && <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border px-2 py-1">
         {!search_mode && !saved_view && <>
           <Button size="sm" variant={filter.unread_only ? "secondary" : "ghost"} aria-pressed={filter.unread_only ?? false}
             onClick={() => change_filter(() => set_options((previous) => ({ ...previous, unread_only: !filter.unread_only })))}>{t("entry.unreadOnly")}</Button>
           {!!tag_ids?.length && <Button size="sm" variant="outline" aria-label={t("entry.tagMode")}
             onClick={() => change_filter(() => set_options((previous) => ({ ...previous, tag_mode: filter.tag_mode === "all" ? "any" : "all" })))}>{t(filter.tag_mode === "all" ? "entry.tagAll" : "entry.tagAny")}</Button>}
         </>}
-        <Button size="sm" variant="ghost" disabled={selecting || refresh_mutation.isPending} onClick={() => refresh_mutation.mutate()}>{t("entry.refresh")}</Button>
+        {!search_mode && <Button size="sm" variant="ghost" disabled={selecting || refresh_mutation.isPending} onClick={() => refresh_mutation.mutate()}>{t("entry.refresh")}</Button>}
         <span role="status" className="text-xs text-muted-foreground">{filtering || isFetching && !isFetchingNextPage ? t("search.searching") : ""}</span>
-      </div>
+      </div>}
       <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border p-2">
         <span className="flex-1 text-xs text-muted-foreground">
           {t("entry.entriesCount", { count: data?.pages[0]?.total ?? 0 })}
@@ -245,7 +245,6 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
           {t("entry.markAllRead")}
         </Button>
       </div>
-      {uses_search_filter && <p className="shrink-0 border-b border-border px-3 py-1 text-[11px] text-muted-foreground">{t("search.bulkHint")}</p>}
       {selecting && <p className="px-3 py-2 text-xs text-muted-foreground">{t("digest.selectionHint")}</p>}
 
       {(mark_read_mutation.isError || mark_all_read_mutation.isError || star_mutation.isError || delete_mutation.isError || refresh_mutation.isError) &&
@@ -296,15 +295,13 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
                   )}
                 </div>
                 {uses_search_filter && search_info.has(entry.id) && <div className="mt-1 space-y-1 text-xs">
-                  <p className="text-muted-foreground break-all">{search_info.get(entry.id)!.feed_title} · {t(search_info.get(entry.id)!.body_available ? "search.bodyAvailable" : "search.bodyMissing")}</p>
+                  <p className="text-muted-foreground break-all">{search_info.get(entry.id)!.feed_title}</p>
                   {search_info.get(entry.id)?.ai && <div className="space-y-1 text-muted-foreground">
                     {search_info.get(entry.id)!.ai!.basis?.startsWith("keyword_") ? <>
                       <p>{t("search.natural.keywordPending")}</p>
-                      <p className="break-words">{t("search.natural.keywordReason", { terms: search_info.get(entry.id)!.ai!.reason })}</p>
                       <p className="line-clamp-3 break-words">{search_info.get(entry.id)!.ai!.quote}</p>
                     </> : <>
                       <p>{t("search.natural.reason", { reason: search_info.get(entry.id)!.ai!.reason })}</p>
-                      {search_info.get(entry.id)!.ai!.basis && <p>{t(`search.natural.basis_${search_info.get(entry.id)!.ai!.basis}`, { count: search_info.get(entry.id)!.ai!.parts ?? 0 })}</p>}
                       {search_info.get(entry.id)!.ai!.limited && <p>{t("search.natural.limited")}</p>}
                       <p className="line-clamp-3 break-words">“{search_info.get(entry.id)!.ai!.quote}”</p>
                     </>}
