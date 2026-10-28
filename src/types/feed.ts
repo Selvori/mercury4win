@@ -29,7 +29,7 @@ export interface ImportResult {
 }
 
 export interface ImportProgress {
-  status: "start" | "processing" | "completed" | "added" | "skipped" | "error" | "done";
+  status: "start" | "processing" | "retrying" | "completed" | "added" | "skipped" | "error" | "done";
   feed_url: string;
   title: string | null;
   error: string | null;

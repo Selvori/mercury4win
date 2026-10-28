@@ -148,77 +148,90 @@ pub async fn bulk_upsert_entries(
         .await
         .map_err(|e| e.to_string())?
         .interact(move |conn| {
-            let mut new_count = 0usize;
-            let mut updated_count = 0usize;
-
             let tx = conn.unchecked_transaction().map_err(|e| e.to_string())?;
+            let result = upsert_entries_in_transaction(&tx, feed_id, &entries)?;
+            tx.commit().map_err(|e| e.to_string())?;
+            Ok(result)
+        })
+        .await
+        .map_err(|e| e.to_string())?
+}
 
-            for e in &entries {
-                let exists: Option<i64> = if !e.guid.is_empty() {
-                    match tx.query_row(
-                        "SELECT id FROM entry WHERE feed_id = ?1 AND guid = ?2",
-                        params![feed_id, e.guid],
-                        |row| row.get(0),
-                    ) {
-                        Ok(id) => Some(id),
-                        Err(rusqlite::Error::QueryReturnedNoRows) => None,
-                        Err(e) => return Err(e.to_string()),
-                    }
-                } else if let Some(ref url) = e.url {
-                    match tx.query_row(
-                        "SELECT id FROM entry WHERE feed_id = ?1 AND url = ?2",
-                        params![feed_id, url],
-                        |row| row.get(0),
-                    ) {
-                        Ok(id) => Some(id),
-                        Err(rusqlite::Error::QueryReturnedNoRows) => None,
-                        Err(e) => return Err(e.to_string()),
-                    }
-                } else {
-                    None
-                };
+pub(crate) fn upsert_entries_in_transaction(
+    tx: &rusqlite::Transaction<'_>,
+    feed_id: i64,
+    entries: &[RawEntryData],
+) -> Result<(usize, usize), String> {
+    let mut new_count = 0usize;
+    let mut updated_count = 0usize;
 
-                if let Some(existing_id) = exists {
-                    // Only invalidate on source changes. Repeated sync must not
-                    // discard a downloaded full article or any user/AI data.
-                    let source_changed: bool = tx.query_row(
-                        "SELECT feed_content IS NOT ?1 OR feed_content_type IS NOT ?2
+    for e in entries {
+        let exists: Option<i64> = if !e.guid.is_empty() {
+            match tx.query_row(
+                "SELECT id FROM entry WHERE feed_id = ?1 AND guid = ?2",
+                params![feed_id, e.guid],
+                |row| row.get(0),
+            ) {
+                Ok(id) => Some(id),
+                Err(rusqlite::Error::QueryReturnedNoRows) => None,
+                Err(e) => return Err(e.to_string()),
+            }
+        } else if let Some(ref url) = e.url {
+            match tx.query_row(
+                "SELECT id FROM entry WHERE feed_id = ?1 AND url = ?2",
+                params![feed_id, url],
+                |row| row.get(0),
+            ) {
+                Ok(id) => Some(id),
+                Err(rusqlite::Error::QueryReturnedNoRows) => None,
+                Err(e) => return Err(e.to_string()),
+            }
+        } else {
+            None
+        };
+
+        if let Some(existing_id) = exists {
+            // Only invalidate on source changes. Repeated sync must not
+            // discard a downloaded full article or any user/AI data.
+            let source_changed: bool = tx
+                .query_row(
+                    "SELECT feed_content IS NOT ?1 OR feed_content_type IS NOT ?2
                          OR url IS NOT COALESCE(?3, url) FROM entry WHERE id = ?4",
-                        params![e.feed_content, e.feed_content_type, e.url, existing_id],
-                        |row| row.get(0),
-                    ).map_err(|e| e.to_string())?;
-                    if source_changed {
-                        tx.execute("DELETE FROM content_html_cache WHERE entry_id = ?1", [existing_id])
-                            .map_err(|e| e.to_string())?;
-                        tx.execute("DELETE FROM content WHERE entry_id = ?1", [existing_id])
-                            .map_err(|e| e.to_string())?;
-                    }
-                    tx.execute(
+                    params![e.feed_content, e.feed_content_type, e.url, existing_id],
+                    |row| row.get(0),
+                )
+                .map_err(|e| e.to_string())?;
+            if source_changed {
+                tx.execute(
+                    "DELETE FROM content_html_cache WHERE entry_id = ?1",
+                    [existing_id],
+                )
+                .map_err(|e| e.to_string())?;
+                tx.execute("DELETE FROM content WHERE entry_id = ?1", [existing_id])
+                    .map_err(|e| e.to_string())?;
+            }
+            tx.execute(
                         "UPDATE entry SET title = ?1, author = ?2, published_at = ?3,
                          summary = ?4, url = COALESCE(?5, url), feed_content = ?7, feed_content_type = ?8
                          WHERE id = ?6",
                         params![e.title, e.author, e.published_at, e.summary, e.url, existing_id, e.feed_content, e.feed_content_type],
                     )
                     .map_err(|e| e.to_string())?;
-                    updated_count += 1;
-                } else {
-                    let affected = tx.execute(
+            updated_count += 1;
+        } else {
+            let affected = tx.execute(
                         "INSERT OR IGNORE INTO entry (feed_id, guid, url, title, author, published_at, summary, feed_content, feed_content_type)
                          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
                         params![feed_id, e.guid, e.url, e.title, e.author, e.published_at, e.summary, e.feed_content, e.feed_content_type],
                     )
                     .map_err(|e| e.to_string())?;
-                    if affected > 0 {
-                        new_count += 1;
-                    }
-                }
+            if affected > 0 {
+                new_count += 1;
             }
+        }
+    }
 
-            tx.commit().map_err(|e| e.to_string())?;
-            Ok((new_count, updated_count))
-        })
-        .await
-        .map_err(|e| e.to_string())?
+    Ok((new_count, updated_count))
 }
 
 pub struct RawEntryData {

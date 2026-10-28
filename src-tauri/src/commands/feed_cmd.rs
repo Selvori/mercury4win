@@ -144,46 +144,7 @@ pub async fn import_opml(
     let path = std::path::Path::new(&file_path);
     let entries = opml_import::parse_opml_file(path)?;
 
-    let mut added = 0usize;
-    let mut skipped = 0usize;
-    let mut errors = Vec::new();
-
-    for entry in entries {
-        match feed_store::insert_feed(
-            &pool,
-            &entry.feed_url,
-            Some(&entry.title),
-            entry.site_url.as_deref(),
-        )
-        .await
-        {
-            Ok((feed, was_inserted)) => {
-                if was_inserted {
-                    // New feed: try initial sync
-                    if let Err(e) = initial_sync_result(
-                        use_cases::refresh_single(&pool, &client.0, feed.id).await,
-                    ) {
-                        errors.push(format!("{}: {}", entry.feed_url, e));
-                    }
-                    added += 1;
-                } else {
-                    // Duplicate feed: skip
-                    skipped += 1;
-                }
-            }
-            Err(e) => {
-                // Database error
-                errors.push(format!("{}: {}", entry.feed_url, e));
-                skipped += 1;
-            }
-        }
-    }
-
-    Ok(ImportResult {
-        feeds_added: added,
-        feeds_skipped: skipped,
-        errors,
-    })
+    crate::feed::import_service::import_entries(&pool, &client.0, entries, |_| {}).await
 }
 
 #[tauri::command]
@@ -221,106 +182,14 @@ pub async fn import_opml_stream(
 ) -> Result<(), String> {
     let path = std::path::Path::new(&file_path);
     let entries = opml_import::parse_opml_file(path)?;
-    let total = entries.len();
-
-    let _ = on_progress.send(ImportProgress {
-        status: "start".into(),
-        feed_url: String::new(),
-        title: None,
-        error: None,
-        current: 0,
-        total,
-    });
-
-    for (idx, entry) in entries.iter().enumerate() {
-        let current = idx + 1;
-
-        // Send "processing" event
-        let _ = on_progress.send(ImportProgress {
-            status: "processing".into(),
-            feed_url: entry.feed_url.clone(),
-            title: Some(entry.title.clone()),
-            error: None,
-            current,
-            total,
-        });
-
-        // Try to insert + sync
-        match feed_store::insert_feed(
-            &pool,
-            &entry.feed_url,
-            Some(&entry.title),
-            entry.site_url.as_deref(),
-        )
-        .await
-        {
-            Ok((feed, was_inserted)) => {
-                if was_inserted {
-                    // New feed: try initial sync
-                    match initial_sync_result(
-                        use_cases::refresh_single(&pool, &client.0, feed.id).await,
-                    ) {
-                        Ok(_) => {
-                            let _ = on_progress.send(ImportProgress {
-                                status: "added".into(),
-                                feed_url: entry.feed_url.clone(),
-                                title: Some(entry.title.clone()),
-                                error: None,
-                                current,
-                                total,
-                            });
-                        }
-                        Err(e) => {
-                            // Added but sync failed
-                            let _ = on_progress.send(ImportProgress {
-                                status: "error".into(),
-                                feed_url: entry.feed_url.clone(),
-                                title: Some(entry.title.clone()),
-                                error: Some(format!("Added but initial sync failed: {}", e)),
-                                current,
-                                total,
-                            });
-                        }
-                    }
-                } else {
-                    // Duplicate feed: skip
-                    let _ = on_progress.send(ImportProgress {
-                        status: "skipped".into(),
-                        feed_url: entry.feed_url.clone(),
-                        title: Some(entry.title.clone()),
-                        error: Some("Feed already exists".into()),
-                        current,
-                        total,
-                    });
-                }
-            }
-            Err(e) => {
-                // Database error
-                let _ = on_progress.send(ImportProgress {
-                    status: "error".into(),
-                    feed_url: entry.feed_url.clone(),
-                    title: Some(entry.title.clone()),
-                    error: Some(format!("Database error: {}", e)),
-                    current,
-                    total,
-                });
-            }
-        }
-    }
-
-    // Final "done" event
-    let _ = on_progress.send(ImportProgress {
-        status: "done".into(),
-        feed_url: String::new(),
-        title: None,
-        error: None,
-        current: total,
-        total,
-    });
-
+    crate::feed::import_service::import_entries(&pool, &client.0, entries, |progress| {
+        let _ = on_progress.send(progress);
+    })
+    .await?;
     Ok(())
 }
 
+#[cfg(test)]
 fn initial_sync_result(result: Result<SyncResult, String>) -> Result<(), String> {
     result.and_then(|result| match result.error {
         Some(error) => Err(error),

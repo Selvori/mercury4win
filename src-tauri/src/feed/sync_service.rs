@@ -3,7 +3,7 @@
 
 use crate::db::models::SyncResult;
 use crate::db::{entry_store, feed_store};
-use crate::feed::parser::parse_feed_bytes;
+use crate::feed::fetch::fetch_feed;
 use deadpool_sqlite::Pool;
 
 /// Sync a single feed: fetch, parse, upsert entries.
@@ -13,32 +13,7 @@ pub async fn sync_feed(
     feed_id: i64,
     feed_url: &str,
 ) -> Result<SyncResult, String> {
-    let response = http_client
-        .get(feed_url)
-        .header("User-Agent", "Mercury/0.1 (RSS Reader)")
-        .send()
-        .await
-        .map_err(|e| format!("HTTP error: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!("Feed HTTP error: {}", response.status()));
-    }
-
-    let bytes = response
-        .bytes()
-        .await
-        .map_err(|e| format!("Read error: {}", e))?;
-
-    if bytes.is_empty() {
-        return Ok(SyncResult {
-            feed_id,
-            new_entries: 0,
-            updated_entries: 0,
-            error: Some("Empty response body".into()),
-        });
-    }
-
-    let parsed = parse_feed_bytes(&bytes, Some(feed_url))?;
+    let (parsed, _) = fetch_feed(http_client, feed_url).await?;
 
     // Update feed metadata
     feed_store::update_feed_meta(

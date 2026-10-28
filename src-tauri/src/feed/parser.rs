@@ -24,6 +24,7 @@ pub fn parse_feed_bytes(bytes: &[u8], feed_url: Option<&str>) -> Result<ParsedFe
         .links
         .iter()
         .find(|l| l.rel.as_deref() == Some("alternate"))
+        .or_else(|| feed.links.iter().find(|l| l.rel.is_none()))
         .map(|l| l.href.clone())
         .and_then(|href| resolve_url(&href, base_url.as_ref()));
 

@@ -445,6 +445,8 @@
     "deleteNamed": "删除订阅：{{name}}"
   },
   "opml": {
+    "retrying": "首次抓取失败，正在重试一次…",
+    "duplicateFeed": "该订阅源已存在，已跳过重复导入。",
     "importTitle": "导入 OPML",
     "importDescription": "选择 OPML 文件以从其他 RSS 阅读器导入订阅源。",
     "selectFile": "选择文件",

@@ -1,0 +1,74 @@
+FIRST IMPORT
+导入 OPML
+导入完成
+5 / 5
+已添加: 2
+已跳过: 2
+失败: 1
+Retry fixture
+Mirror fixture
+该订阅源已存在，已跳过重复导入。
+Failed fixture
+Feed HTTP error: 503 Service Unavailable
+Next fixture
+Repeated URL
+该订阅源已存在，已跳过重复导入。
+关闭
+SIDEBAR
+Mercury
+订阅源
+标签
+主题追踪
+全文搜索
+收藏
+智能视图
+在全文搜索中设置条件后，点击书签按钮保存。
+添加订阅源
+同步全部
+导入 OPML
+导出 OPML
+全部订阅源
+6
+Next Feed
+3
+删除订阅：Next Feed
+Retry Feed
+3
+删除订阅：Retry Feed
+设置
+切换外观（当前：跟随系统）
+￼
+选择一个订阅源或标签来查看文章
+￼
+Mercury
+选择一个订阅源和文章开始阅读
+就绪
+RESTART
+Mercury
+订阅源
+标签
+主题追踪
+全文搜索
+收藏
+智能视图
+在全文搜索中设置条件后，点击书签按钮保存。
+添加订阅源
+同步全部
+导入 OPML
+导出 OPML
+全部订阅源
+6
+Next Feed
+3
+删除订阅：Next Feed
+Retry Feed
+3
+删除订阅：Retry Feed
+设置
+切换外观（当前：跟随系统）
+￼
+选择一个订阅源或标签来查看文章
+￼
+Mercury
+选择一个订阅源和文章开始阅读
+就绪

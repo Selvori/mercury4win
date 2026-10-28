@@ -647,3 +647,27 @@
 - 按用户要求提交当前仓库工作；确认G:\sth_interesting\mercury4win、PowerShell7.6.7、Git根、main分支及81f7b2e基线，保留已有改动与外部RSS整理记录。提交范围包含自然语言筛选、分阶段搜索、最新100篇和关键词先展示、相应测试及真实/隔离验证记录，以及窗口关闭操作约定。
 - 提交前核对142个变更/新增文本文件（约5.2MB），无构建产物、临时目录、数据库或凭据文件；凭据模式扫描仅命中已存在的兼容性假密钥测试。核对diff、UTF-8及JSON/JSONL结构；未修改产品代码或重复运行上轮已完成的编译/测试，实际通过与历史失败继续以原验证记录为准。
 - 此次执行本地Git提交；不推送远程、不创建发布标签或版本。
+
+## 2026-10-29 Top20 OPML 导入失败与空列表诊断
+
+- 99a6bb7干净基线，Windows/PowerShell7.6.7；核对cwd/Shell/Git/status及STATUS/ISSUES、005验收证据和上游Feed说明。只读日常库这20个公共地址的feed元数据/聚合计数：全部存在，13有文章、7为空且last_fetched_at为null，未读取正文/笔记/凭据或写用户库。
+- 新增默认ignore/环境变量显式选择的Rust联网诊断，复用生产AppClient/User-Agent、OPML/Feed解析器、迁移/内存SQLite store与列表查询。20源HTTP实测13成功且逐源解析/入库/列表=日常可见计数；5个rsshub.app返回403及限制部分阅读器的说明、知乎精选200/0字节、酷壳跳HTTPS后522。13正常源均没有丢文章；无诊断40秒超时触发。
+- 静态发现先保存订阅后同步失败、重复导入跳过；全局刷新覆盖错误/列表刷新忽略嵌套错误、无持久失败原因，另生产HTTP无超时/串行导入。M4W-033/034登记待处理，生产逻辑未修复。逐源脱敏JSON/报告落docs/audits，公开响应快照仅忽略tmp；原OPML/固定F-001保持。
+- 联网诊断1项、已有005九项、导入错误一项、cargo check --locked及cargo fmt --check实际通过；测试编写最初SQLite错误转换及第二次output所有权编译失败，修正后通过。Python首次stdout乱码已核对环境/UTF-8文件正确并显式PYTHONIOENCODING确认，不改实际数据。未操作原生UI/调用AI/重跑无关全套/构建发布；源在线结果仅代表本机本次，不证明永久失效。详见[报告](audits/rss-top20-2026-10-29.md)。
+## 2026-10-29 重选前20个正常RSS源并替换OPML
+
+- 基线99a6bb7及保留上轮诊断改动，Windows/PowerShell7.6.7；重新获取原top-rss-list main README并按原顺序探测前40条，复用既有显式联网Rust测试/生产AppClient、OPML/Feed解析器及隔离内存数据库。跳过非成功HTTP、空正文、HTML冒充Feed、超时与0文章；酷壳本轮恢复200/15篇但39.878秒且上轮522，按不稳定排除。保留同名不同URL，没有以“更新频率”排除可读旧博客。
+- 按原序取前20个通过者，最后一条为原列表第36条“程序员的喵”，再用生成OPML及相同生产路径联网复验：20/20抓取、非空文章解析、入库/列表通过（BMPI144篇入库、首页100条属正常分页）。两轮联网诊断各1项通过，第一轮含明确记录的失败/1超时，不把40源都记为可用；未改Rust/应用/用户库，未操作UI或调用AI。
+- 新文件 C:\Users\Selvori\Desktop\opml\top-rss-list-working20.opml ，UTF-8无BOM/OPML2.0，20唯一xmlUrl与选定顺序/复验地址逐项一致。保存并回读新文件后，核对旧文件完整路径及父目录，仅删除用户要求的 top-rss-list-top20.opml；同目录其他文件和固定F-001保持。结果仅代表本机本次在线可用性，未执行原生导入。逐源证据见[JSON](audits/rss-working20-2026-10-29.json)，原始公开响应仅忽略tmp。
+## 2026-10-29 RSS同源去重、一次重试与失败不留侧栏
+
+- 基线99a6bb7及保留上轮RSS诊断/文件筛选未提交改动；Windows/PowerShell7.6.7。读STATUS/ISSUES、005证据及上游导入实现，用户截图为同源不同地址；新增import_service/fetch/identity，普通/流式OPML及手动添加共用：失败自动再抓一次，Feed每请求30秒上限，成功后订阅/文章/同步时间事务提交，最终失败无新feed；旧无文章/无成功同步占位仅在重新导入时恢复或条件清理。entry_store仅抽取原upsert事务内部函数，Schema10不变，AI共享client不改。
+- URL归一保留路径/查询/端口/账户；同名/相同站点或旧站点缺省+至少3文章链接/小窗口80%重合才判不同地址别名。修复RSS无rel站点链接，重定向最终URL解析及OPML站点缺省回退。前端按current更新防重复URL计数覆盖，新增双语retrying/duplicate说明，690对资源同步。历史有文章重复源未自动合并/删除，不写日常库或访问凭据。
+- 新Rust10项通过+1项实际公开快照显式通过（阮一峰/小众软件四地址只存两源），原005九项/006四项/011四项通过；新生产DOM中英4组、690对资源、npm lint/build、cargo check/fmt及diff检查通过。新测试最初usize编译失败后修正，2项实际失败揭示RSS站点缺省；修复后通过。DOM初版act警告修正。fmt初次模块顺序、最后诊断源码格式失败后仅定向格式化，未全仓重排。前端既有大chunk提示保留，无完整library/跨平台回归。
+- 使用computer-use技能，在新identifier com.mercury4win.importcheck20261029的空库通过真实文件框导入5条合成源，实际捕获重试提示，添加2/跳过2/失败1；loopback6次，503→200、mirror200、fail503两次、good200，失败无feed行且侧栏只有两源各3篇，外键正常，Alt+F4退出重启保持。无公网新增请求/AI调用；原生30秒超时未等满，仅100ms相同生产helper受控回归。033导入子路径完成但全局错误展示仍处理中，034待验证，035有限验收关闭；D017记录用户约定。
+- 初次构建被日常进程持有文件报os32；CU确认空闲无编辑后正常退出。cargo rustc额外文件产物在deps，最初误用根新exe路径报ShellExecute2，后误启旧根exe看到devUrl拒绝连接，正常关闭再以实际产物启动正确隔离窗口。UIA-only缺geometry、文件框索引缓存不可用后重新观察，使用截图/文件名焦点恢复，无反复关闭点击或强杀。隔离窗口已正常退出，18764服务停止；默认identifier完整debug/no-bundle/locked/offline构建成功，已启动根target新版日常Mercury（tauri.localhost），保留日常数据供用户复测。
+- 报告/脱敏事实/UIA见[原生与回归](audits/feed-import-2026-10-29.md)及[复现入口](../tests/feed_import/README.md)。未提交/推送/发布，未修改桌面OPML或固定F001；既有重复记录仍可见，历史合并不属于本次防重导入修复。
+## 2026-10-29 保存RSS导入修复到Git
+
+- 用户明确要求提交Git。核对实际目录/PowerShell/Git根及main状态，提交范围为本轮RSS逐源诊断、正常源筛选记录、导入去重/一次重试/失败不留侧栏的实现、测试和验收文档；保留现有历史记录，忽略目录中的响应快照/构建产物及桌面OPML不加入仓库。
+- 提交前检查diff、UTF-8和JSON结构、暂存文件清单及git diff --cached --check；此前28项Rust/4组DOM、lint/build/check/fmt及原生受控导入/重启验证基线沿用，本提交整理不重复执行整套测试。仅本地提交，不推送或创建发布标签。

@@ -1,45 +1,24 @@
 // mercury4win/src-tauri/feed/use_cases.rs
 // Feed CRUD use cases — thin wrappers around db stores
 
+use crate::db::feed_store;
 use crate::db::models::{Feed, SyncResult};
-use crate::db::{entry_store, feed_store};
 use crate::feed::sync_service;
 use deadpool_sqlite::Pool;
 
 /// Add a new feed, fetch its metadata, and return the feed.
 pub async fn subscribe(pool: &Pool, client: &reqwest::Client, url: &str) -> Result<Feed, String> {
-    // Fetch the feed first to validate and get title
-    let response = client
-        .get(url)
-        .header("User-Agent", "Mercury/0.1 (RSS Reader)")
-        .send()
-        .await
-        .map_err(|e| format!("HTTP error: {}", e))?;
-
-    if !response.status().is_success() {
-        return Err(format!("Feed HTTP error: {}", response.status()));
-    }
-
-    let bytes = response
-        .bytes()
-        .await
-        .map_err(|e| format!("Read error: {}", e))?;
-
-    let parsed = crate::feed::parser::parse_feed_bytes(&bytes, Some(url))?;
-
-    let (feed, _was_inserted) = feed_store::insert_feed(
-        pool,
-        url,
-        parsed.title.as_deref(),
-        parsed.site_url.as_deref(),
-    )
-    .await?;
-
-    // Initial sync to populate entries
-    let _ = entry_store::bulk_upsert_entries(pool, feed.id, parsed.entries).await?;
-    feed_store::touch_feed_sync(pool, feed.id).await?;
-
-    Ok(feed)
+    let entry = super::opml_import::OpmlImportEntry {
+        title: url.to_owned(),
+        feed_url: url.to_owned(),
+        site_url: None,
+    };
+    let (id, _) =
+        super::import_service::import_one(pool, client, &entry, || {}, super::fetch::FEED_TIMEOUT)
+            .await?;
+    feed_store::get_feed(pool, id)
+        .await?
+        .ok_or_else(|| "Feed not found".into())
 }
 
 /// Refresh all feeds.

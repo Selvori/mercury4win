@@ -23,9 +23,10 @@ interface Props {
 }
 
 interface FeedProgress {
+  current: number;
   feed_url: string;
   title: string;
-  status: "processing" | "added" | "skipped" | "error";
+  status: "processing" | "retrying" | "added" | "skipped" | "error";
   error?: string;
 }
 
@@ -69,15 +70,20 @@ export function OpmlImport({ open, on_close }: Props) {
           set_progress_list((prev) => [
             ...prev,
             {
+              current: msg.current,
               feed_url: msg.feed_url,
               title: msg.title || msg.feed_url,
               status: "processing",
             },
           ]);
+        } else if (msg.status === "retrying") {
+          set_progress_list((prev) => prev.map((item) =>
+            item.current === msg.current ? { ...item, status: "retrying" } : item
+          ));
         } else if (msg.status === "added") {
           set_progress_list((prev) =>
             prev.map((item) =>
-              item.feed_url === msg.feed_url
+              item.current === msg.current
                 ? { ...item, status: "added" }
                 : item
             )
@@ -85,15 +91,15 @@ export function OpmlImport({ open, on_close }: Props) {
         } else if (msg.status === "skipped") {
           set_progress_list((prev) =>
             prev.map((item) =>
-              item.feed_url === msg.feed_url
-                ? { ...item, status: "skipped", error: msg.error || undefined }
+              item.current === msg.current
+                ? { ...item, status: "skipped", error: msg.error === "duplicate_feed" ? t("opml.duplicateFeed") : msg.error || undefined }
                 : item
             )
           );
         } else if (msg.status === "error") {
           set_progress_list((prev) =>
             prev.map((item) =>
-              item.feed_url === msg.feed_url
+              item.current === msg.current
                 ? { ...item, status: "error", error: msg.error || undefined }
                 : item
             )
@@ -187,7 +193,7 @@ export function OpmlImport({ open, on_close }: Props) {
                     key={i}
                     className="flex items-start gap-2 text-xs p-1.5 rounded hover:bg-muted/50"
                   >
-                    {feed.status === "processing" && (
+                    {(feed.status === "processing" || feed.status === "retrying") && (
                       <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" />
                     )}
                     {feed.status === "added" && (
@@ -201,6 +207,7 @@ export function OpmlImport({ open, on_close }: Props) {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">{feed.title}</p>
+                      {feed.status === "retrying" && <p role="status" className="text-muted-foreground">{t("opml.retrying")}</p>}
                       {feed.error && (
                         <p className="text-muted-foreground break-all">
                           {feed.error}

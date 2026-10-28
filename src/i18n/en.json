@@ -445,6 +445,8 @@
     "deleteNamed": "Delete feed: {{name}}"
   },
   "opml": {
+    "retrying": "Fetch failed. Retrying once…",
+    "duplicateFeed": "This feed already exists. Duplicate import skipped.",
     "importTitle": "Import OPML",
     "importDescription": "Select an OPML file to import feeds from another RSS reader.",
     "selectFile": "Select file",
