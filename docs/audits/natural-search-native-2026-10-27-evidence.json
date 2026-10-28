@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-27",
+  "baseline": "81f7b2e + uncommitted natural-search implementation and native fix",
+  "identifier": "com.mercury4win.naturalsearch20261027",
+  "schema": "8",
+  "entries": 4,
+  "starred": 3,
+  "notes": 1,
+  "views": [
+    {
+      "name": "自然语言 Rust 近7天",
+      "filter": {
+        "feed_id": null,
+        "unread_only": true,
+        "starred_only": true,
+        "search": "Rust",
+        "tag_ids": [],
+        "tag_mode": "any",
+        "is_read": null,
+        "has_note": null,
+        "date_from": null,
+        "date_to": null,
+        "recent_days": 7,
+        "search_field": "all",
+        "exclude_title": false,
+        "sort": "newest"
+      }
+    }
+  ],
+  "usage_statuses": {
+    "cancelled": 3,
+    "failed": 1,
+    "succeeded": 8
+  },
+  "foreign_key_errors": [],
+  "real_provider_requests_this_phase": 0,
+  "loopback_requests": 12,
+  "provider_enabled": true,
+  "outbound_metadata_only": true
+}

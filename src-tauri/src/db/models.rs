@@ -61,6 +61,8 @@ pub struct EntryCursor {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EntryPage {
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub ai_stale: bool,
     pub search_info: Vec<super::search_store::SearchInfo>,
     pub entries: Vec<Entry>,
     pub next_cursor: Option<EntryCursor>,

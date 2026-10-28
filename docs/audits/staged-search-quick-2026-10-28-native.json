@@ -1,0 +1,2423 @@
+{
+  "date": "2026-10-28",
+  "baseline": "81f7b2e plus all retained uncommitted changes",
+  "platform": "Windows / Tauri / WebView2",
+  "algorithm": "topic-search-quick100-v4",
+  "synthetic_only": true,
+  "runs": [
+    {
+      "identifier": "com.mercury4win.quick20261028",
+      "current_entry_count": 0,
+      "frozen_count": 100,
+      "scan": {
+        "id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+        "algorithm": "topic-search-quick100-v4",
+        "status": "complete",
+        "last_error": null
+      },
+      "snapshots": [
+        {
+          "scope_id": "scan:c3845e40-cfce-417a-bbf7-6c871ad3f930",
+          "preliminary": 24,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "titles",
+            "total": 100,
+            "title_screened": 0,
+            "title_model_reviewed": 0,
+            "title_fallback": 0,
+            "title_excluded": 0,
+            "preview_screened": 0,
+            "further_pending": 0,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 0,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 100,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 8,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 10,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 12,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 31,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 32,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 33,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 110,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:fc4c46bc-5bb3-4cca-a1a8-08518ac17c1c",
+          "preliminary": 19,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "titles",
+            "total": 100,
+            "title_screened": 98,
+            "title_model_reviewed": 96,
+            "title_fallback": 0,
+            "title_excluded": 79,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 79,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 21,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 8,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 10,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:4d1a29d7-9c93-41a6-906d-3151e792b541",
+          "preliminary": 17,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 81,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 19,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:29b11c2b-ae7d-454e-b476-c37d9f24dd77",
+          "preliminary": 17,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "failed",
+            "phase": "previews",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 81,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 8,
+            "pending": 19,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:4c0af138-5586-4a67-8a97-26f6b80d7ead",
+          "preliminary": 17,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 81,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 19,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:a1c94f32-d563-4dc4-ab99-2054e2b0072a",
+          "preliminary": 15,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 8,
+            "further_pending": 17,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 83,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 17,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 14,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:9adacc15-d7aa-425b-9ea0-4aa019147743",
+          "preliminary": 13,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 17,
+            "further_pending": 13,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 86,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 13,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 24,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:0e57aa11-2a2c-4a82-9efd-f149f091f999",
+          "preliminary": 10,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 10,
+            "full_verified": 3,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 86,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 10,
+            "matches": 3,
+            "full_parts_done": 6,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:8c1d2d72-ad56-4226-8a61-be4b62d231cc",
+          "preliminary": 8,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 8,
+            "full_verified": 5,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 86,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 8,
+            "matches": 5,
+            "full_parts_done": 12,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:cd5d4bc6-ab0b-479b-9f10-7a26716dfc49",
+          "preliminary": 4,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 4,
+            "full_verified": 9,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 87,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 4,
+            "matches": 8,
+            "full_parts_done": 18,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:416dfcdb-df8a-43c2-9ad7-dcdff3b91abb",
+          "preliminary": 2,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 2,
+            "full_verified": 10,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 87,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 2,
+            "matches": 10,
+            "full_parts_done": 22,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:e1ae0c9e-7d2b-4b0b-8cf2-b6c662900446",
+          "preliminary": 1,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 1,
+            "full_verified": 11,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 87,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 1,
+            "matches": 11,
+            "full_parts_done": 24,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:ff24dba2-bfb0-443f-84f2-9e8ea0f7d07c",
+          "preliminary": 0,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "running",
+            "phase": "done",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 0,
+            "full_verified": 12,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 87,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 0,
+            "matches": 12,
+            "full_parts_done": 26,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:1ca021f1-c173-472e-aa7f-33dbe9e054b8",
+          "preliminary": 0,
+          "progress": {
+            "scan_id": "eb8d6b56-fd57-404b-ad74-429d2fc54855",
+            "started_at": "2026-10-28T11:47:28.139558400+00:00",
+            "status": "complete",
+            "phase": "done",
+            "total": 100,
+            "title_screened": 100,
+            "title_model_reviewed": 98,
+            "title_fallback": 0,
+            "title_excluded": 81,
+            "preview_screened": 19,
+            "further_pending": 0,
+            "full_verified": 12,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 87,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 0,
+            "matches": 12,
+            "full_parts_done": 26,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        }
+      ],
+      "requests_by_stage": {
+        "understanding": 1,
+        "titles": 7,
+        "previews": 4,
+        "full": 7,
+        "final": 6
+      },
+      "request_count": 25,
+      "injected_preview_failures": 1,
+      "notes_sent": false,
+      "credential_files": 0,
+      "foreign_key_errors": 0
+    },
+    {
+      "identifier": "com.mercury4win.quickfinal20261028",
+      "current_entry_count": 71,
+      "frozen_count": 71,
+      "scan": {
+        "id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+        "algorithm": "topic-search-quick100-v4",
+        "status": "complete",
+        "last_error": null
+      },
+      "snapshots": [
+        {
+          "scope_id": "scan:a0c8dadc-029e-4d92-90c4-9141ad2a18cb",
+          "preliminary": 24,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "titles",
+            "total": 71,
+            "title_screened": 0,
+            "title_model_reviewed": 0,
+            "title_fallback": 0,
+            "title_excluded": 0,
+            "preview_screened": 0,
+            "further_pending": 0,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 0,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 71,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 8,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 10,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 12,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 31,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 32,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 33,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 110,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:b61f1daf-2685-488c-9728-5e6b32741ac2",
+          "preliminary": 20,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "titles",
+            "total": 71,
+            "title_screened": 66,
+            "title_model_reviewed": 64,
+            "title_fallback": 0,
+            "title_excluded": 47,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 47,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 24,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 8,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 10,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 12,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:46c24f23-0116-4c56-9dbe-f296737506cc",
+          "preliminary": 17,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 0,
+            "further_pending": 19,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 52,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 19,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 11,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 30,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:a29dc5ae-2112-49e9-9ef5-b583688906a1",
+          "preliminary": 15,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 8,
+            "further_pending": 17,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 54,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 0,
+            "pending": 17,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 14,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 7,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 9,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:d06fc7f5-f505-4ff3-90be-812d8203122f",
+          "preliminary": 13,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 17,
+            "further_pending": 13,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 57,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 13,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 24,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:07f84d37-ef44-46ac-8e3a-4e13e4a30457",
+          "preliminary": 10,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 10,
+            "full_verified": 3,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 57,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 10,
+            "matches": 3,
+            "full_parts_done": 6,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:fecc5f85-f370-46cc-89c2-b6d5943103d8",
+          "preliminary": 8,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 8,
+            "full_verified": 5,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 57,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 8,
+            "matches": 5,
+            "full_parts_done": 12,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 105,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:f16b138b-4873-4536-a8f0-71097195c552",
+          "preliminary": 4,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 4,
+            "full_verified": 9,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 58,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 4,
+            "matches": 8,
+            "full_parts_done": 18,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "keyword_body"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:27079b1f-5959-46b8-b7dd-239eb3d24393",
+          "preliminary": 2,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 2,
+            "full_verified": 10,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 58,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 2,
+            "matches": 10,
+            "full_parts_done": 22,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:a63f4401-ab00-4198-a6fc-9cd50ff7c81d",
+          "preliminary": 1,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 1,
+            "full_verified": 11,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 58,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 1,
+            "matches": 11,
+            "full_parts_done": 24,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "keyword_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:4aa7a209-25b5-47c7-9781-5c3579fa9b3b",
+          "preliminary": 0,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "running",
+            "phase": "done",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 0,
+            "full_verified": 12,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 58,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 0,
+            "matches": 12,
+            "full_parts_done": 26,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        },
+        {
+          "scope_id": "scan:98820076-a083-4bce-872d-2fa657256de9",
+          "preliminary": 0,
+          "progress": {
+            "scan_id": "9c917f39-f914-411b-a2fd-9b53ac92cfbe",
+            "started_at": "2026-10-28T13:32:11.407061700+00:00",
+            "status": "complete",
+            "phase": "done",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_fallback": 0,
+            "title_excluded": 52,
+            "preview_screened": 19,
+            "further_pending": 0,
+            "full_verified": 12,
+            "summary_only": 1,
+            "note_verified": 0,
+            "excluded": 58,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 0,
+            "matches": 12,
+            "full_parts_done": 26,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 0
+          },
+          "members": [
+            {
+              "entry_id": 1,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 2,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 3,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 4,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 5,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 6,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 100,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 101,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 102,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 103,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 104,
+              "basis": "full_body"
+            },
+            {
+              "entry_id": 107,
+              "basis": "summary_only"
+            }
+          ]
+        }
+      ],
+      "requests_by_stage": {
+        "understanding": 1,
+        "titles": 5,
+        "previews": 3,
+        "full": 7,
+        "final": 6
+      },
+      "request_count": 22,
+      "injected_preview_failures": 0,
+      "notes_sent": false,
+      "credential_files": 0,
+      "foreign_key_errors": 0
+    }
+  ]
+}

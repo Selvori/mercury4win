@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-28T16:32:11.292039300+08:00",
+  "version": "topic-search-staged-v2",
+  "baseline": "81f7b2e plus retained uncommitted work",
+  "platform": "Windows",
+  "model": "ecnu-plus",
+  "synthetic_only": true,
+  "primary_only": true,
+  "no_automatic_retry": true,
+  "selected_repair_case": "models_zh",
+  "reconstructed_from": null,
+  "replayed_requests": 0,
+  "max_experiment_requests": 160,
+  "request_count": 1,
+  "total_tokens": 1213,
+  "requests": [
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 927,
+      "completion_tokens": 286,
+      "total_tokens": 1213
+    }
+  ],
+  "cases": [
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "models_zh",
+        "query": "新的AI模型",
+        "topic": "models",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "error": {
+          "code": "invalid",
+          "detail": ""
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 8583,
+      "requests": 1,
+      "timing_includes_replay": false,
+      "replayed_requests": 0
+    }
+  ],
+  "passed": false
+}

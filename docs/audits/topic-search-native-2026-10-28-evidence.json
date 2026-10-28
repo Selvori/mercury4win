@@ -1,0 +1,459 @@
+{
+  "date": "2026-10-28",
+  "baseline": "81f7b2e + all preserved uncommitted changes",
+  "synthetic_only": true,
+  "identifier": "com.mercury4win.topicsearch20261028",
+  "entries": 80,
+  "schema": "9",
+  "foreign_key_errors": [],
+  "read_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "note_count": 1,
+  "smart_views": [
+    [
+      "普通视图兼容验收",
+      "{\"ai_search_id\":null,\"feed_id\":null,\"unread_only\":false,\"starred_only\":false,\"search\":null,\"tag_ids\":null,\"tag_mode\":\"any\",\"is_read\":null,\"has_note\":null,\"date_from\":null,\"date_to\":null,\"recent_days\":null,\"search_field\":\"all\",\"exclude_title\":false,\"sort\":\"newest\"}"
+    ]
+  ],
+  "requests": 22,
+  "http_status_counts": {
+    "cancelled": 1,
+    "failed": 1,
+    "succeeded": 20
+  },
+  "no_note_outbound": true,
+  "late_body_seen": true,
+  "credentials_files": 0,
+  "published_scopes": [
+    {
+      "id": "ad21a1f7-c0c0-4361-9ffa-accc8b98b7f4",
+      "sentence": "新的AI模型",
+      "checked": 36,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "010dabbe-fc7d-4759-9e32-a1edb6a48b4a",
+      "sentence": "新的AI模型",
+      "checked": 72,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "64836985-5187-468a-8766-ae09aa1028e8",
+      "sentence": "新的AI模型",
+      "checked": 76,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "fc56515d-f002-4841-b9ab-03897a3ad0a3",
+      "sentence": "新的AI模型",
+      "checked": 36,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "f1052d3f-b60b-4dc5-8d40-ebad342fd1c1",
+      "sentence": "newly released AI models",
+      "checked": 36,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "f194f3fc-01d0-47f4-8895-9e3f33bc90a3",
+      "sentence": "newly released AI models",
+      "checked": 36,
+      "matches": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "request_sequence": [
+    {
+      "topic": "新的AI模型",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        2,
+        159,
+        4,
+        158,
+        6,
+        22,
+        157,
+        30,
+        156,
+        8,
+        3,
+        155
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        1,
+        20,
+        154,
+        11,
+        153,
+        100,
+        9,
+        5,
+        152,
+        101,
+        7,
+        33
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        102,
+        12,
+        151,
+        103,
+        23,
+        150,
+        104,
+        149,
+        105,
+        148,
+        106,
+        147
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        146,
+        107,
+        145,
+        108,
+        144,
+        109,
+        143,
+        110,
+        142,
+        111,
+        141,
+        112
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        140,
+        113,
+        139,
+        114,
+        138,
+        115,
+        137,
+        116,
+        136,
+        117,
+        135,
+        118
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        119,
+        134,
+        120,
+        133,
+        121,
+        132,
+        122,
+        131,
+        123,
+        130,
+        124,
+        129
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        125,
+        128,
+        126,
+        127
+      ],
+      "control": {}
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {
+        "fail": true
+      }
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {
+        "delay": 10
+      }
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        2,
+        159,
+        4,
+        158,
+        6,
+        22,
+        157,
+        30,
+        156,
+        8,
+        3,
+        155
+      ],
+      "control": {
+        "delay": 10
+      }
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        1,
+        20,
+        154,
+        11,
+        153,
+        100,
+        9,
+        5,
+        152,
+        101,
+        7,
+        33
+      ],
+      "control": {
+        "delay": 10
+      }
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "judging",
+      "candidate_ids": [
+        102,
+        12,
+        151,
+        103,
+        23,
+        150,
+        104,
+        149,
+        105,
+        148,
+        106,
+        147
+      ],
+      "control": {
+        "delay": 10
+      }
+    },
+    {
+      "topic": "新的AI模型",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {
+        "delay": 30
+      }
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        2,
+        159,
+        4,
+        158,
+        6,
+        22,
+        157,
+        30,
+        156,
+        8,
+        3,
+        155
+      ],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        1,
+        20,
+        154,
+        11,
+        153,
+        100,
+        9,
+        5,
+        152,
+        101,
+        7,
+        33
+      ],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        102,
+        12,
+        151,
+        103,
+        23,
+        150,
+        104,
+        149,
+        105,
+        148,
+        106,
+        147
+      ],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "understanding",
+      "candidate_ids": [],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        2,
+        159,
+        4,
+        158,
+        6,
+        22,
+        157,
+        30,
+        156,
+        8,
+        3,
+        155
+      ],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        1,
+        20,
+        154,
+        11,
+        153,
+        100,
+        9,
+        5,
+        152,
+        101,
+        7,
+        33
+      ],
+      "control": {}
+    },
+    {
+      "topic": "newly released AI models",
+      "phase": "judging",
+      "candidate_ids": [
+        102,
+        12,
+        151,
+        103,
+        23,
+        150,
+        104,
+        149,
+        105,
+        148,
+        106,
+        147
+      ],
+      "control": {}
+    }
+  ]
+}

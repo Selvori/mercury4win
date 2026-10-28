@@ -21,6 +21,7 @@ pub enum TagMatchMode {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 pub struct EntryFilter {
+    pub ai_search_id: Option<String>,
     pub feed_id: Option<i64>,
     pub unread_only: bool,
     pub starred_only: bool,
@@ -315,7 +316,10 @@ pub async fn mark_all_read_in_scope(pool: &Pool, filter: &EntryFilter) -> Result
             if !super::search_store::terms(&filter).is_empty() {
                 super::search_store::refresh_locked(&tx)?;
             }
-            let compiled = super::search_store::compile(&filter, &chrono::Utc::now().to_rfc3339())?;
+            super::topic_search_store::validate_scope(&tx, &filter, true)?;
+            let anchor = super::topic_search_store::scope_anchor(&tx, &filter)?
+                .unwrap_or_else(|| chrono::Utc::now().to_rfc3339());
+            let compiled = super::search_store::compile(&filter, &anchor)?;
             let (conditions, values) = (compiled.conditions, compiled.values);
             let sql = format!(
                 "UPDATE entry AS e SET is_read = 1 WHERE {}",

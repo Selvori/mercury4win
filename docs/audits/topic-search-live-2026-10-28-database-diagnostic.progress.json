@@ -1,0 +1,63 @@
+[
+  {
+    "case": {
+      "key": "database_zh",
+      "query": "数据库查询性能与加速",
+      "topic": "database",
+      "expected": [
+        20,
+        21,
+        22
+      ]
+    },
+    "passed": false,
+    "elapsed_ms": 5720,
+    "result": {
+      "error": {
+        "code": "invalid",
+        "detail": ""
+      }
+    },
+    "exchanges": [
+      {
+        "input": {
+          "sentence": "数据库查询性能与加速",
+          "manual_conditions": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "sources": [
+            {
+              "name": "技术来源",
+              "url": "https://tech.test/rss"
+            },
+            {
+              "name": "新闻来源",
+              "url": "https://news.test/rss"
+            }
+          ],
+          "tags": [
+            "Rust",
+            "SQLite"
+          ],
+          "now_local": "2026-10-28T00:51:28.535714+08:00",
+          "today_utc": "2026-10-27"
+        },
+        "response": "{\n  \"intent\": \"General discussion or technical articles about database query performance optimization and acceleration techniques, including indexing, caching, and tuning.\",\n  \"entities\": [],\n  \"routes\": [\n    {\n      \"language\": \"zh\",\n      \"groups\": [\n        [\"数据库\", \"DB\"],\n        [\"查询性能\", \"查询速度\", \"SQL性能\", \"执行效率\"],\n        [\"优化\", \"加速\", \"调优\", \"提升\"]\n      ]\n    },\n    {\n      \"language\": \"en\",\n      \"groups\": [\n        [\"database\", \"db\"],\n        [\"query performance\", \"query speed\", \"sql performance\", \"execution time\"],\n        [\"optimization\", \"acceleration\", \"tuning\", \"boost\"]\n      ]\n    },\n    {\n      \"language\": \"zh\",\n      \"groups\": [\n        [\"索引\", \"缓存\", \"分库分表\", \"读写分离\"],\n        [\"性能\", \"优化\", \"加速\"]\n      ]\n    },\n    {\n      \"language\": \"en\",\n      \"groups\": [\n        [\"indexing\", \"caching\", \"sharding\", \"replication\"],\n        [\"performance\", \"optimization\", \"speed up\"]\n      ]\n    },\n    {\n      \"language\": \"zh\",\n      \"groups\": [\n        [\"数据库性能\", \"查询优化\", \"SQL调优\"]\n      ]\n    },\n    {\n      \"language\": \"en\",\n      \"groups\": [\n        [\"database performance\", \"query optimization\", \"sql tuning\"]\n      ]\n    }\n  ],\n  \"filter\": {\n    \"source\": [\n      \"https://tech.test/rss\",\n      \"https://news.test/rss\"\n    ],\n    \"tags\": [\n      \"Rust\",\n      \"SQLite\"\n    ],\n    \"tag_mode\": \"any\",\n    \"sort\": \"relevance\",\n    \"search_field\": \"all\"\n  },\n  \"unsupported\": []\n}"
+      }
+    ]
+  }
+]

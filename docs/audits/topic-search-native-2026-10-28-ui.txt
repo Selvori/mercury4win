@@ -1,0 +1,59 @@
+Actual synthetic UIA excerpts, numeric accessibility indexes/indentation removed; deduplicated in observation order.
+按钮 AI 主题搜索
+文本 搜索本地已存内容；未获取的正文不在范围内，不使用 AI。
+文本 80 篇
+切换按钮 Engineering dispatch 47
+文本 Engineering dispatch 47
+切换按钮 星河团队开放新一代语言系统权重
+文本 星河团队开放新一代语言系统权重
+切换按钮 DeltaLab unveils Terra-8B language model
+文本 DeltaLab unveils Terra-8B language model
+AI 主题搜索
+搜索本地已存内容；未获取的正文不在范围内，不使用 AI。
+篇
+Engineering dispatch 47
+星河团队开放新一代语言系统权重
+DeltaLab unveils Terra-8B language model
+按钮 (disabled) 保存 / 管理智能视图 Description: AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+区域 AI 主题搜索
+表单 AI 主题搜索
+文本 AI 主题搜索
+编辑 (settable, string) AI 主题搜索 Description: 新的AI模型
+编辑 (settable, string) AI 主题搜索 Description: 新的AI模型 Value: 新的AI模型
+文本 正在理解主题…
+文本 当前 AI 结果：6 篇
+文本 已检查 36 / 76 篇本地候选，尚余 40 篇。
+文本 已检查 72 / 76 篇本地候选，尚余 4 篇。
+文本 已检查 76 / 76 篇本地候选，尚余 0 篇。
+文本 本次仅完成部分检查。上次有效列表保留，可重试未完成部分。
+文本 AI 请求失败或被拒绝，请重试或手动筛选。当前条件未改变。
+文本 正在判断文章相关性…
+文本 已取消请求，当前条件未改变。
+当前 AI 结果：6 篇
+已检查 76 / 76 篇本地候选，尚余 0 篇。
+本次仅完成部分检查。上次有效列表保留，可重试未完成部分。
+已取消请求，当前条件未改变。
+“Engineering dispatch 47”
+“星河团队开放新一代语言系统权重”
+“DeltaLab unveils Terra-8B language model”
+编辑 (settable, string) 视图名称 Value: 普通视图兼容验收
+普通视图兼容验收
+切换按钮 普通视图兼容验收 Description: 普通视图兼容验收
+文本 普通视图兼容验收
+文本 正在检索 / 更新索引…
+正在检索 / 更新索引…
+文本 80 entries
+entries
+按钮 AI topic search
+组合框 (settable, string) Sort Value: Newest first
+AI topic search
+按钮 (disabled) Save / manage smart view Description: AI results are a snapshot of this check and cannot yet be saved as a smart view. Ordinary condition views can still be saved.
+区域 AI topic search
+表单 AI topic search
+文本 AI topic search
+编辑 (settable, string) AI topic search Description: Newly released AI models
+组合框 (settable, string) Sort Value: Relevance
+编辑 (settable, string) AI topic search Description: Newly released AI models Value: newly released AI models
+文本 Current AI results: 6 articles
+文本 Checked 36 / 76 local candidates; 40 remain.
+文本 Relevance: 本机受控协议验收：直接相关

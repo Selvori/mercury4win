@@ -4,6 +4,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { Topic, TopicDetail } from "@/types/topic";
 import type { Channel } from "@tauri-apps/api/core";
+import type { TopicSearchRun, TopicSearchProgress, TopicSearchResume } from "@/types/topic_search";
 import type {
   Feed,
   FeedWithCounts,
@@ -112,6 +113,16 @@ export async function delete_smart_view(id: number): Promise<void> {
 export async function rebuild_search_index(): Promise<void> {
   return invoke("rebuild_search_index");
 }
+
+export async function parse_search_filter(sentence: string, request_id: string, on_event: Channel<string>): Promise<EntryFilter> {
+  return invoke("parse_search_filter", { sentence, requestId: request_id, onEvent: on_event });
+}
+
+export function search_local_topic(sentence: string, manual: EntryFilter, request_id: string, on_event: Channel<string>, resume: string | null = null, force = false): Promise<TopicSearchRun> {
+  return invoke("search_local_topic", { sentence, manual: { ...manual, search: null, ai_search_id: null, sort: manual.sort ?? "relevance" }, requestId: request_id, onEvent: on_event, resume, force });
+}
+export const stop_topic_search = (request_id: string, mode: "paused" | "cancelled") => invoke<TopicSearchProgress | null>("stop_topic_search", { requestId: request_id, mode });
+export const recent_topic_search = () => invoke<TopicSearchResume | null>("recent_topic_search");
 
 export async function load_entries(
   params: LoadEntriesParams,

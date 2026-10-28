@@ -92,6 +92,10 @@ pub fn run() {
             commands::search_cmd::save_smart_view,
             commands::search_cmd::delete_smart_view,
             commands::search_cmd::rebuild_search_index,
+            commands::search_cmd::parse_search_filter,
+            commands::search_cmd::search_local_topic,
+            commands::search_cmd::stop_topic_search,
+            commands::search_cmd::recent_topic_search,
             // Tags
             commands::tag_cmd::list_tags,
             commands::tag_cmd::add_tag,

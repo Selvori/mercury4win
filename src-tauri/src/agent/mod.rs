@@ -10,6 +10,9 @@ pub mod translation_segments;
 
 pub mod tag_batch;
 
+pub mod search_filter;
+pub mod staged_search;
 pub mod topic;
 pub mod topic_auto;
+pub mod topic_search;
 pub mod usage;

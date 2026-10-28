@@ -9,6 +9,13 @@ use tauri::ipc::Channel;
 mod sse;
 
 #[cfg(test)]
+tokio::task_local! {
+    // Opt-in synthetic paid evaluations persist before/after every request.
+    pub(crate) static TEST_AUDIT: std::sync::Arc<dyn Fn(serde_json::Value) -> Result<(), String> + Send + Sync>;
+    pub(crate) static TEST_REPLAY: std::sync::Arc<dyn Fn(&ChatCompletionRequest) -> Result<Option<ChatCompletionResponse>,String> + Send + Sync>;
+}
+
+#[cfg(test)]
 #[path = "m4w_017_tests.rs"]
 mod m4w_017_tests;
 
@@ -83,6 +90,29 @@ fn request_route(fallback: bool) -> Option<RequestRoute> {
         .flatten()
 }
 
+/// A bounded diagnostic label; never includes response bodies or credentials.
+pub(crate) fn failure_class(error: &str) -> String {
+    if let Some(status) = error
+        .strip_prefix("API error (HTTP ")
+        .and_then(|s| s.split(')').next())
+        .and_then(|s| s.parse::<u16>().ok())
+        .filter(|s| (100..=599).contains(s))
+    {
+        return format!("http_{status}");
+    }
+    match error {
+        "HTTP request failed" => "transport",
+        "HTTP response body failed" => "response_transport",
+        "Invalid completion JSON" => "completion_json",
+        "Invalid completion response" => "completion_fields",
+        "Provider returned empty content" => "empty_completion",
+        s if s.starts_with("Timeout:") => "timeout",
+        s if s.starts_with("Provider did not finish completion:") => "unfinished_completion",
+        _ => "provider_failure",
+    }
+    .into()
+}
+
 /// Non-streaming chat completion.
 async fn chat_completion_once(
     client: &Client,
@@ -91,6 +121,14 @@ async fn chat_completion_once(
     request: &ChatCompletionRequest,
     fallback: bool,
 ) -> Result<ChatCompletionResponse, String> {
+    #[cfg(test)]
+    if let Ok(replayed) = TEST_REPLAY.try_with(|replay| replay(request)) {
+        if let Some(response) = replayed? {
+            return Ok(response);
+        }
+    }
+    #[cfg(test)]
+    if let Ok(result) = TEST_AUDIT.try_with(|audit| audit(serde_json::json!({"event":"started","phase":crate::agent::usage::PHASE.try_with(|p|*p).unwrap_or("unknown"),"request":request}))) { result?; }
     let url = format!("{}/chat/completions", base_url.trim_end_matches('/'));
 
     let outbound = client
@@ -154,6 +192,11 @@ async fn chat_completion_once(
     }
     .await;
     guard.finish(&result).await;
+    #[cfg(test)]
+    if let Ok(saved) = TEST_AUDIT.try_with(|audit| audit(match &result {
+        Ok(response) => serde_json::json!({"event":"finished","response":response.choices[0].message.content,"usage":response.usage.as_ref().map(|u|serde_json::json!({"prompt_tokens":u.prompt_tokens,"completion_tokens":u.completion_tokens,"total_tokens":u.total_tokens}))}),
+        Err(error) => serde_json::json!({"event":"failed","failure_class":failure_class(error),"usage":"see usage ledger; unknown if provider did not return usage"})
+    })) { saved?; }
     result
 }
 

@@ -141,13 +141,20 @@ pub(crate) fn markdown_text(md: &str) -> String {
 }
 
 /// Original plain text for snippets; folded copies are stored in FTS.
-fn document(conn: &Connection, id: i64) -> rusqlite::Result<Option<[String; 4]>> {
+pub(crate) fn document(conn: &Connection, id: i64) -> rusqlite::Result<Option<[String; 4]>> {
+    document_for(conn, id, true)
+}
+pub(crate) fn document_for(
+    conn: &Connection,
+    id: i64,
+    notes: bool,
+) -> rusqlite::Result<Option<[String; 4]>> {
     conn.query_row(
         "SELECT e.title,e.summary,c.markdown,c.cleaned_html,c.html,
-        e.feed_content,e.feed_content_type,n.markdown FROM entry e
+        e.feed_content,e.feed_content_type,CASE WHEN ?2 THEN n.markdown ELSE NULL END FROM entry e
         LEFT JOIN content c ON c.entry_id=e.id LEFT JOIN entry_note n ON n.entry_id=e.id
         WHERE e.id=?1 AND e.is_deleted=0",
-        [id],
+        params![id, notes],
         |r| {
             let get = |i| r.get::<_, Option<String>>(i).map(|s| s.unwrap_or_default());
             let md = get(2)?;
@@ -279,6 +286,21 @@ pub fn compile(filter: &EntryFilter, anchor: &str) -> Result<Compiled, String> {
         values: vec![],
         score: "0".into(),
     };
+    if let Some(id) = &filter.ai_search_id {
+        let token = bind(&mut c.values, id.clone());
+        c.conditions.push(format!("EXISTS(SELECT 1 FROM ai_search_judgment j WHERE j.session_id={token} AND j.entry_id=e.id AND (j.score>=60 OR (j.evidence_key='keyword' AND j.score>0)))"));
+        c.score = if id.starts_with("scan:") {
+            format!("COALESCE((SELECT CASE WHEN evidence_key='keyword' THEN score ELSE 10000+score END FROM ai_search_judgment j WHERE j.session_id={token} AND j.entry_id=e.id),0)")
+        } else {
+            format!("COALESCE((SELECT score FROM ai_search_judgment j WHERE j.session_id={token} AND j.entry_id=e.id),0)")
+        };
+        // Hierarchical search memberships were frozen with their hard filters.
+        // Read/star actions cannot silently change that published result scope.
+        // validate_scope verifies the real server token before any query/mutation.
+        if id.starts_with("scan:") {
+            return Ok(c);
+        }
+    }
     if let Some(id) = filter.feed_id {
         c.conditions
             .push(format!("e.feed_id={}", bind(&mut c.values, id)));
@@ -384,6 +406,8 @@ pub struct SearchHit {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SearchInfo {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ai: Option<super::topic_search_store::Hit>,
     pub preview: String,
     pub entry_id: i64,
     pub feed_title: String,
@@ -497,8 +521,8 @@ pub fn query(
     if !words.is_empty() {
         refresh(conn)?;
     }
-    let anchor = cursor
-        .and_then(|c| c.anchor.clone())
+    let anchor = super::topic_search_store::scope_anchor(conn, filter)?
+        .or_else(|| cursor.and_then(|c| c.anchor.clone()))
         .unwrap_or_else(|| Utc::now().to_rfc3339());
     if DateTime::parse_from_rfc3339(&anchor).is_err() {
         return Err("Invalid cursor anchor".into());
@@ -520,6 +544,7 @@ pub fn query(
         drop(tx);
         refresh(conn)?;
     };
+    let ai_stale = super::topic_search_store::validate_scope(&tx, filter, false)?;
     let total: i64 = tx
         .query_row(
             &format!(
@@ -530,7 +555,8 @@ pub fn query(
             |r| r.get(0),
         )
         .map_err(|e| e.to_string())?;
-    let ranked = filter.sort == SearchSort::Relevance && !words.is_empty();
+    let ranked = filter.sort == SearchSort::Relevance
+        && (!words.is_empty() || filter.ai_search_id.is_some());
     let ascending = filter.sort == SearchSort::Oldest;
     if let Some(cursor) = cursor {
         let id = bind(&mut c.values, cursor.id);
@@ -647,6 +673,12 @@ pub fn query(
             entry.feed_content.as_deref().is_some_and(|s|!s.trim().is_empty()) || tx.query_row("SELECT EXISTS(SELECT 1 FROM content WHERE entry_id=?1 AND (length(trim(COALESCE(markdown,'')))>0 OR length(trim(COALESCE(cleaned_html,'')))>0 OR length(trim(COALESCE(html,'')))>0))",[entry.id],|r|r.get(0)).map_err(|e|e.to_string())?
         };
         search_info.push(SearchInfo {
+            ai: filter
+                .ai_search_id
+                .as_ref()
+                .map(|id| super::topic_search_store::hit(&tx, id, entry.id))
+                .transpose()?
+                .flatten(),
             entry_id: entry.id,
             feed_title,
             body_available,
@@ -655,6 +687,7 @@ pub fn query(
         });
     }
     Ok(EntryPage {
+        ai_stale,
         entries: rows.into_iter().map(|(entry, _)| entry).collect(),
         next_cursor,
         total,

@@ -204,6 +204,9 @@ pub async fn save_configured(
     }
     if let Some(f) = &rule {
         search_store::validate(f)?;
+        if f.ai_search_id.is_some() {
+            return Err("AI topic result snapshots cannot be saved as a topic rule".into());
+        }
     }
     if mode
         .as_ref()

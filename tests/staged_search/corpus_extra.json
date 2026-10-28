@@ -1,0 +1,229 @@
+{
+  "description": "Independent human-labelled additions to the preserved 20-article corpus. Labels are evaluation data, never sent to the real model.",
+  "articles": [
+    {
+      "id": 100,
+      "title": "Wednesday dispatch",
+      "summary": "Operations, a laboratory note and a software package.",
+      "prefix_repeat": 140,
+      "prefix": "The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. ",
+      "body": "\n# Vireo weights\nThe laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning. The new model checkpoints and inference source code were published this morning.",
+      "days": 2,
+      "starred": false,
+      "feed": 1,
+      "topics": [
+        "models"
+      ]
+    },
+    {
+      "id": 101,
+      "title": "Garden irrigation checklist",
+      "summary": "Watering notes from an engineering cooperative.",
+      "prefix_repeat": 80,
+      "prefix": "Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. ",
+      "body": "\n# A separate laboratory announcement\nLatticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research.\nThe cooperative's final section is the laboratory's official release announcement, separate from the gardening notes.",
+      "days": 12,
+      "starred": false,
+      "feed": 2,
+      "topics": [
+        "models"
+      ]
+    },
+    {
+      "id": 102,
+      "title": null,
+      "summary": "Kiruna-X18 的新权重和推理代码已开放。",
+      "body": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。",
+      "days": 3,
+      "starred": false,
+      "feed": 2,
+      "topics": [
+        "models"
+      ]
+    },
+    {
+      "id": 103,
+      "title": "Frontier weekly",
+      "summary": "Three research developments from this week.",
+      "body": "# Database execution\nA PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script.\n# Open weights\nThe Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public.\n# Hiring\nA compiler company opened two documentation roles.",
+      "days": 5,
+      "starred": false,
+      "feed": 1,
+      "topics": [
+        "models",
+        "database"
+      ]
+    },
+    {
+      "id": 104,
+      "title": "EchoChess 1.2 opens its text decoder",
+      "summary": "A research release with multilingual conversation and new transformer weights.",
+      "body": "The lab shipped EchoChess 1.2, a text-generating transformer with new open weights. People can converse with the decoder in several languages. The package includes source code, checkpoints and evaluation results.",
+      "days": 8,
+      "starred": false,
+      "feed": 2,
+      "topics": [
+        "models"
+      ]
+    },
+    {
+      "id": 105,
+      "title": "Solstice keynote quotation in a funding prospectus",
+      "summary": "A prospectus opens with a historical quotation and later explains the transaction.",
+      "prefix_repeat": 100,
+      "prefix": "The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. ",
+      "opening": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\"\n",
+      "body": "\n# Context of the quotation\nThat quotation came from a keynote held eighteen months ago. Solstice-5 is an existing product and the weights have been public since that event. The current transaction issues shares to fund new offices and sales staff. The prospectus describes no current software launch or model upgrade.",
+      "days": 1,
+      "starred": true,
+      "feed": 1,
+      "topics": []
+    },
+    {
+      "id": 106,
+      "title": "Firmware model catalog for electric delivery vans",
+      "summary": "A vehicle electronics supplier lists controller variants.",
+      "body": "The catalog lists motor controller models R9 and R10, connector pinouts, operating voltages and firmware compatibility for electric delivery vans. A service table maps each hardware revision to its replacement part.",
+      "days": 1,
+      "starred": false,
+      "feed": 2,
+      "topics": []
+    },
+    {
+      "id": 107,
+      "title": "Introducing FalconTree-63, a new text foundation model",
+      "summary": "The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.",
+      "body": null,
+      "days": 2,
+      "starred": true,
+      "feed": 1,
+      "topics": [
+        "models",
+        "hard"
+      ]
+    },
+    {
+      "id": 108,
+      "title": null,
+      "summary": null,
+      "body": null,
+      "days": 1,
+      "starred": false,
+      "feed": 2,
+      "topics": []
+    },
+    {
+      "id": 109,
+      "title": "Chess tournament volunteer guide",
+      "summary": "Venue logistics and a separate technology appendix.",
+      "prefix_repeat": 120,
+      "prefix": "Volunteers checked the room numbers, table signs, lunch reservations and the timetable for each round. The venue coordinator distributed printed maps. ",
+      "body": "\n# Query execution appendix\nOn identical hardware, our PostgreSQL query engine finished the analytics workload in 0.8 seconds rather than 2.1 seconds. The database performance comparison isolates a new vectorized join executor and provides SQL benchmarks.",
+      "days": 70,
+      "starred": false,
+      "feed": 1,
+      "topics": [
+        "database"
+      ]
+    },
+    {
+      "id": 110,
+      "title": "Kestrel Build 4.2 ships incremental compilation",
+      "summary": "The open-source command-line build tool publishes a new stable version.",
+      "body": "Kestrel Build 4.2 is released under the MIT licence. This open-source build tool adds incremental compilation, with source archives, tagged commits and release notes published alongside the binaries.",
+      "days": 10,
+      "starred": false,
+      "feed": 2,
+      "topics": [
+        "tools"
+      ]
+    }
+  ],
+  "filler_count": 40,
+  "cases": [
+    {
+      "key": "models_zh",
+      "query": "新的AI模型",
+      "topic": "models",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        100,
+        101,
+        102,
+        103,
+        104,
+        107
+      ]
+    },
+    {
+      "key": "models_en",
+      "query": "newly released AI models",
+      "topic": "models",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        100,
+        101,
+        102,
+        103,
+        104,
+        107
+      ]
+    },
+    {
+      "key": "unknown_entity",
+      "query": "Nebula-Q47 新模型发布",
+      "topic": "entity",
+      "expected": [
+        1
+      ]
+    },
+    {
+      "key": "database_zh",
+      "query": "数据库查询性能与加速",
+      "topic": "database",
+      "expected": [
+        20,
+        21,
+        22,
+        103,
+        109
+      ]
+    },
+    {
+      "key": "tools_en",
+      "query": "new open-source build tool releases",
+      "topic": "tools",
+      "expected": [
+        30,
+        31,
+        110
+      ]
+    },
+    {
+      "key": "explicit_hard",
+      "query": "最近一周已收藏的新的AI模型，来自技术来源",
+      "topic": "hard",
+      "expected": [
+        1,
+        5,
+        107
+      ]
+    },
+    {
+      "key": "no_relevant",
+      "query": "海底火山声学监测的新发现",
+      "topic": "none",
+      "expected": []
+    }
+  ]
+}

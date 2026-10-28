@@ -105,6 +105,18 @@ fn simple_decrypt(hex_str: &str) -> String {
 }
 
 #[cfg(test)]
+#[path = "search_filter/live_tests.rs"]
+mod live_search_filter_tests;
+
+#[cfg(test)]
+#[path = "topic_search/live_tests.rs"]
+mod live_topic_search_tests;
+
+#[cfg(test)]
+#[path = "staged_search/live_tests.rs"]
+mod live_staged_search_tests;
+
+#[cfg(test)]
 mod tests {
     use super::{simple_decrypt, simple_encrypt};
 

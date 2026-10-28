@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-27T15:53:35.844163500+08:00",
+  "model": "ecnu-plus",
+  "primary_only": true,
+  "synthetic_metadata_and_library": true,
+  "passed": false,
+  "metrics": {
+    "requests": 1,
+    "prompt_tokens": 720,
+    "completion_tokens": 28,
+    "total_tokens": 748,
+    "missing_usage": 0
+  },
+  "cases": [
+    {
+      "case": "ambiguous_source",
+      "sentence": "找来自技术的 Rust 文章",
+      "passed": false,
+      "elapsed_ms": 1216,
+      "result": {
+        "error": {
+          "code": "unsupported",
+          "detail": "存在多个名为“技术”的来源，请指定具体的源名称或 URL 以区分。"
+        }
+      },
+      "model_response": "{\"filter\":null,\"unsupported\":[\"存在多个名为“技术”的来源，请指定具体的源名称或 URL 以区分。\"]}"
+    }
+  ]
+}

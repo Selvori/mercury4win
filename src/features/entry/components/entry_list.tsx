@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { load_entries, mark_read, mark_all_read_in_scope, mark_starred, delete_entry, sync_feed, sync_all_feeds } from "@/lib/tauri_bindings";
 import type { Entry, EntryFilter, EntryCursor, SmartView, SearchPart } from "@/types";
+import type { TopicSearchSession } from "@/types/topic_search";
 
 interface Props {
   feed_id: number | null | undefined;
@@ -35,12 +36,15 @@ interface Props {
 export function EntryList({ search_mode = false, on_edit_search, saved_view, on_view_saved, on_view_deleted, on_select_note, feed_id, tag_ids, starred_only = false, selected_entry_id, on_select_entry, on_clear_selection, on_delete_entry }: Props) {
   const { t, i18n } = useTranslation();
   const query_client = useQueryClient();
+  const [ai_scope, set_ai_scope] = useState<TopicSearchSession | null>(null);
   const current_scope: EntryFilter = { feed_id: feed_id ?? undefined, tag_ids, starred_only };
   const [options, set_options] = useState<EntryFilter>(() => saved_view?.filter ?? {});
   const uses_search_filter = search_mode || !!saved_view;
   const draft_filter: EntryFilter = saved_view ? options : search_mode ? { ...current_scope, ...options }
     : { ...current_scope, unread_only: options.unread_only ?? false, tag_mode: options.tag_mode ?? "any" };
   const base_key = JSON.stringify(current_scope);
+  useLayoutEffect(() => { set_ai_scope(null); }, [base_key, saved_view?.id]);
+  useLayoutEffect(() => { if (!uses_search_filter) set_ai_scope(null); }, [uses_search_filter]);
   useLayoutEffect(() => {
     if (!saved_view) {
       const base = JSON.parse(base_key) as EntryFilter;
@@ -52,8 +56,8 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
     const timer = setTimeout(() => set_applied_search(draft_filter.search), 250);
     return () => clearTimeout(timer);
   }, [draft_filter.search]);
-  const filter: EntryFilter = { ...draft_filter, search: uses_search_filter ? applied_search : undefined };
-  const filtering = uses_search_filter && (draft_filter.search ?? "") !== (applied_search ?? "");
+  const filter: EntryFilter = ai_scope && uses_search_filter ? { ...ai_scope.filter, sort: draft_filter.sort ?? ai_scope.filter.sort, ai_search_id: ai_scope.id } : { ...draft_filter, search: uses_search_filter ? applied_search : undefined };
+  const filtering = !ai_scope && uses_search_filter && (draft_filter.search ?? "") !== (applied_search ?? "");
   const scope_key = JSON.stringify(filter);
   const [digest_selection, set_digest_selection] = useState<{ scope: string; entries: Entry[]; ids: Set<number> } | null>(null);
   const [digest_ids, set_digest_ids] = useState<number[] | null>(null);
@@ -120,7 +124,7 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
   });
 
   const mark_all_read_mutation = useMutation({
-    mutationFn: () => mark_all_read_in_scope(filter),
+    mutationFn: (visible_scope: EntryFilter) => mark_all_read_in_scope(visible_scope),
     onSuccess: () => {
       query_client.invalidateQueries({ queryKey: ["entries"] });
       query_client.invalidateQueries({ queryKey: ["feeds"] });
@@ -174,7 +178,7 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
     on_open: () => { if (selected) on_select_entry(selected); },
     on_toggle_read: () => { if (selected && !mark_read_mutation.isPending) mark_read_mutation.mutate({ ids: [selected.id], read: !selected.is_read }); },
     on_toggle_star: () => { if (selected && !star_mutation.isPending) star_mutation.mutate({ id: selected.id, starred: !selected.is_starred }); },
-    on_mark_all_read: () => { if (!mark_all_read_mutation.isPending) mark_all_read_mutation.mutate(); },
+    on_mark_all_read: () => { if (!mark_all_read_mutation.isPending && !isLoading && !isError && show_entries.length) mark_all_read_mutation.mutate({ ...filter }); },
     on_refresh: () => { if (!refresh_mutation.isPending) refresh_mutation.mutate(); },
   } : {});
 
@@ -191,9 +195,15 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
       {digest_ids && <DigestDialog key={JSON.stringify(digest_ids)} entry_ids={digest_ids} multiple on_close={() => set_digest_ids(null)} />}
       {topic_ids && <AddToTopic ids={topic_ids} on_close={() => set_topic_ids(null)} />}
       {(search_mode || saved_view) && <SearchControls compact={!search_mode} on_edit_filters={on_edit_search}
+        ai_scope={ai_scope} on_ai_scope={(scope) => {
+          navigation_generation.current++;
+          if (!scope || !ai_scope || scope.input_key!==ai_scope.input_key) on_clear_selection?.();
+          set_ai_scope(scope); set_digest_selection(null);
+        }}
         filter={draft_filter} current_scope={saved_view?.filter ?? current_scope} saved_view={saved_view}
         on_change={(value) => change_filter(() => { set_options(value); set_digest_selection(null); })}
         on_saved={on_view_saved} on_deleted={on_view_deleted} />}
+      {ai_scope && data?.pages.some((page) => page.ai_stale) && <p role="alert" className="shrink-0 border-b border-border p-2 text-xs text-destructive">{t("search.natural.staleResults")}</p>}
       <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border px-2 py-1">
         {!search_mode && !saved_view && <>
           <Button size="sm" variant={filter.unread_only ? "secondary" : "ghost"} aria-pressed={filter.unread_only ?? false}
@@ -227,9 +237,9 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
           variant="ghost"
           size="sm"
           className="h-7 text-xs"
-          onClick={() => mark_all_read_mutation.mutate()}
+          onClick={() => mark_all_read_mutation.mutate({ ...filter })}
           title={t("search.bulkHint")}
-          disabled={filtering || !!search_filter_error(filter) || selecting || mark_all_read_mutation.isPending || isLoading || isError || !show_entries.length}
+          disabled={filtering || !!search_filter_error(filter) || selecting || mark_all_read_mutation.isPending || isLoading || isError || !show_entries.length || data?.pages.some((page) => page.ai_stale)}
         >
           <CheckCheck className="mr-1 h-3.5 w-3.5" />
           {t("entry.markAllRead")}
@@ -287,6 +297,18 @@ export function EntryList({ search_mode = false, on_edit_search, saved_view, on_
                 </div>
                 {uses_search_filter && search_info.has(entry.id) && <div className="mt-1 space-y-1 text-xs">
                   <p className="text-muted-foreground break-all">{search_info.get(entry.id)!.feed_title} · {t(search_info.get(entry.id)!.body_available ? "search.bodyAvailable" : "search.bodyMissing")}</p>
+                  {search_info.get(entry.id)?.ai && <div className="space-y-1 text-muted-foreground">
+                    {search_info.get(entry.id)!.ai!.basis?.startsWith("keyword_") ? <>
+                      <p>{t("search.natural.keywordPending")}</p>
+                      <p className="break-words">{t("search.natural.keywordReason", { terms: search_info.get(entry.id)!.ai!.reason })}</p>
+                      <p className="line-clamp-3 break-words">{search_info.get(entry.id)!.ai!.quote}</p>
+                    </> : <>
+                      <p>{t("search.natural.reason", { reason: search_info.get(entry.id)!.ai!.reason })}</p>
+                      {search_info.get(entry.id)!.ai!.basis && <p>{t(`search.natural.basis_${search_info.get(entry.id)!.ai!.basis}`, { count: search_info.get(entry.id)!.ai!.parts ?? 0 })}</p>}
+                      {search_info.get(entry.id)!.ai!.limited && <p>{t("search.natural.limited")}</p>}
+                      <p className="line-clamp-3 break-words">“{search_info.get(entry.id)!.ai!.quote}”</p>
+                    </>}
+                  </div>}
                   {search_info.get(entry.id)!.hits.filter((hit) => hit.field !== "title").map((hit) => <div key={hit.field}>
                     <span className="mr-1 rounded bg-secondary px-1 text-[11px] text-secondary-foreground">{t(`search.field_${hit.field}`)}</span>
                     <span className="break-words text-muted-foreground"><Highlight parts={hit.parts} /></span>

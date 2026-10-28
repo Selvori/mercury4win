@@ -1,5 +1,9 @@
 # 测试样例与验证记录
 
+## AI 主题搜索
+
+固定人工标注的跨语言 / 非 AI 主题合成资料、受控生产 HTTP、真实 API（默认忽略）和隔离 Windows 验收入口见 [分阶段检索测试说明](../tests/staged_search/README.md)（旧36篇阶段保留于 [v4测试记录](../tests/topic_search/README.md)）。普通关键词与已有视图保持独立；真实 API 和 Computer Use 仅在用户明确授权的范围内执行，历史记录保留失败和未验证边界。
+
 ## 固定 OPML 样例 F-001
 
 - 文件：[hn-popular10+1.opml](../tests/fixtures/opml/hn-popular10+1.opml)。
@@ -80,3 +84,8 @@
 ## 主题追踪与增量简报
 
 入口、范围限制、受控 Provider、真实 V6 升级 fixture、Rust／生产界面回归及隔离桌面复验步骤见[专题测试说明](../tests/topics/README.md)。实际执行结果、已知失败和 native 边界只记录在[2026-10-26 专项报告](audits/topics-2026-10-26.md)；受控响应通过不等于真实模型分析质量达标。
+
+
+## 多语言关键词先展示与AI继续核验
+
+当前入口/命令见[分阶段检索](../tests/staged_search/README.md)。桌面验收须阻塞标题响应并确认初步列表已可读，部分词命中即可入列，清楚显示未AI核验；继续核验可添加/移除，空快照清除最后一个候选，收起继续且Reader保持。检查错误保留、显式恢复、取消恢复此前范围及旧令牌分页/批量；默认范围最新100篇，笔记需明确选择。初次关键词耗时与首次AI确认耗时分开，回放不得算首次性能。实际结果见[2026-10-28报告](audits/staged-search-quick-2026-10-28.md)。

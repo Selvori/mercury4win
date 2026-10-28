@@ -1,0 +1,450 @@
+{
+  "date": "2026-10-28T16:59:02.533180700+08:00",
+  "version": "topic-search-staged-v2",
+  "baseline": "81f7b2e plus retained uncommitted work",
+  "platform": "Windows",
+  "model": "ecnu-plus",
+  "synthetic_only": true,
+  "primary_only": true,
+  "no_automatic_retry": true,
+  "selected_repair_case": "models_zh",
+  "reconstructed_from": null,
+  "replayed_requests": 0,
+  "max_experiment_requests": 160,
+  "request_count": 35,
+  "total_tokens": 49862,
+  "requests": [
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 927,
+      "completion_tokens": 283,
+      "total_tokens": 1210
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 955,
+      "completion_tokens": 713,
+      "total_tokens": 1668
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 667,
+      "total_tokens": 1423
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 651,
+      "total_tokens": 1407
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 507,
+      "total_tokens": 1263
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 765,
+      "total_tokens": 1521
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 685,
+      "total_tokens": 1441
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 701,
+      "total_tokens": 1457
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 765,
+      "total_tokens": 1521
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 733,
+      "total_tokens": 1489
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 653,
+      "total_tokens": 1409
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 717,
+      "total_tokens": 1473
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 749,
+      "total_tokens": 1505
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 756,
+      "completion_tokens": 571,
+      "total_tokens": 1327
+    },
+    {
+      "phase": "search_titles",
+      "status": "failed",
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null
+    }
+  ],
+  "cases": [
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "models_zh",
+        "query": "新的AI模型",
+        "topic": "models",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "provider",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "a65e9b8b-e772-402e-a32d-08ff672d34ea",
+            "started_at": "2026-10-28T08:40:13.704022600+00:00",
+            "status": "failed",
+            "phase": "titles",
+            "total": 609,
+            "title_screened": 529,
+            "title_model_reviewed": 528,
+            "title_fallback": 0,
+            "title_excluded": 512,
+            "preview_screened": 0,
+            "further_pending": 17,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 512,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 16,
+            "pending": 97,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 700
+          },
+          "id": "scan:e9c4557f-0ebf-44b6-ae5d-9be6fb79f125",
+          "sentence": "新的AI模型",
+          "input_key": "ab5e7a6b06c8262d5f057e1dadcb62c8e3594dc48b9f15e0b762b9ef9e8f8aba",
+          "plan": {
+            "intent": "News or discussions about newly released or announced AI models, including major versions and open-weights models.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "人工智能",
+                    "大模型",
+                    "语言模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "foundation model",
+                    "language model",
+                    "llm"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "开源",
+                    "新发布",
+                    "新推出",
+                    "最新版本"
+                  ],
+                  [
+                    "模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "announced",
+                    "launch",
+                    "new",
+                    "released"
+                  ],
+                  [
+                    "model"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-28T08:40:13.704022600+00:00",
+          "revision": 700,
+          "flags": 0,
+          "checked": 512,
+          "total": 609,
+          "pending": 97,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 1147216,
+      "requests": 35,
+      "timing_includes_replay": false,
+      "replayed_requests": 0
+    }
+  ],
+  "passed": false
+}

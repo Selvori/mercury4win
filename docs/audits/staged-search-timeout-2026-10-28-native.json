@@ -1,0 +1,792 @@
+{
+  "date": "2026-10-28",
+  "baseline": "81f7b2e plus retained uncommitted changes",
+  "platform": "Windows / WebView2",
+  "synthetic_only": true,
+  "scope": 609,
+  "progress": {
+    "scan_id": "80e7c294-e021-4ca7-98e8-a4db107857a2",
+    "started_at": "2026-10-28T07:57:12.450407900+00:00",
+    "status": "complete",
+    "phase": "done",
+    "total": 609,
+    "title_screened": 609,
+    "title_model_reviewed": 607,
+    "title_excluded": 590,
+    "preview_screened": 19,
+    "further_pending": 0,
+    "full_verified": 12,
+    "summary_only": 1,
+    "note_verified": 0,
+    "excluded": 596,
+    "insufficient": 1,
+    "changed": 0,
+    "failed": 0,
+    "pending": 0,
+    "matches": 12,
+    "full_parts_done": 26,
+    "full_parts_total": 26,
+    "cache_hits": 0,
+    "snapshot_revision": 0
+  },
+  "accepted_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    100,
+    101,
+    102,
+    103,
+    104,
+    107
+  ],
+  "title_batch_sizes": [
+    16,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    8,
+    7
+  ],
+  "requests": 94,
+  "usage": [
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "started_at": "2026-10-28T07:57:12.293150400+00:00",
+      "finished_at": "2026-10-28T07:57:12.308326900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "timedOut",
+      "started_at": "2026-10-28T07:57:12.486388300+00:00",
+      "finished_at": "2026-10-28T07:59:12.499168300+00:00",
+      "total_tokens": null
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.195353600+00:00",
+      "finished_at": "2026-10-28T08:00:46.199641100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.210512400+00:00",
+      "finished_at": "2026-10-28T08:00:46.213213700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.224067300+00:00",
+      "finished_at": "2026-10-28T08:00:46.228991600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.240069500+00:00",
+      "finished_at": "2026-10-28T08:00:46.242730600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.253971+00:00",
+      "finished_at": "2026-10-28T08:00:46.257678600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.268771+00:00",
+      "finished_at": "2026-10-28T08:00:46.272965100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.284674200+00:00",
+      "finished_at": "2026-10-28T08:00:46.287929600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.299372900+00:00",
+      "finished_at": "2026-10-28T08:00:46.303372300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.315650700+00:00",
+      "finished_at": "2026-10-28T08:00:46.319054300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.329971500+00:00",
+      "finished_at": "2026-10-28T08:00:46.333411300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.345102500+00:00",
+      "finished_at": "2026-10-28T08:00:46.348526+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.359448700+00:00",
+      "finished_at": "2026-10-28T08:00:46.362882700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.374584700+00:00",
+      "finished_at": "2026-10-28T08:00:46.378233900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.390557200+00:00",
+      "finished_at": "2026-10-28T08:00:46.393750900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.406312500+00:00",
+      "finished_at": "2026-10-28T08:00:46.409554700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.421004300+00:00",
+      "finished_at": "2026-10-28T08:00:46.424761600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.436376700+00:00",
+      "finished_at": "2026-10-28T08:00:46.439599500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.451495100+00:00",
+      "finished_at": "2026-10-28T08:00:46.454979700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.467007700+00:00",
+      "finished_at": "2026-10-28T08:00:46.471003900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.484206500+00:00",
+      "finished_at": "2026-10-28T08:00:46.487514500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.498986+00:00",
+      "finished_at": "2026-10-28T08:00:46.503136500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.514679900+00:00",
+      "finished_at": "2026-10-28T08:00:46.517637+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.529769400+00:00",
+      "finished_at": "2026-10-28T08:00:46.533001400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.546187900+00:00",
+      "finished_at": "2026-10-28T08:00:46.549920600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.563627800+00:00",
+      "finished_at": "2026-10-28T08:00:46.566961800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.582452200+00:00",
+      "finished_at": "2026-10-28T08:00:46.587548200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.602752400+00:00",
+      "finished_at": "2026-10-28T08:00:46.607178500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.623876+00:00",
+      "finished_at": "2026-10-28T08:00:46.629303400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.643358900+00:00",
+      "finished_at": "2026-10-28T08:00:46.648402700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.663740900+00:00",
+      "finished_at": "2026-10-28T08:00:46.667670300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.689998200+00:00",
+      "finished_at": "2026-10-28T08:00:46.693563700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.708279400+00:00",
+      "finished_at": "2026-10-28T08:00:46.711858800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.723159900+00:00",
+      "finished_at": "2026-10-28T08:00:46.727576+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.739236400+00:00",
+      "finished_at": "2026-10-28T08:00:46.742987200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.754847+00:00",
+      "finished_at": "2026-10-28T08:00:46.757832100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.770244200+00:00",
+      "finished_at": "2026-10-28T08:00:46.773604300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.784855+00:00",
+      "finished_at": "2026-10-28T08:00:46.788546400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.799678500+00:00",
+      "finished_at": "2026-10-28T08:00:46.803512+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.813924400+00:00",
+      "finished_at": "2026-10-28T08:00:46.817892900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.828860900+00:00",
+      "finished_at": "2026-10-28T08:00:46.833395700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.844539900+00:00",
+      "finished_at": "2026-10-28T08:00:46.848283100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.859177700+00:00",
+      "finished_at": "2026-10-28T08:00:46.862967600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.873357800+00:00",
+      "finished_at": "2026-10-28T08:00:46.876840500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.887800200+00:00",
+      "finished_at": "2026-10-28T08:00:46.891032500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.901442400+00:00",
+      "finished_at": "2026-10-28T08:00:46.904370400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.916070100+00:00",
+      "finished_at": "2026-10-28T08:00:46.919611500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.931023+00:00",
+      "finished_at": "2026-10-28T08:00:46.934757100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.946063200+00:00",
+      "finished_at": "2026-10-28T08:00:46.949849400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.960077500+00:00",
+      "finished_at": "2026-10-28T08:00:46.964783800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.977252200+00:00",
+      "finished_at": "2026-10-28T08:00:46.980674100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:46.992197200+00:00",
+      "finished_at": "2026-10-28T08:00:46.995565300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.007414600+00:00",
+      "finished_at": "2026-10-28T08:00:47.010490+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.023591100+00:00",
+      "finished_at": "2026-10-28T08:00:47.026857800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.037299200+00:00",
+      "finished_at": "2026-10-28T08:00:47.041941400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.052994200+00:00",
+      "finished_at": "2026-10-28T08:00:47.056334400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.069034800+00:00",
+      "finished_at": "2026-10-28T08:00:47.073195800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.084772700+00:00",
+      "finished_at": "2026-10-28T08:00:47.088221700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.098698300+00:00",
+      "finished_at": "2026-10-28T08:00:47.102237100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.113784+00:00",
+      "finished_at": "2026-10-28T08:00:47.117412400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.129369800+00:00",
+      "finished_at": "2026-10-28T08:00:47.132629900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.143254500+00:00",
+      "finished_at": "2026-10-28T08:00:47.146967500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.157832300+00:00",
+      "finished_at": "2026-10-28T08:00:47.161380700+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.171068700+00:00",
+      "finished_at": "2026-10-28T08:00:47.174331200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.184450500+00:00",
+      "finished_at": "2026-10-28T08:00:47.187721800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.196487400+00:00",
+      "finished_at": "2026-10-28T08:00:47.199801600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.210492100+00:00",
+      "finished_at": "2026-10-28T08:00:47.214160400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.224897700+00:00",
+      "finished_at": "2026-10-28T08:00:47.227977200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.238169900+00:00",
+      "finished_at": "2026-10-28T08:00:47.241886200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.251220900+00:00",
+      "finished_at": "2026-10-28T08:00:47.255175100+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.265496500+00:00",
+      "finished_at": "2026-10-28T08:00:47.268916500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.278259600+00:00",
+      "finished_at": "2026-10-28T08:00:47.281375800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.290829400+00:00",
+      "finished_at": "2026-10-28T08:00:47.310473400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.320585300+00:00",
+      "finished_at": "2026-10-28T08:00:47.324867400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.335433200+00:00",
+      "finished_at": "2026-10-28T08:00:47.339451600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.359638700+00:00",
+      "finished_at": "2026-10-28T08:00:47.363424800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.372181600+00:00",
+      "finished_at": "2026-10-28T08:00:47.376516200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.406071300+00:00",
+      "finished_at": "2026-10-28T08:00:47.433519600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.474591400+00:00",
+      "finished_at": "2026-10-28T08:00:47.478078200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.485847700+00:00",
+      "finished_at": "2026-10-28T08:00:47.489295400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.502442600+00:00",
+      "finished_at": "2026-10-28T08:00:47.505852800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.514379400+00:00",
+      "finished_at": "2026-10-28T08:00:47.518579+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.540257+00:00",
+      "finished_at": "2026-10-28T08:00:47.544743800+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.552820300+00:00",
+      "finished_at": "2026-10-28T08:00:47.557094200+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.577194+00:00",
+      "finished_at": "2026-10-28T08:00:47.581638300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.594421800+00:00",
+      "finished_at": "2026-10-28T08:00:47.598913300+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.616964600+00:00",
+      "finished_at": "2026-10-28T08:00:47.622255900+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.633199700+00:00",
+      "finished_at": "2026-10-28T08:00:47.637302+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.652760900+00:00",
+      "finished_at": "2026-10-28T08:00:47.678167500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.685139900+00:00",
+      "finished_at": "2026-10-28T08:00:47.690803600+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.705112900+00:00",
+      "finished_at": "2026-10-28T08:00:47.709470500+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.718295400+00:00",
+      "finished_at": "2026-10-28T08:00:47.723103400+00:00",
+      "total_tokens": 150
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "started_at": "2026-10-28T08:00:47.731832400+00:00",
+      "finished_at": "2026-10-28T08:00:47.737114900+00:00",
+      "total_tokens": 150
+    }
+  ],
+  "foreign_key_errors": 0,
+  "credentials": 0,
+  "notes_sent": false,
+  "app_exited": true,
+  "provider_stopped": true,
+  "boundary": "Native title-timeout/resume used the build before the later singleton-wrapper parsing fix; that separate format is covered by the saved real-response Rust regression and fresh live recheck."
+}

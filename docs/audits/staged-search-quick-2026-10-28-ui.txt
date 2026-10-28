@@ -1,0 +1,1802 @@
+
+=== initial quick before first title response ===
+Window: "Mercury Quick Final Acceptance", App: mercury.exe.
+	0 窗口 Mercury Quick Final Acceptance Secondary Actions: Raise
+		1 窗格
+			8 窗格 Mercury
+				22 窗格 (disabled)
+				9 区域 Mercury - Web 内容
+					10 区域
+						11 区域
+							12 区域
+								13 区域
+								14 区域
+									15 区域
+										16 区域
+											17 区域
+												18 区域
+												23 文档 Mercury Value: http://tauri.localhost/ ID: RootWebArea
+													24 组 ID: root
+														25 补充
+															26 文本 Mercury
+															27 导航
+																28 切换按钮 订阅源
+																29 切换按钮 标签
+															30 切换按钮 主题追踪
+															31 切换按钮 全文搜索
+															32 切换按钮 收藏
+															33 区域 智能视图
+																34 标题 智能视图
+																49 文本 在全文搜索中设置条件后，点击书签按钮保存。
+															37 按钮 添加订阅源 Description: 添加订阅源
+															38 按钮 同步全部 Description: 同步全部
+															39 按钮 导入 OPML Description: 导入 OPML
+															40 按钮 导出 OPML Description: 导出 OPML
+															50 切换按钮 全部订阅源 71
+															51 切换按钮 技术来源 36
+															52 按钮 删除订阅：技术来源
+															53 切换按钮 新闻来源 35
+															54 按钮 删除订阅：新闻来源
+															42 按钮 设置
+															43 按钮 切换外观（当前：跟随系统） Description: 切换外观（当前：跟随系统）
+														55 文本 全文搜索
+														56 按钮 (disabled) 保存 / 管理智能视图 Description: AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														57 按钮 AI 主题搜索
+														784 区域 AI 主题搜索
+															785 表单 AI 主题搜索
+																786 文本 AI 主题搜索
+																787 编辑 (settable, string) AI 主题搜索 Description: 新的AI模型 Value: 新的AI模型
+																788 按钮 重新发起请求
+																798 按钮 暂停
+																799 按钮 取消
+																789 文本 默认仅搜索当前筛选范围内最新的 100 篇文章，较旧文章不参与本次检查。
+																790 详细信息
+																	791 开合三角标记 会发送本地标题、摘要和正文给 AI；笔记需明确选择。
+																		792 文本 会发送本地标题、摘要和正文给 AI；笔记需明确选择。
+															800 文本 当前 24 篇：AI已核验相关 0 篇，关键词初步匹配待核验 24 篇。
+															801 组
+																802 文本 范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+																803 状态
+																	804 文本 检查进行中
+																	805 文本 ·
+																	806 文本 正在初筛最新100篇范围内的标题
+																807 文本 标题已筛 0 / 71，其中模型初筛或初筛缓存 0 篇。
+																808 文本 待深入 0 篇；全文已核验 0 篇，命中中仅标题/摘要依据 0 篇，完整笔记已核验 0 篇。
+																809 文本 已覆盖资料块 0 / 0（当前已规划）。
+																810 文本 已排除 0，资料不足 0，资料已变更 0，遇错 0，未完成 71。
+															793 详细信息
+																794 开合三角标记 覆盖范围与限制
+																	795 文本 覆盖范围与限制
+															811 详细信息
+																812 开合三角标记 查看主题理解与范围
+																	813 文本 查看主题理解与范围
+															796 按钮 退出 AI 搜索
+														797 文本 AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														59 按钮 全库
+														60 按钮 当前导航范围
+														61 按钮 筛选
+														62 切换按钮 仅未读
+														63 文本 排序
+														64 组合框 (settable, string) 排序 Value: 相关性
+														65 文本 全部订阅源
+														67 按钮 刷新订阅
+														68 状态
+														70 文本 24 篇
+														71 按钮 选择文章
+														72 按钮 全部已读 Description: 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														73 文本 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														74 组
+															814 切换按钮 Sable-3 multimodal model launches
+																815 文本 Sable-3 multimodal model launches
+																816 文本 2026/10/19
+																817 文本 新闻来源
+																818 文本 ·
+																819 文本 正文已在搜索范围
+																820 文本 关键词初步匹配 · AI尚未核验
+																821 文本 命中关键词：ai / introduc / launch / multimodal model / release
+																822 文本 the team introduces a new ai model for images and language.
+																823 文本 The team introduces a new AI model for images and language.
+																824 按钮 收藏文章
+																825 按钮 删除文章
+																826 按钮 标记为已读 Description: 标记为已读
+															827 切换按钮 Introducing FalconTree-63, a new text foundation model
+																828 文本 Introducing FalconTree-63, a new text foundation model
+																829 文本 2026/10/26
+																830 文本 技术来源
+																831 文本 ·
+																832 文本 正文尚未获取
+																833 文本 关键词初步匹配 · AI尚未核验
+																834 文本 命中关键词：foundation model / introduc / language model / release
+																835 文本 introducing falcontree-63, a new text foundation model
+																836 文本 The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.
+																837 按钮 取消收藏
+																838 按钮 删除文章
+																839 按钮 标记为已读 Description: 标记为已读
+															840 切换按钮 Introducing Nebula-Q47, our new language model
+																841 文本 Introducing Nebula-Q47, our new language model
+																842 文本 2026/10/26
+																843 文本 技术来源
+																844 文本 ·
+																845 文本 正文已在搜索范围
+																846 文本 关键词初步匹配 · AI尚未核验
+																847 文本 命中关键词：foundation model / introduc / language model / release
+																848 文本 the research team releases an open-weight foundation model for multilingual reasoning.
+																849 文本 The research team releases an open-weight foundation model for multilingual reasoning.
+																850 按钮 取消收藏
+																851 按钮 删除文章
+																852 按钮 标记为已读 Description: 标记为已读
+															853 切换按钮 DeltaLab unveils Terra-8B language model
+																854 文本 DeltaLab unveils Terra-8B language model
+																855 文本 2026/5/1
+																856 文本 技术来源
+																857 文本 ·
+																858 文本 正文已在搜索范围
+																859 文本 关键词初步匹配 · AI尚未核验
+																860 文本 命中关键词：language model / release / unveil
+																861 文本 deltalab unveils terra-8b language model
+																862 文本 New open language model and evaluation results announced.
+																863 按钮 取消收藏
+																864 按钮 删除文章
+																865 按钮 标记为已读 Description: 标记为已读
+															866 切换按钮 A beginner guide to using large language models
+																867 文本 A beginner guide to using large language models
+																868 文本 2026/10/25
+																869 文本 技术来源
+																870 文本 ·
+																871 文本 正文已在搜索范围
+																872 文本 关键词初步匹配 · AI尚未核验
+																873 文本 命中关键词：ai / language model / release
+																874 文本 an old tutorial explains prompting with a previously released ai model.
+																875 文本 An old tutorial explains prompting with a previously released AI model.
+																876 按钮 取消收藏
+																877 按钮 删除文章
+																878 按钮 标记为已读 Description: 标记为已读
+															879 切换按钮 Aurora unveils its new 2026 vehicle model
+																880 文本 Aurora unveils its new 2026 vehicle model
+																881 文本 2026/10/27
+																882 文本 技术来源
+																883 文本 ·
+																884 文本 正文已在搜索范围
+																885 文本 关键词初步匹配 · AI尚未核验
+																886 文本 命中关键词：launch / release / unveil
+																887 文本 the car model launches with improved electric motors.
+																888 文本 The car model launches with improved electric motors.
+																889 按钮 取消收藏
+																890 按钮 删除文章
+																891 按钮 标记为已读 Description: 标记为已读
+															892 切换按钮 Retail sales rise while stores use older AI software
+																893 文本 Retail sales rise while stores use older AI software
+																894 文本 2026/10/26
+																895 文本 新闻来源
+																896 文本 ·
+																897 文本 正文已在搜索范围
+																898 文本 关键词初步匹配 · AI尚未核验
+																899 文本 命中关键词：ai / language model
+																900 文本 retail sales rise while stores use older ai software
+																901 文本 Retailers still run an unchanged legacy language model.
+																902 按钮 收藏文章
+																903 按钮 删除文章
+																904 按钮 标记为已读 Description: 标记为已读
+															905 切换按钮 Lumen AI raises $200 million
+																906 文本 Lumen AI raises $200 million
+																907 文本 2026/10/27
+																908 文本 技术来源
+																909 文本 ·
+																910 文本 正文已在搜索范围
+																911 文本 关键词初步匹配 · AI尚未核验
+																912 文本 命中关键词：ai / language model
+																913 文本 lumen ai raises $200 million
+																914 文本 AI company secures financing to expand its business.
+																915 按钮 取消收藏
+																916 按钮 删除文章
+																917 按钮 标记为已读 Description: 标记为已读
+															918 切换按钮 星河团队开放新一代语言系统权重
+																919 文本 星河团队开放新一代语言系统权重
+																920 文本 2026/10/25
+																921 文本 技术来源
+																922 文本 ·
+																923 文本 正文已在搜索范围
+																924 文本 关键词初步匹配 · AI尚未核验
+																925 文本 命中关键词：发布 / 大语言模型 / 开放权重 / 语言模型
+																926 文本 大语言模型星河二代正式发布，支持多语种推理。
+																927 文本 大语言模型星河二代正式发布，支持多语种推理。
+																928 按钮 收藏文章
+																929 按钮 删除文章
+																930 按钮 标记为已读 Description: 标记为已读
+															931 切换按钮 AI model news: a security demonstration
+																932 文本 AI model news: a security demonstration
+																933 文本 2026/10/27
+																934 文本 新闻来源
+																935 文本 ·
+																936 文本 正文已在搜索范围
+																937 文本 关键词初步匹配 · AI尚未核验
+																938 文本 命中关键词：ai
+																939 文本 ai model news: a security demonstration
+																940 文本 An example of prompt injection, not an actual product announcement.
+																941 按钮 收藏文章
+																942 按钮 删除文章
+																943 按钮 标记为已读 Description: 标记为已读
+															944 切换按钮 开源构建工具石燕发布新版
+																945 文本 开源构建工具石燕发布新版
+																946 文本 2026/10/18
+																947 文本 新闻来源
+																948 文本 ·
+																949 文本 正文已在搜索范围
+																950 文本 关键词初步匹配 · AI尚未核验
+																951 文本 命中关键词：发布
+																952 文本 开源构建工具石燕发布新版
+																953 文本 MIT 许可的命令行构建工具推出 3.1，改进增量编译。
+																954 按钮 收藏文章
+																955 按钮 删除文章
+																956 按钮 标记为已读 Description: 标记为已读
+															957 切换按钮 Orion 0.9 checkpoints are here
+																958 文本 Orion 0.9 checkpoints are here
+																959 文本 2026/10/24
+																960 文本 新闻来源
+																961 文本 ·
+																962 文本 正文已在搜索范围
+																963 文本 关键词初步匹配 · AI尚未核验
+																964 文本 命中关键词：foundation model / introduc / release
+																965 文本 a fresh foundation model joins the open weights ecosystem.
+																966 文本 A fresh foundation model joins the open weights ecosystem.
+																967 按钮 取消收藏
+																968 按钮 删除文章
+																969 按钮 标记为已读 Description: 标记为已读
+															970 切换按钮 Solstice keynote quotation in a funding prospectus
+																971 文本 Solstice keynote quotation in a funding prospectus
+																972 文本 2026/10/27
+																973 文本 技术来源
+																974 文本 ·
+																975 文本 正文已在搜索范围
+																976 文本 关键词初步匹配 · AI尚未核验
+																977 文本 命中关键词：language model / launch / release
+																978 文本 the prospectus quotes a keynote: "today we release solstice-5, a new language model with open weights." the prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly
+																979 文本 A prospectus opens with a historical quotation and later explains the transaction.
+																980 按钮 取消收藏
+																981 按钮 删除文章
+																982 按钮 标记为已读 Description: 标记为已读
+															983 切换按钮 Engineering dispatch 47
+																984 文本 Engineering dispatch 47
+																985 文本 2026/10/27
+																986 文本 技术来源
+																987 文本 ·
+																988 文本 正文已在搜索范围
+																989 文本 关键词初步匹配 · AI尚未核验
+																990 文本 命中关键词：ai / foundation model / release
+																991 文本 routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure m
+																992 文本 Infrastructure notes and a research update.
+																993 按钮 取消收藏
+																994 按钮 删除文章
+																995 按钮 标记为已读 Description: 标记为已读
+															996 切换按钮 （无标题）
+																997 文本 （无标题）
+																998 文本 2026/10/25
+																999 文本 新闻来源
+																1000 文本 ·
+																1001 文本 正文已在搜索范围
+																1002 文本 关键词初步匹配 · AI尚未核验
+																1003 文本 命中关键词：发布 / 大语言模型 / 语言模型
+																1004 文本 kiruna-x18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。
+																1005 文本 Kiruna-X18 的新权重和推理代码已开放。
+																1006 按钮 收藏文章
+																1007 按钮 删除文章
+																1008 按钮 标记为已读 Description: 标记为已读
+															1009 切换按钮 Wednesday dispatch
+																1010 文本 Wednesday dispatch
+																1011 文本 2026/10/26
+																1012 文本 技术来源
+																1013 文本 ·
+																1014 文本 正文已在搜索范围
+																1015 文本 关键词初步匹配 · AI尚未核验
+																1016 文本 命中关键词：language model / release
+																1017 文本 vireo weights the laboratory has released vireo-9b, a new open-weight language model with multilingual reasoning. the new model checkpoints and inference source code were published this morning.
+																1018 文本 Operations, a laboratory note and a software package.
+																1019 按钮 收藏文章
+																1020 按钮 删除文章
+																1021 按钮 标记为已读 Description: 标记为已读
+															1022 切换按钮 New model templates for database schema diagrams
+																1023 文本 New model templates for database schema diagrams
+																1024 文本 2026/10/26
+																1025 文本 新闻来源
+																1026 文本 ·
+																1027 文本 正文已在搜索范围
+																1028 文本 关键词初步匹配 · AI尚未核验
+																1029 文本 命中关键词：introduc / language model
+																1030 文本 ew model is a database diagram template; no trained language model is introduced.
+																1031 文本 Diagramming templates get an update.
+																1032 按钮 收藏文章
+																1033 按钮 删除文章
+																1034 按钮 标记为已读 Description: 标记为已读
+															1035 切换按钮 Frontier weekly
+																1036 文本 Frontier weekly
+																1037 文本 2026/10/23
+																1038 文本 技术来源
+																1039 文本 ·
+																1040 文本 正文已在搜索范围
+																1041 文本 关键词初步匹配 · AI尚未核验
+																1042 文本 命中关键词：language model / release
+																1043 文本 n weights the hawthorn team has released hawthorn-6b, a newly trained language model with open weights. its versioned checkpoints and inference implementation are public. hiring a compiler company opened two documentation roles.
+																1044 文本 Three research developments from this week.
+																1045 按钮 收藏文章
+																1046 按钮 删除文章
+																1047 按钮 标记为已读 Description: 标记为已读
+															1048 切换按钮 ToolForge 2.0 is available
+																1049 文本 ToolForge 2.0 is available
+																1050 文本 2026/10/22
+																1051 文本 技术来源
+																1052 文本 ·
+																1053 文本 正文已在搜索范围
+																1054 文本 关键词初步匹配 · AI尚未核验
+																1055 文本 命中关键词：release
+																1056 文本 an open-source build tool releases a new major version under apache 2.0.
+																1057 文本 An open-source build tool releases a new major version under Apache 2.0.
+																1058 按钮 取消收藏
+																1059 按钮 删除文章
+																1060 按钮 标记为已读 Description: 标记为已读
+															1061 切换按钮 EchoChess 1.2 opens its text decoder
+																1062 文本 EchoChess 1.2 opens its text decoder
+																1063 文本 2026/10/20
+																1064 文本 新闻来源
+																1065 文本 ·
+																1066 文本 正文已在搜索范围
+																1067 文本 关键词初步匹配 · AI尚未核验
+																1068 文本 命中关键词：release
+																1069 文本 a research release with multilingual conversation and new transformer weights.
+																1070 文本 A research release with multilingual conversation and new transformer weights.
+																1071 按钮 收藏文章
+																1072 按钮 删除文章
+																1073 按钮 标记为已读 Description: 标记为已读
+															1074 切换按钮 Garden irrigation checklist
+																1075 文本 Garden irrigation checklist
+																1076 文本 2026/10/16
+																1077 文本 新闻来源
+																1078 文本 ·
+																1079 文本 正文已在搜索范围
+																1080 文本 关键词初步匹配 · AI尚未核验
+																1081 文本 命中关键词：language model / release
+																1082 文本 boratory announcement latticeworks has released luma-r17, a new large language model. the release opens its weights and tokenizer for independent research. the cooperative's final section is the laboratory's official release announcement, s
+																1083 文本 Watering notes from an engineering cooperative.
+																1084 按钮 收藏文章
+																1085 按钮 删除文章
+																1086 按钮 标记为已读 Description: 标记为已读
+															1087 切换按钮 Open-source company expands its hiring team
+																1088 文本 Open-source company expands its hiring team
+																1089 文本 2026/10/27
+																1090 文本 技术来源
+																1091 文本 ·
+																1092 文本 正文已在搜索范围
+																1093 文本 关键词初步匹配 · AI尚未核验
+																1094 文本 命中关键词：release
+																1095 文本 announcement is about hiring, without a software version or new tool release.
+																1096 文本 A company that maintains build tools announces recruiting plans.
+																1097 按钮 收藏文章
+																1098 按钮 删除文章
+																1099 按钮 标记为已读 Description: 标记为已读
+															1100 切换按钮 Installing an old build utility
+																1101 文本 Installing an old build utility
+																1102 文本 2026/10/27
+																1103 文本 新闻来源
+																1104 文本 ·
+																1105 文本 正文已在搜索范围
+																1106 文本 关键词初步匹配 · AI尚未核验
+																1107 文本 命中关键词：release
+																1108 文本 this is a tutorial for a version released years ago. there is no new tool release or version announcement.
+																1109 文本 An installation tutorial for an existing open-source tool.
+																1110 按钮 收藏文章
+																1111 按钮 删除文章
+																1112 按钮 标记为已读 Description: 标记为已读
+															1113 切换按钮 Kestrel Build 4.2 ships incremental compilation
+																1114 文本 Kestrel Build 4.2 ships incremental compilation
+																1115 文本 2026/10/18
+																1116 文本 新闻来源
+																1117 文本 ·
+																1118 文本 正文已在搜索范围
+																1119 文本 关键词初步匹配 · AI尚未核验
+																1120 文本 命中关键词：release
+																1121 文本 kestrel build 4.2 is released under the mit licence. this open-source build tool adds incremental compilation, with source archives, tagged commits and release notes published alongside the binaries.
+																1122 文本 The open-source command-line build tool publishes a new stable version.
+																1123 按钮 收藏文章
+																1124 按钮 删除文章
+																1125 按钮 标记为已读 Description: 标记为已读
+														45 主要
+															46 标题 Mercury
+															47 文本 选择一个订阅源和文章开始阅读
+															48 文本 就绪
+								19 区域
+						20 区域
+						21 区域
+		2 标题栏 (settable, string) Value: Mercury Quick Final Acceptance
+			3 菜单栏 系统 ID: MenuBar
+				4 菜单项 系统
+			5 按钮 最小化
+			6 按钮 最大化
+			7 按钮 关闭
+
+Document text: ```
+新的AI模型
+```
+
+=== reading while pending ===
+Window: "Mercury Quick Final Acceptance", App: mercury.exe.
+	0 窗口 Mercury Quick Final Acceptance Secondary Actions: Raise
+		1 窗格
+			8 窗格 Mercury
+				22 窗格 (disabled)
+				9 区域 Mercury - Web 内容
+					10 区域
+						11 区域
+							12 区域
+								13 区域
+								14 区域
+									15 区域
+										16 区域
+											17 区域
+												18 区域
+												23 文档 Mercury Value: http://tauri.localhost/ ID: RootWebArea
+													24 组 ID: root
+														25 补充
+															26 文本 Mercury
+															27 导航
+																28 切换按钮 订阅源
+																29 切换按钮 标签
+															30 切换按钮 主题追踪
+															31 切换按钮 全文搜索
+															32 切换按钮 收藏
+															33 区域 智能视图
+																34 标题 智能视图
+																49 文本 在全文搜索中设置条件后，点击书签按钮保存。
+															37 按钮 添加订阅源 Description: 添加订阅源
+															38 按钮 同步全部 Description: 同步全部
+															39 按钮 导入 OPML Description: 导入 OPML
+															40 按钮 导出 OPML Description: 导出 OPML
+															50 切换按钮 全部订阅源 71
+															51 切换按钮 技术来源 36
+															52 按钮 删除订阅：技术来源
+															53 切换按钮 新闻来源 35
+															54 按钮 删除订阅：新闻来源
+															42 按钮 设置
+															43 按钮 切换外观（当前：跟随系统） Description: 切换外观（当前：跟随系统）
+														55 文本 全文搜索
+														56 按钮 (disabled) 保存 / 管理智能视图 Description: AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														57 按钮 AI 主题搜索
+														784 区域 AI 主题搜索
+															785 表单 AI 主题搜索
+																786 文本 AI 主题搜索
+																787 编辑 (settable, string) AI 主题搜索 Description: 新的AI模型 Value: 新的AI模型
+																788 按钮 重新发起请求
+																798 按钮 暂停
+																799 按钮 取消
+																789 文本 默认仅搜索当前筛选范围内最新的 100 篇文章，较旧文章不参与本次检查。
+																790 详细信息
+																	791 开合三角标记 会发送本地标题、摘要和正文给 AI；笔记需明确选择。
+																		792 文本 会发送本地标题、摘要和正文给 AI；笔记需明确选择。
+															800 文本 当前 24 篇：AI已核验相关 0 篇，关键词初步匹配待核验 24 篇。
+															801 组
+																802 文本 范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+																803 状态
+																	804 文本 检查进行中
+																	805 文本 ·
+																	806 文本 正在初筛最新100篇范围内的标题
+																807 文本 标题已筛 0 / 71，其中模型初筛或初筛缓存 0 篇。
+																808 文本 待深入 0 篇；全文已核验 0 篇，命中中仅标题/摘要依据 0 篇，完整笔记已核验 0 篇。
+																809 文本 已覆盖资料块 0 / 0（当前已规划）。
+																810 文本 已排除 0，资料不足 0，资料已变更 0，遇错 0，未完成 71。
+															793 详细信息
+																794 开合三角标记 覆盖范围与限制
+																	795 文本 覆盖范围与限制
+															811 详细信息
+																812 开合三角标记 查看主题理解与范围
+																	813 文本 查看主题理解与范围
+															796 按钮 退出 AI 搜索
+														797 文本 AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														59 按钮 全库
+														60 按钮 当前导航范围
+														61 按钮 筛选
+														62 切换按钮 仅未读
+														63 文本 排序
+														64 组合框 (settable, string) 排序 Value: 相关性
+														65 文本 全部订阅源
+														67 按钮 刷新订阅
+														68 状态
+														70 文本 24 篇
+														71 按钮 选择文章
+														72 按钮 全部已读 Description: 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														73 文本 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														74 组
+															814 切换按钮 Sable-3 multimodal model launches
+																815 文本 Sable-3 multimodal model launches
+																816 文本 2026/10/19
+																817 文本 新闻来源
+																818 文本 ·
+																819 文本 正文已在搜索范围
+																820 文本 关键词初步匹配 · AI尚未核验
+																821 文本 命中关键词：ai / introduc / launch / multimodal model / release
+																822 文本 the team introduces a new ai model for images and language.
+																823 文本 The team introduces a new AI model for images and language.
+																824 按钮 收藏文章
+																825 按钮 删除文章
+																826 按钮 标记为已读 Description: 标记为已读
+															827 切换按钮 Introducing FalconTree-63, a new text foundation model
+																828 文本 Introducing FalconTree-63, a new text foundation model
+																829 文本 2026/10/26
+																830 文本 技术来源
+																831 文本 ·
+																832 文本 正文尚未获取
+																833 文本 关键词初步匹配 · AI尚未核验
+																834 文本 命中关键词：foundation model / introduc / language model / release
+																835 文本 introducing falcontree-63, a new text foundation model
+																836 文本 The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.
+																837 按钮 取消收藏
+																838 按钮 删除文章
+																839 按钮 标记为已读 Description: 标记为已读
+															840 切换按钮 Introducing Nebula-Q47, our new language model
+																841 文本 Introducing Nebula-Q47, our new language model
+																842 文本 2026/10/26
+																843 文本 技术来源
+																844 文本 ·
+																845 文本 正文已在搜索范围
+																846 文本 关键词初步匹配 · AI尚未核验
+																847 文本 命中关键词：foundation model / introduc / language model / release
+																848 文本 the research team releases an open-weight foundation model for multilingual reasoning.
+																849 文本 The research team releases an open-weight foundation model for multilingual reasoning.
+																850 按钮 取消收藏
+																851 按钮 删除文章
+																852 按钮 标记为已读 Description: 标记为已读
+															853 切换按钮 DeltaLab unveils Terra-8B language model
+																854 文本 DeltaLab unveils Terra-8B language model
+																855 文本 2026/5/1
+																856 文本 技术来源
+																857 文本 ·
+																858 文本 正文已在搜索范围
+																859 文本 关键词初步匹配 · AI尚未核验
+																860 文本 命中关键词：language model / release / unveil
+																861 文本 deltalab unveils terra-8b language model
+																862 文本 New open language model and evaluation results announced.
+																863 按钮 取消收藏
+																864 按钮 删除文章
+																865 按钮 标记为已读 Description: 标记为已读
+															866 切换按钮 A beginner guide to using large language models
+																867 文本 A beginner guide to using large language models
+																868 文本 2026/10/25
+																869 文本 技术来源
+																870 文本 ·
+																871 文本 正文已在搜索范围
+																872 文本 关键词初步匹配 · AI尚未核验
+																873 文本 命中关键词：ai / language model / release
+																874 文本 an old tutorial explains prompting with a previously released ai model.
+																875 文本 An old tutorial explains prompting with a previously released AI model.
+																876 按钮 取消收藏
+																877 按钮 删除文章
+																878 按钮 标记为已读 Description: 标记为已读
+															879 切换按钮 Aurora unveils its new 2026 vehicle model
+																880 文本 Aurora unveils its new 2026 vehicle model
+																881 文本 2026/10/27
+																882 文本 技术来源
+																883 文本 ·
+																884 文本 正文已在搜索范围
+																885 文本 关键词初步匹配 · AI尚未核验
+																886 文本 命中关键词：launch / release / unveil
+																887 文本 the car model launches with improved electric motors.
+																888 文本 The car model launches with improved electric motors.
+																889 按钮 取消收藏
+																890 按钮 删除文章
+																891 按钮 标记为已读 Description: 标记为已读
+															892 切换按钮 Retail sales rise while stores use older AI software
+																893 文本 Retail sales rise while stores use older AI software
+																894 文本 2026/10/26
+																895 文本 新闻来源
+																896 文本 ·
+																897 文本 正文已在搜索范围
+																898 文本 关键词初步匹配 · AI尚未核验
+																899 文本 命中关键词：ai / language model
+																900 文本 retail sales rise while stores use older ai software
+																901 文本 Retailers still run an unchanged legacy language model.
+																902 按钮 收藏文章
+																903 按钮 删除文章
+																904 按钮 标记为已读 Description: 标记为已读
+															905 切换按钮 Lumen AI raises $200 million
+																906 文本 Lumen AI raises $200 million
+																907 文本 2026/10/27
+																908 文本 技术来源
+																909 文本 ·
+																910 文本 正文已在搜索范围
+																911 文本 关键词初步匹配 · AI尚未核验
+																912 文本 命中关键词：ai / language model
+																913 文本 lumen ai raises $200 million
+																914 文本 AI company secures financing to expand its business.
+																915 按钮 取消收藏
+																916 按钮 删除文章
+																917 按钮 标记为已读 Description: 标记为已读
+															918 切换按钮 星河团队开放新一代语言系统权重
+																919 文本 星河团队开放新一代语言系统权重
+																920 文本 2026/10/25
+																921 文本 技术来源
+																922 文本 ·
+																923 文本 正文已在搜索范围
+																924 文本 关键词初步匹配 · AI尚未核验
+																925 文本 命中关键词：发布 / 大语言模型 / 开放权重 / 语言模型
+																926 文本 大语言模型星河二代正式发布，支持多语种推理。
+																927 文本 大语言模型星河二代正式发布，支持多语种推理。
+																928 按钮 收藏文章
+																929 按钮 删除文章
+																930 按钮 标记为已读 Description: 标记为已读
+															931 切换按钮 AI model news: a security demonstration
+																932 文本 AI model news: a security demonstration
+																933 文本 2026/10/27
+																934 文本 新闻来源
+																935 文本 ·
+																936 文本 正文已在搜索范围
+																937 文本 关键词初步匹配 · AI尚未核验
+																938 文本 命中关键词：ai
+																939 文本 ai model news: a security demonstration
+																940 文本 An example of prompt injection, not an actual product announcement.
+																941 按钮 收藏文章
+																942 按钮 删除文章
+																943 按钮 标记为已读 Description: 标记为已读
+															944 切换按钮 开源构建工具石燕发布新版
+																945 文本 开源构建工具石燕发布新版
+																946 文本 2026/10/18
+																947 文本 新闻来源
+																948 文本 ·
+																949 文本 正文已在搜索范围
+																950 文本 关键词初步匹配 · AI尚未核验
+																951 文本 命中关键词：发布
+																952 文本 开源构建工具石燕发布新版
+																953 文本 MIT 许可的命令行构建工具推出 3.1，改进增量编译。
+																954 按钮 收藏文章
+																955 按钮 删除文章
+																956 按钮 标记为已读 Description: 标记为已读
+															957 切换按钮 Orion 0.9 checkpoints are here
+																958 文本 Orion 0.9 checkpoints are here
+																959 文本 2026/10/24
+																960 文本 新闻来源
+																961 文本 ·
+																962 文本 正文已在搜索范围
+																963 文本 关键词初步匹配 · AI尚未核验
+																964 文本 命中关键词：foundation model / introduc / release
+																965 文本 a fresh foundation model joins the open weights ecosystem.
+																966 文本 A fresh foundation model joins the open weights ecosystem.
+																967 按钮 取消收藏
+																968 按钮 删除文章
+																969 按钮 标记为已读 Description: 标记为已读
+															970 切换按钮 Solstice keynote quotation in a funding prospectus
+																971 文本 Solstice keynote quotation in a funding prospectus
+																972 文本 2026/10/27
+																973 文本 技术来源
+																974 文本 ·
+																975 文本 正文已在搜索范围
+																976 文本 关键词初步匹配 · AI尚未核验
+																977 文本 命中关键词：language model / launch / release
+																978 文本 the prospectus quotes a keynote: "today we release solstice-5, a new language model with open weights." the prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly
+																979 文本 A prospectus opens with a historical quotation and later explains the transaction.
+																980 按钮 取消收藏
+																981 按钮 删除文章
+																982 按钮 标记为已读 Description: 标记为已读
+															983 切换按钮 Engineering dispatch 47
+																984 文本 Engineering dispatch 47
+																985 文本 2026/10/27
+																986 文本 技术来源
+																987 文本 ·
+																988 文本 正文已在搜索范围
+																989 文本 关键词初步匹配 · AI尚未核验
+																990 文本 命中关键词：ai / foundation model / release
+																991 文本 routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure m
+																992 文本 Infrastructure notes and a research update.
+																993 按钮 取消收藏
+																994 按钮 删除文章
+																995 按钮 标记为已读 Description: 标记为已读
+															996 切换按钮 （无标题）
+																997 文本 （无标题）
+																998 文本 2026/10/25
+																999 文本 新闻来源
+																1000 文本 ·
+																1001 文本 正文已在搜索范围
+																1002 文本 关键词初步匹配 · AI尚未核验
+																1003 文本 命中关键词：发布 / 大语言模型 / 语言模型
+																1004 文本 kiruna-x18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。
+																1005 文本 Kiruna-X18 的新权重和推理代码已开放。
+																1006 按钮 收藏文章
+																1007 按钮 删除文章
+																1008 按钮 标记为已读 Description: 标记为已读
+															1009 切换按钮 Wednesday dispatch
+																1010 文本 Wednesday dispatch
+																1011 文本 2026/10/26
+																1012 文本 技术来源
+																1013 文本 ·
+																1014 文本 正文已在搜索范围
+																1015 文本 关键词初步匹配 · AI尚未核验
+																1016 文本 命中关键词：language model / release
+																1017 文本 vireo weights the laboratory has released vireo-9b, a new open-weight language model with multilingual reasoning. the new model checkpoints and inference source code were published this morning.
+																1018 文本 Operations, a laboratory note and a software package.
+																1019 按钮 收藏文章
+																1020 按钮 删除文章
+																1021 按钮 标记为已读 Description: 标记为已读
+															1022 切换按钮 New model templates for database schema diagrams
+																1023 文本 New model templates for database schema diagrams
+																1024 文本 2026/10/26
+																1025 文本 新闻来源
+																1026 文本 ·
+																1027 文本 正文已在搜索范围
+																1028 文本 关键词初步匹配 · AI尚未核验
+																1029 文本 命中关键词：introduc / language model
+																1030 文本 ew model is a database diagram template; no trained language model is introduced.
+																1031 文本 Diagramming templates get an update.
+																1032 按钮 收藏文章
+																1033 按钮 删除文章
+																1034 按钮 标记为已读 Description: 标记为已读
+															1035 切换按钮 Frontier weekly
+																1036 文本 Frontier weekly
+																1037 文本 2026/10/23
+																1038 文本 技术来源
+																1039 文本 ·
+																1040 文本 正文已在搜索范围
+																1041 文本 关键词初步匹配 · AI尚未核验
+																1042 文本 命中关键词：language model / release
+																1043 文本 n weights the hawthorn team has released hawthorn-6b, a newly trained language model with open weights. its versioned checkpoints and inference implementation are public. hiring a compiler company opened two documentation roles.
+																1044 文本 Three research developments from this week.
+																1045 按钮 收藏文章
+																1046 按钮 删除文章
+																1047 按钮 标记为已读 Description: 标记为已读
+															1048 切换按钮 ToolForge 2.0 is available
+																1049 文本 ToolForge 2.0 is available
+																1050 文本 2026/10/22
+																1051 文本 技术来源
+																1052 文本 ·
+																1053 文本 正文已在搜索范围
+																1054 文本 关键词初步匹配 · AI尚未核验
+																1055 文本 命中关键词：release
+																1056 文本 an open-source build tool releases a new major version under apache 2.0.
+																1057 文本 An open-source build tool releases a new major version under Apache 2.0.
+																1058 按钮 取消收藏
+																1059 按钮 删除文章
+																1060 按钮 标记为已读 Description: 标记为已读
+															1061 切换按钮 EchoChess 1.2 opens its text decoder
+																1062 文本 EchoChess 1.2 opens its text decoder
+																1063 文本 2026/10/20
+																1064 文本 新闻来源
+																1065 文本 ·
+																1066 文本 正文已在搜索范围
+																1067 文本 关键词初步匹配 · AI尚未核验
+																1068 文本 命中关键词：release
+																1069 文本 a research release with multilingual conversation and new transformer weights.
+																1070 文本 A research release with multilingual conversation and new transformer weights.
+																1071 按钮 收藏文章
+																1072 按钮 删除文章
+																1073 按钮 标记为已读 Description: 标记为已读
+															1074 切换按钮 Garden irrigation checklist
+																1075 文本 Garden irrigation checklist
+																1076 文本 2026/10/16
+																1077 文本 新闻来源
+																1078 文本 ·
+																1079 文本 正文已在搜索范围
+																1080 文本 关键词初步匹配 · AI尚未核验
+																1081 文本 命中关键词：language model / release
+																1082 文本 boratory announcement latticeworks has released luma-r17, a new large language model. the release opens its weights and tokenizer for independent research. the cooperative's final section is the laboratory's official release announcement, s
+																1083 文本 Watering notes from an engineering cooperative.
+																1084 按钮 收藏文章
+																1085 按钮 删除文章
+																1086 按钮 标记为已读 Description: 标记为已读
+															1087 切换按钮 Open-source company expands its hiring team
+																1088 文本 Open-source company expands its hiring team
+																1089 文本 2026/10/27
+																1090 文本 技术来源
+																1091 文本 ·
+																1092 文本 正文已在搜索范围
+																1093 文本 关键词初步匹配 · AI尚未核验
+																1094 文本 命中关键词：release
+																1095 文本 announcement is about hiring, without a software version or new tool release.
+																1096 文本 A company that maintains build tools announces recruiting plans.
+																1097 按钮 收藏文章
+																1098 按钮 删除文章
+																1099 按钮 标记为已读 Description: 标记为已读
+															1100 切换按钮 Installing an old build utility
+																1101 文本 Installing an old build utility
+																1102 文本 2026/10/27
+																1103 文本 新闻来源
+																1104 文本 ·
+																1105 文本 正文已在搜索范围
+																1106 文本 关键词初步匹配 · AI尚未核验
+																1107 文本 命中关键词：release
+																1108 文本 this is a tutorial for a version released years ago. there is no new tool release or version announcement.
+																1109 文本 An installation tutorial for an existing open-source tool.
+																1110 按钮 收藏文章
+																1111 按钮 删除文章
+																1112 按钮 标记为已读 Description: 标记为已读
+															1113 切换按钮 Kestrel Build 4.2 ships incremental compilation
+																1114 文本 Kestrel Build 4.2 ships incremental compilation
+																1115 文本 2026/10/18
+																1116 文本 新闻来源
+																1117 文本 ·
+																1118 文本 正文已在搜索范围
+																1119 文本 关键词初步匹配 · AI尚未核验
+																1120 文本 命中关键词：release
+																1121 文本 kestrel build 4.2 is released under the mit licence. this open-source build tool adds incremental compilation, with source archives, tagged commits and release notes published alongside the binaries.
+																1122 文本 The open-source command-line build tool publishes a new stable version.
+																1123 按钮 收藏文章
+																1124 按钮 删除文章
+																1125 按钮 标记为已读 Description: 标记为已读
+														45 主要
+															1126 切换按钮 阅读 Description: 阅读
+															1127 切换按钮 笔记 Description: 笔记
+															1128 切换按钮 摘要 Description: 摘要
+															1129 切换按钮 翻译 Description: 翻译
+															1130 切换按钮 标签 Description: 标签
+															1131 标题 Sable-3 multimodal model launches Description: Sable-3 multimodal model launches
+															1132 按钮 导出文摘
+															1133 按钮 阅读设置 Description: 阅读设置
+															1134 状态
+																1135 文本 未能获取全文，当前显示订阅源摘要或旧版订阅内容，可能不完整。
+																1136 按钮 重试获取全文
+															1137 文档 阅读内容 Description: 阅读内容
+																1138 文档 Value: about:srcdoc ID: RootWebArea
+																	1139 文章
+																		1140 文本 The team introduces a new AI model for images and language.
+															48 文本 就绪
+								19 区域
+						20 区域
+						21 区域
+		2 标题栏 (settable, string) Value: Mercury Quick Final Acceptance
+			3 菜单栏 系统 ID: MenuBar
+				4 菜单项 系统
+			5 按钮 最小化
+			6 按钮 最大化
+			7 按钮 关闭
+
+Document text: ```
+新的AI模型
+```
+
+=== collapsed while running ===
+Window: "Mercury Quick Final Acceptance", App: mercury.exe.
+	0 窗口 Mercury Quick Final Acceptance Secondary Actions: Raise
+		1 窗格
+			8 窗格 Mercury
+				22 窗格 (disabled)
+				9 区域 Mercury - Web 内容
+					10 区域
+						11 区域
+							12 区域
+								13 区域
+								14 区域
+									15 区域
+										16 区域
+											17 区域
+												18 区域
+												23 文档 Mercury Value: http://tauri.localhost/ ID: RootWebArea
+													24 组 ID: root
+														25 补充
+															26 文本 Mercury
+															27 导航
+																28 切换按钮 订阅源
+																29 切换按钮 标签
+															30 切换按钮 主题追踪
+															31 切换按钮 全文搜索
+															32 切换按钮 收藏
+															33 区域 智能视图
+																34 标题 智能视图
+																49 文本 在全文搜索中设置条件后，点击书签按钮保存。
+															37 按钮 添加订阅源 Description: 添加订阅源
+															38 按钮 同步全部 Description: 同步全部
+															39 按钮 导入 OPML Description: 导入 OPML
+															40 按钮 导出 OPML Description: 导出 OPML
+															50 切换按钮 全部订阅源 71
+															51 切换按钮 技术来源 36
+															52 按钮 删除订阅：技术来源
+															53 切换按钮 新闻来源 35
+															54 按钮 删除订阅：新闻来源
+															42 按钮 设置
+															43 按钮 切换外观（当前：跟随系统） Description: 切换外观（当前：跟随系统）
+														55 文本 全文搜索
+														56 按钮 (disabled) 保存 / 管理智能视图 Description: AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														57 按钮 AI 主题搜索
+														784 区域 AI 主题搜索
+															1485 按钮 暂停
+															1486 按钮 取消
+															800 文本 当前 13 篇：AI已核验相关 3 篇，关键词初步匹配待核验 10 篇。
+															801 组
+																802 文本 范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+																803 状态
+																	804 文本 检查进行中
+																	805 文本 ·
+																	806 文本 正在分块核验完整资料
+																807 文本 标题已筛 71 / 71，其中模型初筛或初筛缓存 69 篇。
+																808 文本 待深入 10 篇；全文已核验 3 篇，命中中仅标题/摘要依据 0 篇，完整笔记已核验 0 篇。
+																809 文本 已覆盖资料块 6 / 26（当前已规划）。
+																810 文本 已排除 57，资料不足 1，资料已变更 0，遇错 0，未完成 10。
+															793 详细信息
+																794 开合三角标记 覆盖范围与限制
+																	795 文本 覆盖范围与限制
+															811 详细信息
+																812 开合三角标记 查看主题理解与范围
+																	813 文本 查看主题理解与范围
+															796 按钮 退出 AI 搜索
+														797 文本 AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														59 按钮 全库
+														60 按钮 当前导航范围
+														61 按钮 筛选
+														62 切换按钮 仅未读
+														63 文本 排序
+														64 组合框 (settable, string) 排序 Value: 相关性
+														65 文本 全部订阅源
+														67 按钮 刷新订阅
+														68 状态
+														70 文本 13 篇
+														71 按钮 选择文章
+														72 按钮 全部已读 Description: 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														73 文本 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														74 组
+															1310 切换按钮 （无标题）
+																1311 文本 （无标题）
+																1312 文本 2026/10/25
+																1313 文本 新闻来源
+																1314 文本 ·
+																1315 文本 正文已在搜索范围
+																1316 文本 相关依据：受控整篇判断：直接相关
+																1317 文本 全文已核验：1 块
+																1318 文本 “
+																1319 文本 Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。
+																1320 文本 ”
+																1321 文本 Kiruna-X18 的新权重和推理代码已开放。
+																1322 按钮 收藏文章
+																1323 按钮 删除文章
+																1324 按钮 标记为已读 Description: 标记为已读
+															1325 切换按钮 Frontier weekly
+																1326 文本 Frontier weekly
+																1327 文本 2026/10/23
+																1328 文本 技术来源
+																1329 文本 ·
+																1330 文本 正文已在搜索范围
+																1331 文本 相关依据：受控整篇判断：直接相关
+																1332 文本 全文已核验：1 块
+																1333 文本 “
+																1334 文本 Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthor
+																1335 文本 ”
+																1336 文本 Three research developments from this week.
+																1337 按钮 收藏文章
+																1338 按钮 删除文章
+																1339 按钮 标记为已读 Description: 标记为已读
+															1340 切换按钮 Sable-3 multimodal model launches
+																1341 文本 Sable-3 multimodal model launches
+																1342 文本 2026/10/19
+																1343 文本 新闻来源
+																1344 文本 ·
+																1345 文本 正文已在搜索范围
+																1346 文本 相关依据：受控整篇判断：直接相关
+																1347 文本 全文已核验：1 块
+																1348 文本 “
+																1349 文本 Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report.
+																1350 文本 ”
+																1351 文本 The team introduces a new AI model for images and language.
+																1352 按钮 收藏文章
+																1353 按钮 删除文章
+																1354 按钮 标记为已读 Description: 标记为已读
+															1355 切换按钮 Introducing FalconTree-63, a new text foundation model
+																1356 文本 Introducing FalconTree-63, a new text foundation model
+																1357 文本 2026/10/26
+																1358 文本 技术来源
+																1359 文本 ·
+																1360 文本 正文尚未获取
+																1361 文本 关键词初步匹配 · AI尚未核验
+																1362 文本 命中关键词：foundation model / introduc / language model / release
+																1363 文本 introducing falcontree-63, a new text foundation model
+																1364 文本 The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.
+																1365 按钮 取消收藏
+																1366 按钮 删除文章
+																1367 按钮 标记为已读 Description: 标记为已读
+															1368 切换按钮 Introducing Nebula-Q47, our new language model
+																1369 文本 Introducing Nebula-Q47, our new language model
+																1370 文本 2026/10/26
+																1371 文本 技术来源
+																1372 文本 ·
+																1373 文本 正文已在搜索范围
+																1374 文本 关键词初步匹配 · AI尚未核验
+																1375 文本 命中关键词：foundation model / introduc / language model / release
+																1376 文本 the research team releases an open-weight foundation model for multilingual reasoning.
+																1377 文本 The research team releases an open-weight foundation model for multilingual reasoning.
+																1378 按钮 取消收藏
+																1379 按钮 删除文章
+																1380 按钮 标记为已读 Description: 标记为已读
+															1381 切换按钮 DeltaLab unveils Terra-8B language model
+																1382 文本 DeltaLab unveils Terra-8B language model
+																1383 文本 2026/5/1
+																1384 文本 技术来源
+																1385 文本 ·
+																1386 文本 正文已在搜索范围
+																1387 文本 关键词初步匹配 · AI尚未核验
+																1388 文本 命中关键词：language model / release / unveil
+																1389 文本 deltalab unveils terra-8b language model
+																1390 文本 New open language model and evaluation results announced.
+																1391 按钮 取消收藏
+																1392 按钮 删除文章
+																1393 按钮 标记为已读 Description: 标记为已读
+															1394 切换按钮 星河团队开放新一代语言系统权重
+																1395 文本 星河团队开放新一代语言系统权重
+																1396 文本 2026/10/25
+																1397 文本 技术来源
+																1398 文本 ·
+																1399 文本 正文已在搜索范围
+																1400 文本 关键词初步匹配 · AI尚未核验
+																1401 文本 命中关键词：发布 / 大语言模型 / 开放权重 / 语言模型
+																1402 文本 大语言模型星河二代正式发布，支持多语种推理。
+																1403 文本 大语言模型星河二代正式发布，支持多语种推理。
+																1404 按钮 收藏文章
+																1405 按钮 删除文章
+																1406 按钮 标记为已读 Description: 标记为已读
+															1407 切换按钮 Orion 0.9 checkpoints are here
+																1408 文本 Orion 0.9 checkpoints are here
+																1409 文本 2026/10/24
+																1410 文本 新闻来源
+																1411 文本 ·
+																1412 文本 正文已在搜索范围
+																1413 文本 关键词初步匹配 · AI尚未核验
+																1414 文本 命中关键词：foundation model / introduc / release
+																1415 文本 a fresh foundation model joins the open weights ecosystem.
+																1416 文本 A fresh foundation model joins the open weights ecosystem.
+																1417 按钮 取消收藏
+																1418 按钮 删除文章
+																1419 按钮 标记为已读 Description: 标记为已读
+															1420 切换按钮 Solstice keynote quotation in a funding prospectus
+																1421 文本 Solstice keynote quotation in a funding prospectus
+																1422 文本 2026/10/27
+																1423 文本 技术来源
+																1424 文本 ·
+																1425 文本 正文已在搜索范围
+																1426 文本 关键词初步匹配 · AI尚未核验
+																1427 文本 命中关键词：language model / launch / release
+																1428 文本 the prospectus quotes a keynote: "today we release solstice-5, a new language model with open weights." the prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly
+																1429 文本 A prospectus opens with a historical quotation and later explains the transaction.
+																1430 按钮 取消收藏
+																1431 按钮 删除文章
+																1432 按钮 标记为已读 Description: 标记为已读
+															1433 切换按钮 Engineering dispatch 47
+																1434 文本 Engineering dispatch 47
+																1435 文本 2026/10/27
+																1436 文本 技术来源
+																1437 文本 ·
+																1438 文本 正文已在搜索范围
+																1439 文本 关键词初步匹配 · AI尚未核验
+																1440 文本 命中关键词：ai / foundation model / release
+																1441 文本 routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure m
+																1442 文本 Infrastructure notes and a research update.
+																1443 按钮 取消收藏
+																1444 按钮 删除文章
+																1445 按钮 标记为已读 Description: 标记为已读
+															1446 切换按钮 Wednesday dispatch
+																1447 文本 Wednesday dispatch
+																1448 文本 2026/10/26
+																1449 文本 技术来源
+																1450 文本 ·
+																1451 文本 正文已在搜索范围
+																1452 文本 关键词初步匹配 · AI尚未核验
+																1453 文本 命中关键词：language model / release
+																1454 文本 vireo weights the laboratory has released vireo-9b, a new open-weight language model with multilingual reasoning. the new model checkpoints and inference source code were published this morning.
+																1455 文本 Operations, a laboratory note and a software package.
+																1456 按钮 收藏文章
+																1457 按钮 删除文章
+																1458 按钮 标记为已读 Description: 标记为已读
+															1459 切换按钮 EchoChess 1.2 opens its text decoder
+																1460 文本 EchoChess 1.2 opens its text decoder
+																1461 文本 2026/10/20
+																1462 文本 新闻来源
+																1463 文本 ·
+																1464 文本 正文已在搜索范围
+																1465 文本 关键词初步匹配 · AI尚未核验
+																1466 文本 命中关键词：release
+																1467 文本 a research release with multilingual conversation and new transformer weights.
+																1468 文本 A research release with multilingual conversation and new transformer weights.
+																1469 按钮 收藏文章
+																1470 按钮 删除文章
+																1471 按钮 标记为已读 Description: 标记为已读
+															1472 切换按钮 Garden irrigation checklist
+																1473 文本 Garden irrigation checklist
+																1474 文本 2026/10/16
+																1475 文本 新闻来源
+																1476 文本 ·
+																1477 文本 正文已在搜索范围
+																1478 文本 关键词初步匹配 · AI尚未核验
+																1479 文本 命中关键词：language model / release
+																1480 文本 boratory announcement latticeworks has released luma-r17, a new large language model. the release opens its weights and tokenizer for independent research. the cooperative's final section is the laboratory's official release announcement, s
+																1481 文本 Watering notes from an engineering cooperative.
+																1482 按钮 收藏文章
+																1483 按钮 删除文章
+																1484 按钮 标记为已读 Description: 标记为已读
+														45 主要
+															1126 切换按钮 阅读 Description: 阅读
+															1127 切换按钮 笔记 Description: 笔记
+															1128 切换按钮 摘要 Description: 摘要
+															1129 切换按钮 翻译 Description: 翻译
+															1130 切换按钮 标签 Description: 标签
+															1131 标题 Sable-3 multimodal model launches Description: Sable-3 multimodal model launches
+															1132 按钮 导出文摘
+															1133 按钮 阅读设置 Description: 阅读设置
+															1134 状态
+																1135 文本 未能获取全文，当前显示订阅源摘要或旧版订阅内容，可能不完整。
+																1136 按钮 重试获取全文
+															1137 文档 阅读内容 Description: 阅读内容
+																1138 文档 Value: about:srcdoc ID: RootWebArea
+																	1139 文章
+																		1140 文本 The team introduces a new AI model for images and language.
+															48 文本 就绪
+								19 区域
+						20 区域
+						21 区域
+		2 标题栏 (settable, string) Value: Mercury Quick Final Acceptance
+			3 菜单栏 系统 ID: MenuBar
+				4 菜单项 系统
+			5 按钮 最小化
+			6 按钮 最大化
+			7 按钮 关闭
+
+Document text: ```
+Mercury
+订阅源
+标签
+主题追踪
+全文搜索
+收藏
+智能视图
+在全文搜索中设置条件后，点击书签按钮保存。
+添加订阅源
+同步全部
+导入 OPML
+导出 OPML
+全部订阅源
+71
+技术来源
+36
+删除订阅：技术来源
+新闻来源
+35
+删除订阅：新闻来源
+设置
+切换外观（当前：跟随系统）
+￼
+全文搜索
+保存 / 管理智能视图
+AI 主题搜索
+暂停
+取消
+当前 13 篇：AI已核验相关 3 篇，关键词初步匹配待核验 10 篇。
+范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+检查进行中 · 正在分块核验完整资料
+标题已筛 71 / 71，其中模型初筛或初筛缓存 69 篇。
+待深入 10 篇；全文已核验 3 篇，命中中仅标题/摘要依据 0 篇，完整笔记已核验 0 篇。
+已覆盖资料块 6 / 26（当前已规划）。
+已排除 57，资料不足 1，资料已变更 0，遇错 0，未完成 10。
+覆盖范围与限制
+查看主题理解与范围
+退出 AI 搜索
+AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+全库
+当前导航范围
+筛选
+仅未读
+排序
+￼
+全部订阅源
+刷新订阅
+￼
+13 篇
+选择文章
+全部已读
+全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+（无标题）
+2026/10/25
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。”
+Kiruna-X18 的新权重和推理代码已开放。
+收藏文章
+删除文章
+未读
+Frontier weekly
+2026/10/23
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The …report includes execution plans and a reproducible SQL script. Open weights The Hawthor”
+Three research developments from this week.
+收藏文章
+删除文章
+未读
+Sable-3 multimodal model launches
+2026/10/19
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and version of the model weights, tokenizer a…evaluation report.”
+The team introduces a new AI model for images and language.
+收藏文章
+删除文章
+未读
+Introducing FalconTree-63, a new text foundation model
+2026/10/26
+技术来源 · 正文尚未获取
+关键词初步匹配 · AI尚未核验
+命中关键词：foundation model / introduc / language model / release
+introducing falcontree-63, a new text foundation model
+The lab has released FalconTree-63, a newly trained language model. Open checkpoints trained language model. Open checkpoint…and the inference package were published today.
+取消收藏
+删除文章
+未读
+Introducing Nebula-Q47, our new language model
+2026/10/26
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：foundation model / introduc / language model / release
+the research team releases an open-weight foundation model for multilingual reasoning.
+The research team releases an open-weight foundation model for multilingual …reasoning.
+取消收藏
+删除文章
+未读
+DeltaLab unveils Terra-8B language model
+2026/5/1
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：language model / release / unveil
+deltalab unveils terra-8b language model
+New open language model and evaluation results announced.
+取消收藏
+删除文章
+未读
+星河团队开放新一代语言系统权重
+2026/10/25
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：发布 / 大语言模型 / 开放权重 / 语言模型
+大语言模型星河二代正式发布，支持多语种推理。
+大语言模型星河二代正式发布，支持多语种推理。
+收藏文章
+删除文章
+未读
+Orion 0.9 checkpoints are here
+2026/10/24
+新闻来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：foundation model / introduc / release
+a fresh foundation model joins the open weights ecosystem.
+A fresh foundation model joins the open weights ecosystem.
+取消收藏
+删除文章
+未读
+Solstice keynote quotation in a funding prospectus
+2026/10/27
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：language model / launch / release
+the prospectus quotes a keynote: "today we release solstice-5, a new language model with open weights." the prospectus …describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly
+A prospectus opens with a historical quotation and later explains the …transaction.
+取消收藏
+删除文章
+未读
+Engineering dispatch 47
+2026/10/27
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：ai / foundation model / release
+routine infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine …infrastructure maintenance and storage notes. routine infrastructure maintenance and storage notes. routine infrastructure m
+Infrastructure notes and a research update.
+取消收藏
+删除文章
+未读
+Wednesday dispatch
+2026/10/26
+技术来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：language model / release
+vireo weights the laboratory has released vireo-9b, a new open-weight language model with multilingual reasoning. the new model with multilingual reasoning. the ne…model checkpoints and inference source code were published this morning.
+Operations, a laboratory note and a software package.
+收藏文章
+删除文章
+未读
+EchoChess 1.2 opens its text decoder
+2026/10/20
+新闻来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：release
+a research release with multilingual conversation and new transformer weights.
+A research release with multilingual conversation and new transformer weights.
+收藏文章
+删除文章
+未读
+Garden irrigation checklist
+2026/10/16
+新闻来源 · 正文已在搜索范围
+关键词初步匹配 · AI尚未核验
+命中关键词：language model / release
+boratory announcement latticeworks has released luma-r17, a new large language model. the release opens its weights and …tokenizer for independent research. the cooperative's final section is the laboratory's official release announcement, s
+Watering notes from an engineering cooperative.
+收藏文章
+删除文章
+未读
+￼
+阅读
+笔记
+摘要
+翻译
+标签
+Sable-3 multimodal model launches
+导出文摘
+阅读设置
+未能获取全文，当前显示订阅源摘要或旧版订阅内容，可能不完整。
+重试获取全文
+The team introduces a new AI model for images and language.
+就绪
+```
+
+=== completed while collapsed; Reader preserved ===
+Window: "Mercury Quick Final Acceptance", App: mercury.exe.
+	0 窗口 Mercury Quick Final Acceptance Secondary Actions: Raise
+		1 窗格
+			8 窗格 Mercury
+				22 窗格 (disabled)
+				9 区域 Mercury - Web 内容
+					10 区域
+						11 区域
+							12 区域
+								13 区域
+								14 区域
+									15 区域
+										16 区域
+											17 区域
+												18 区域
+												23 文档 Mercury Value: http://tauri.localhost/ ID: RootWebArea
+													24 组 ID: root
+														25 补充
+															26 文本 Mercury
+															27 导航
+																28 切换按钮 订阅源
+																29 切换按钮 标签
+															30 切换按钮 主题追踪
+															31 切换按钮 全文搜索
+															32 切换按钮 收藏
+															33 区域 智能视图
+																34 标题 智能视图
+																49 文本 在全文搜索中设置条件后，点击书签按钮保存。
+															37 按钮 添加订阅源 Description: 添加订阅源
+															38 按钮 同步全部 Description: 同步全部
+															39 按钮 导入 OPML Description: 导入 OPML
+															40 按钮 导出 OPML Description: 导出 OPML
+															50 切换按钮 全部订阅源 71
+															51 切换按钮 技术来源 36
+															52 按钮 删除订阅：技术来源
+															53 切换按钮 新闻来源 35
+															54 按钮 删除订阅：新闻来源
+															42 按钮 设置
+															43 按钮 切换外观（当前：跟随系统） Description: 切换外观（当前：跟随系统）
+														55 文本 全文搜索
+														56 按钮 (disabled) 保存 / 管理智能视图 Description: AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														57 按钮 AI 主题搜索
+														784 区域 AI 主题搜索
+															800 文本 当前 AI 结果：12 篇
+															801 组
+																802 文本 范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+																803 状态
+																	804 文本 本次检查已完成
+																	805 文本 ·
+																	806 文本 本次范围已处理
+																807 文本 标题已筛 71 / 71，其中模型初筛或初筛缓存 69 篇。
+																808 文本 待深入 0 篇；全文已核验 12 篇，命中中仅标题/摘要依据 1 篇，完整笔记已核验 0 篇。
+																809 文本 已覆盖资料块 26 / 26（当前已规划）。
+																810 文本 已排除 58，资料不足 1，资料已变更 0，遇错 0，未完成 0。
+																2195 文本 已处理这次固定范围。扫描开始后的新增文章留待下次增量；文章后续变化会提示过期。
+															793 详细信息
+																794 开合三角标记 覆盖范围与限制
+																	795 文本 覆盖范围与限制
+															2196 按钮 重新理解并检查
+															811 详细信息
+																812 开合三角标记 查看主题理解与范围
+																	813 文本 查看主题理解与范围
+															796 按钮 退出 AI 搜索
+														797 文本 AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+														59 按钮 全库
+														60 按钮 当前导航范围
+														61 按钮 筛选
+														62 切换按钮 仅未读
+														63 文本 排序
+														64 组合框 (settable, string) 排序 Value: 相关性
+														65 文本 全部订阅源
+														67 按钮 刷新订阅
+														68 状态
+														70 文本 12 篇
+														71 按钮 选择文章
+														72 按钮 全部已读 Description: 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														73 文本 全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+														74 组
+															2197 切换按钮 Engineering dispatch 47
+																2198 文本 Engineering dispatch 47
+																2199 文本 2026/10/27
+																2200 文本 技术来源
+																2201 文本 ·
+																2202 文本 正文已在搜索范围
+																2203 文本 相关依据：受控整篇判断：直接相关
+																2204 文本 全文已核验：6 块
+																2205 文本 “
+																2206 文本 Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and
+																2207 文本 ”
+																2208 文本 Infrastructure notes and a research update.
+																2209 按钮 取消收藏
+																2210 按钮 删除文章
+																2211 按钮 标记为已读 Description: 标记为已读
+															2212 切换按钮 Introducing FalconTree-63, a new text foundation model
+																2213 文本 Introducing FalconTree-63, a new text foundation model
+																2214 文本 2026/10/26
+																2215 文本 技术来源
+																2216 文本 ·
+																2217 文本 正文尚未获取
+																2218 文本 相关依据：受控整篇判断：直接相关
+																2219 文本 仅依据标题/摘要，未核验正文
+																2220 文本 仅有部分上下文
+																2221 文本 “
+																2222 文本 The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.
+																2223 文本 ”
+																2224 文本 The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package were published today.
+																2225 按钮 取消收藏
+																2226 按钮 删除文章
+																2227 按钮 标记为已读 Description: 标记为已读
+															2228 切换按钮 Wednesday dispatch
+																2229 文本 Wednesday dispatch
+																2230 文本 2026/10/26
+																2231 文本 技术来源
+																2232 文本 ·
+																2233 文本 正文已在搜索范围
+																2234 文本 相关依据：受控整篇判断：直接相关
+																2235 文本 全文已核验：5 块
+																2236 文本 “
+																2237 文本 The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and
+																2238 文本 ”
+																2239 文本 Operations, a laboratory note and a software package.
+																2240 按钮 收藏文章
+																2241 按钮 删除文章
+																2242 按钮 标记为已读 Description: 标记为已读
+															2243 切换按钮 Introducing Nebula-Q47, our new language model
+																2244 文本 Introducing Nebula-Q47, our new language model
+																2245 文本 2026/10/26
+																2246 文本 技术来源
+																2247 文本 ·
+																2248 文本 正文已在搜索范围
+																2249 文本 相关依据：受控整篇判断：直接相关
+																2250 文本 全文已核验：1 块
+																2251 文本 “
+																2252 文本 Today we are releasing Nebula-Q47, a new large language model. The weights and inference code are available under Apache 2.0.
+																2253 文本 ”
+																2254 文本 The research team releases an open-weight foundation model for multilingual reasoning.
+																2255 按钮 取消收藏
+																2256 按钮 删除文章
+																2257 按钮 标记为已读 Description: 标记为已读
+															2258 切换按钮 （无标题）
+																2259 文本 （无标题）
+																2260 文本 2026/10/25
+																2261 文本 新闻来源
+																2262 文本 ·
+																2263 文本 正文已在搜索范围
+																2264 文本 相关依据：受控整篇判断：直接相关
+																2265 文本 全文已核验：1 块
+																2266 文本 “
+																2267 文本 Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。
+																2268 文本 ”
+																2269 文本 Kiruna-X18 的新权重和推理代码已开放。
+																2270 按钮 收藏文章
+																2271 按钮 删除文章
+																2272 按钮 标记为已读 Description: 标记为已读
+															2273 切换按钮 星河团队开放新一代语言系统权重
+																2274 文本 星河团队开放新一代语言系统权重
+																2275 文本 2026/10/25
+																2276 文本 技术来源
+																2277 文本 ·
+																2278 文本 正文已在搜索范围
+																2279 文本 相关依据：受控整篇判断：直接相关
+																2280 文本 全文已核验：1 块
+																2281 文本 “
+																2282 文本 星河二代今天正式发布。这款新大语言模型开放权重，开发者可下载检查点，在自己的硬件上运行。
+																2283 文本 ”
+																2284 文本 大语言模型星河二代正式发布，支持多语种推理。
+																2285 按钮 收藏文章
+																2286 按钮 删除文章
+																2287 按钮 标记为已读 Description: 标记为已读
+															2288 切换按钮 Orion 0.9 checkpoints are here
+																2289 文本 Orion 0.9 checkpoints are here
+																2290 文本 2026/10/24
+																2291 文本 新闻来源
+																2292 文本 ·
+																2293 文本 正文已在搜索范围
+																2294 文本 相关依据：受控整篇判断：直接相关
+																2295 文本 全文已核验：1 块
+																2296 文本 “
+																2297 文本 We introduce Orion 0.9, a new foundation model trained for multilingual reasoning. Download the new checkpoints and model card from the release repository.
+																2298 文本 ”
+																2299 文本 A fresh foundation model joins the open weights ecosystem.
+																2300 按钮 取消收藏
+																2301 按钮 删除文章
+																2302 按钮 标记为已读 Description: 标记为已读
+															2303 切换按钮 Frontier weekly
+																2304 文本 Frontier weekly
+																2305 文本 2026/10/23
+																2306 文本 技术来源
+																2307 文本 ·
+																2308 文本 正文已在搜索范围
+																2309 文本 相关依据：受控整篇判断：直接相关
+																2310 文本 全文已核验：1 块
+																2311 文本 “
+																2312 文本 Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthor
+																2313 文本 ”
+																2314 文本 Three research developments from this week.
+																2315 按钮 收藏文章
+																2316 按钮 删除文章
+																2317 按钮 标记为已读 Description: 标记为已读
+															2318 切换按钮 EchoChess 1.2 opens its text decoder
+																2319 文本 EchoChess 1.2 opens its text decoder
+																2320 文本 2026/10/20
+																2321 文本 新闻来源
+																2322 文本 ·
+																2323 文本 正文已在搜索范围
+																2324 文本 相关依据：受控整篇判断：直接相关
+																2325 文本 全文已核验：1 块
+																2326 文本 “
+																2327 文本 The lab shipped EchoChess 1.2, a text-generating transformer with new open weights. People can converse with the decoder in several languages. The package includes source code, checkpoints and evaluat
+																2328 文本 ”
+																2329 文本 A research release with multilingual conversation and new transformer weights.
+																2330 按钮 收藏文章
+																2331 按钮 删除文章
+																2332 按钮 标记为已读 Description: 标记为已读
+															2333 切换按钮 Sable-3 multimodal model launches
+																2334 文本 Sable-3 multimodal model launches
+																2335 文本 2026/10/19
+																2336 文本 新闻来源
+																2337 文本 ·
+																2338 文本 正文已在搜索范围
+																2339 文本 相关依据：受控整篇判断：直接相关
+																2340 文本 全文已核验：1 块
+																2341 文本 “
+																2342 文本 Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report.
+																2343 文本 ”
+																2344 文本 The team introduces a new AI model for images and language.
+																2345 按钮 收藏文章
+																2346 按钮 删除文章
+																2347 按钮 标记为已读 Description: 标记为已读
+															2348 切换按钮 Garden irrigation checklist
+																2349 文本 Garden irrigation checklist
+																2350 文本 2026/10/16
+																2351 文本 新闻来源
+																2352 文本 ·
+																2353 文本 正文已在搜索范围
+																2354 文本 相关依据：受控整篇判断：直接相关
+																2355 文本 全文已核验：3 块
+																2356 文本 “
+																2357 文本 Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture gro
+																2358 文本 ”
+																2359 文本 Watering notes from an engineering cooperative.
+																2360 按钮 收藏文章
+																2361 按钮 删除文章
+																2362 按钮 标记为已读 Description: 标记为已读
+															2363 切换按钮 DeltaLab unveils Terra-8B language model
+																2364 文本 DeltaLab unveils Terra-8B language model
+																2365 文本 2026/5/1
+																2366 文本 技术来源
+																2367 文本 ·
+																2368 文本 正文已在搜索范围
+																2369 文本 相关依据：受控整篇判断：直接相关
+																2370 文本 全文已核验：1 块
+																2371 文本 “
+																2372 文本 DeltaLab has released Terra-8B, a newly trained large language model, with public checkpoints and inference examples.
+																2373 文本 ”
+																2374 文本 New open language model and evaluation results announced.
+																2375 按钮 取消收藏
+																2376 按钮 删除文章
+																2377 按钮 标记为已读 Description: 标记为已读
+														45 主要
+															1126 切换按钮 阅读 Description: 阅读
+															1127 切换按钮 笔记 Description: 笔记
+															1128 切换按钮 摘要 Description: 摘要
+															1129 切换按钮 翻译 Description: 翻译
+															1130 切换按钮 标签 Description: 标签
+															1131 标题 Sable-3 multimodal model launches Description: Sable-3 multimodal model launches
+															1132 按钮 导出文摘
+															1133 按钮 阅读设置 Description: 阅读设置
+															1134 状态
+																1135 文本 未能获取全文，当前显示订阅源摘要或旧版订阅内容，可能不完整。
+																1136 按钮 重试获取全文
+															1137 文档 阅读内容 Description: 阅读内容
+																1138 文档 Value: about:srcdoc ID: RootWebArea
+																	1139 文章
+																		1140 文本 The team introduces a new AI model for images and language.
+															48 文本 就绪
+								19 区域
+						20 区域
+						21 区域
+		2 标题栏 (settable, string) Value: Mercury Quick Final Acceptance
+			3 菜单栏 系统 ID: MenuBar
+				4 菜单项 系统
+			5 按钮 最小化
+			6 按钮 最大化
+			7 按钮 关闭
+
+Document text: ```
+Mercury
+订阅源
+标签
+主题追踪
+全文搜索
+收藏
+智能视图
+在全文搜索中设置条件后，点击书签按钮保存。
+添加订阅源
+同步全部
+导入 OPML
+导出 OPML
+全部订阅源
+71
+技术来源
+36
+删除订阅：技术来源
+新闻来源
+35
+删除订阅：新闻来源
+设置
+切换外观（当前：跟随系统）
+￼
+全文搜索
+保存 / 管理智能视图
+AI 主题搜索
+当前 AI 结果：12 篇
+范围固定于 2026/10/28 21:32:11，相对日期以此时为准。
+本次检查已完成 · 本次范围已处理
+标题已筛 71 / 71，其中模型初筛或初筛缓存 69 篇。
+待深入 0 篇；全文已核验 12 篇，命中中仅标题/摘要依据 1 篇，完整笔记已核验 0 篇。
+已覆盖资料块 26 / 26（当前已规划）。
+已排除 58，资料不足 1，资料已变更 0，遇错 0，未完成 0。
+已处理这次固定范围。扫描开始后的新增文章留待下次增量；文章后续变化会提示过期。
+覆盖范围与限制
+重新理解并检查
+查看主题理解与范围
+退出 AI 搜索
+AI 结果是本次检查的快照，暂不能保存为智能视图。普通条件视图仍可保存。
+全库
+当前导航范围
+筛选
+仅未读
+排序
+￼
+全部订阅源
+刷新订阅
+￼
+12 篇
+选择文章
+全部已读
+全部已读：所有匹配结果（含未加载页）；文摘：仅手动勾选的已加载文章。
+Engineering dispatch 47
+2026/10/27
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：6 块
+“Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine …infrastructure maintenance and storage notes. Routine infrastructure maintenance and”
+Infrastructure notes and a research update.
+取消收藏
+删除文章
+未读
+Introducing FalconTree-63, a new text foundation model
+2026/10/26
+技术来源 · 正文尚未获取
+相关依据：受控整篇判断：直接相关
+仅依据标题/摘要，未核验正文
+仅有部分上下文
+“The lab has released FalconTree-63, a newly trained language model. Open checkpoints and the inference package …were published today.”
+The lab has released FalconTree-63, a newly trained language model. Open checkpoints trained language model. Open checkpoint…and the inference package were published today.
+取消收藏
+删除文章
+未读
+Wednesday dispatch
+2026/10/26
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：5 块
+“The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area operations crew inspected the loading are…and wrote down inventory totals. The logistics desk reconciled parcel receipts and”
+Operations, a laboratory note and a software package.
+收藏文章
+删除文章
+未读
+Introducing Nebula-Q47, our new language model
+2026/10/26
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Today we are releasing Nebula-Q47, a new large language model. The weights and inference code are available under Apache …2.0.”
+The research team releases an open-weight foundation model for multilingual …reasoning.
+取消收藏
+删除文章
+未读
+（无标题）
+2026/10/25
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。”
+Kiruna-X18 的新权重和推理代码已开放。
+收藏文章
+删除文章
+未读
+星河团队开放新一代语言系统权重
+2026/10/25
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“星河二代今天正式发布。这款新大语言模型开放权重，开发者可下载检查点，在自己的硬件上运行。”
+大语言模型星河二代正式发布，支持多语种推理。
+收藏文章
+删除文章
+未读
+Orion 0.9 checkpoints are here
+2026/10/24
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“We introduce Orion 0.9, a new foundation model trained for multilingual reasoning. Download the new checkpoints and model Download the new checkpoints and mode…card from the release repository.”
+A fresh foundation model joins the open weights ecosystem.
+取消收藏
+删除文章
+未读
+Frontier weekly
+2026/10/23
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The …report includes execution plans and a reproducible SQL script. Open weights The Hawthor”
+Three research developments from this week.
+收藏文章
+删除文章
+未读
+EchoChess 1.2 opens its text decoder
+2026/10/20
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“The lab shipped EchoChess 1.2, a text-generating transformer with new open weights. People can converse with the …decoder in several languages. The package includes source code, checkpoints and evaluat”
+A research release with multilingual conversation and new transformer weights.
+收藏文章
+删除文章
+未读
+Sable-3 multimodal model launches
+2026/10/19
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and version of the model weights, tokenizer a…evaluation report.”
+The team introduces a new AI model for images and language.
+收藏文章
+删除文章
+未读
+Garden irrigation checklist
+2026/10/16
+新闻来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：3 块
+“Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the …irrigation hoses. Tomatoes need even moisture through the summer. The horticulture gro”
+Watering notes from an engineering cooperative.
+收藏文章
+删除文章
+未读
+DeltaLab unveils Terra-8B language model
+2026/5/1
+技术来源 · 正文已在搜索范围
+相关依据：受控整篇判断：直接相关
+全文已核验：1 块
+“DeltaLab has released Terra-8B, a newly trained large language model, with public checkpoints and inference examples.”
+New open language model and evaluation results announced.
+取消收藏
+删除文章
+未读
+￼
+阅读
+笔记
+摘要
+翻译
+标签
+Sable-3 multimodal model launches
+导出文摘
+阅读设置
+未能获取全文，当前显示订阅源摘要或旧版订阅内容，可能不完整。
+重试获取全文
+The team introduces a new AI model for images and language.
+就绪
+```

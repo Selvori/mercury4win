@@ -29,6 +29,9 @@ pub async fn save(
     name: String,
     filter: EntryFilter,
 ) -> Result<i64, String> {
+    if filter.ai_search_id.is_some() {
+        return Err("AI topic results cannot be saved as a dynamic smart view".into());
+    }
     search_store::validate(&filter)?;
     let name = name.trim().to_string();
     if name.is_empty() || name.chars().count() > 80 {

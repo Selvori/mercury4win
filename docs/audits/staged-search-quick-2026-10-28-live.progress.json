@@ -1,0 +1,245 @@
+[
+  {
+    "algorithm": "staged",
+    "case": {
+      "key": "models_zh",
+      "query": "新的AI模型",
+      "topic": "models",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        100,
+        101,
+        102,
+        103,
+        104,
+        107
+      ]
+    },
+    "result": {
+      "passed": false,
+      "actual": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        107
+      ],
+      "missed": [],
+      "false_positive": [
+        105
+      ],
+      "error": {
+        "code": "invalidJudgment",
+        "detail": ""
+      },
+      "session": {
+        "preliminary": 8,
+        "scan": {
+          "scan_id": "0885961d-17fb-463c-bd56-3ae977d84883",
+          "started_at": "2026-10-28T10:58:20.680650200+00:00",
+          "status": "failed",
+          "phase": "full",
+          "total": 71,
+          "title_screened": 71,
+          "title_model_reviewed": 69,
+          "title_fallback": 0,
+          "title_excluded": 47,
+          "preview_screened": 24,
+          "further_pending": 8,
+          "full_verified": 5,
+          "summary_only": 0,
+          "note_verified": 0,
+          "excluded": 57,
+          "insufficient": 1,
+          "changed": 0,
+          "failed": 4,
+          "pending": 8,
+          "matches": 5,
+          "full_parts_done": 18,
+          "full_parts_total": 26,
+          "cache_hits": 0,
+          "snapshot_revision": 162
+        },
+        "id": "scan:309e2dc2-3d73-481b-a6f1-50b16c811484",
+        "sentence": "新的AI模型",
+        "input_key": "64ffda4dc37e2ea05c61434eae0d1ce7c6a9d1fc51eaf0a479a0268d9d23083e",
+        "plan": {
+          "intent": "Search for news or discussions about newly announced or released AI models",
+          "entities": [],
+          "routes": [
+            {
+              "language": "zh",
+              "groups": [
+                [
+                  "ai",
+                  "llm",
+                  "人工智能",
+                  "基础模型",
+                  "大模型",
+                  "大语言模型",
+                  "生成式ai"
+                ]
+              ]
+            },
+            {
+              "language": "en",
+              "groups": [
+                [
+                  "ai",
+                  "artificial intelligence",
+                  "foundation model",
+                  "generative ai",
+                  "large language model",
+                  "llm"
+                ]
+              ]
+            },
+            {
+              "language": "zh",
+              "groups": [
+                [
+                  "ai",
+                  "人工智能",
+                  "大模型",
+                  "大语言模型"
+                ],
+                [
+                  "上线",
+                  "亮相",
+                  "发布",
+                  "开源",
+                  "推出",
+                  "新模型"
+                ]
+              ]
+            },
+            {
+              "language": "en",
+              "groups": [
+                [
+                  "ai",
+                  "foundation model",
+                  "language model",
+                  "llm"
+                ],
+                [
+                  "announce",
+                  "launch",
+                  "new model",
+                  "open source",
+                  "release"
+                ]
+              ]
+            },
+            {
+              "language": "zh",
+              "groups": [
+                [
+                  "ai",
+                  "人工智能",
+                  "大模型",
+                  "大语言模型"
+                ],
+                [
+                  "上线",
+                  "亮相",
+                  "发布",
+                  "开源",
+                  "推出",
+                  "新模型",
+                  "版本"
+                ]
+              ]
+            },
+            {
+              "language": "en",
+              "groups": [
+                [
+                  "ai",
+                  "foundation model",
+                  "language model",
+                  "llm"
+                ],
+                [
+                  "announce",
+                  "launch",
+                  "new model",
+                  "open source",
+                  "release",
+                  "version"
+                ]
+              ]
+            }
+          ],
+          "filter": {
+            "sort": "relevance"
+          },
+          "unsupported": []
+        },
+        "filter": {
+          "ai_search_id": null,
+          "feed_id": null,
+          "unread_only": false,
+          "starred_only": false,
+          "search": null,
+          "tag_ids": [],
+          "tag_mode": "any",
+          "is_read": null,
+          "has_note": null,
+          "date_from": null,
+          "date_to": null,
+          "recent_days": null,
+          "search_field": "all",
+          "exclude_title": false,
+          "sort": "relevance"
+        },
+        "manual": {
+          "ai_search_id": null,
+          "feed_id": null,
+          "unread_only": false,
+          "starred_only": false,
+          "search": null,
+          "tag_ids": [],
+          "tag_mode": "any",
+          "is_read": null,
+          "has_note": null,
+          "date_from": null,
+          "date_to": null,
+          "recent_days": null,
+          "search_field": "all",
+          "exclude_title": false,
+          "sort": "relevance"
+        },
+        "anchor": "2026-10-28T10:58:20.680650200+00:00",
+        "revision": 162,
+        "flags": 0,
+        "checked": 63,
+        "total": 71,
+        "pending": 8,
+        "matches": 13,
+        "stale": false,
+        "lane_turn": 0
+      }
+    },
+    "first_result_ms": 17547,
+    "first_quick_ms": 17547,
+    "first_verified_ms": 550375,
+    "elapsed_ms": 664269,
+    "requests": 15,
+    "timing_includes_replay": false,
+    "replayed_requests": 0
+  }
+]

@@ -25,6 +25,7 @@ export interface EntryCursor {
 }
 
 export interface EntryPage {
+  ai_stale?: boolean;
   entries: Entry[];
   next_cursor: EntryCursor | null;
   total: number;
@@ -53,6 +54,7 @@ export interface EntryNote {
 export type TagMatchMode = "any" | "all";
 
 export interface EntryFilter {
+  ai_search_id?: string | null;
   feed_id?: number | null;
   unread_only?: boolean;
   starred_only?: boolean;
@@ -71,5 +73,5 @@ export interface EntryFilter {
 
 export interface SearchPart { text: string; matched: boolean }
 export interface SearchHit { field: "title" | "summary" | "body" | "note"; parts: SearchPart[] }
-export interface SearchInfo { preview?: string; entry_id: number; feed_title: string; body_available: boolean; hits: SearchHit[] }
+export interface SearchInfo { preview?: string; entry_id: number; feed_title: string; body_available: boolean; hits: SearchHit[]; ai?: { score: number; reason: string; quote: string; limited: boolean; basis?: "full_body" | "summary_only" | "title_only" | "note_full" | "keyword_title" | "keyword_summary" | "keyword_body" | "keyword_note"; parts?: number } }
 export interface SmartView { id: number; name: string; filter: EntryFilter; updated_at: string }

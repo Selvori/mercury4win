@@ -1,0 +1,1282 @@
+[
+  {
+    "request": {
+      "stage": "full",
+      "topic": "新的AI模型",
+      "intent": "Find discussions or announcements about newly released or updated Artificial Intelligence models, including Large Language Models (LLMs) and foundation models.",
+      "parts": [
+        {
+          "entry_id": 105,
+          "key": "full.1",
+          "index": 0,
+          "total": 3,
+          "start": 0,
+          "end": 5000,
+          "context_start": 0,
+          "text": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\" The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. ",
+          "article_title": "Solstice keynote quotation in a funding prospectus",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 103,
+          "key": "full.1",
+          "index": 0,
+          "total": 1,
+          "start": 0,
+          "end": 407,
+          "context_start": 0,
+          "text": "Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles.",
+          "article_title": "Frontier weekly",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 102,
+          "key": "full.1",
+          "index": 0,
+          "total": 1,
+          "start": 0,
+          "end": 48,
+          "context_start": 0,
+          "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。",
+          "article_title": "",
+          "source": "新闻来源",
+          "published_at": "2026-10-24 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 101,
+          "key": "full.1",
+          "index": 0,
+          "total": 3,
+          "start": 0,
+          "end": 5000,
+          "context_start": 0,
+          "text": "Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the ir",
+          "article_title": "Garden irrigation checklist",
+          "source": "新闻来源",
+          "published_at": "2026-10-15 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 100,
+          "key": "full.1",
+          "index": 0,
+          "total": 5,
+          "start": 0,
+          "end": 5000,
+          "context_start": 0,
+          "text": "The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics des",
+          "article_title": "Wednesday dispatch",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 6,
+          "key": "full.1",
+          "index": 0,
+          "total": 1,
+          "start": 0,
+          "end": 141,
+          "context_start": 0,
+          "text": "Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report.",
+          "article_title": "Sable-3 multimodal model launches",
+          "source": "新闻来源",
+          "published_at": "2026-10-18 19:24:57",
+          "basis": "full_body",
+          "previous_context": "",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        }
+      ]
+    },
+    "response": "{\n  \"parts\": [\n    {\n      \"entry_id\": 105,\n      \"key\": \"full.1\",\n      \"kind\": \"uncertain\",\n      \"reason\": \"Quoted keynote claims Solstice-5 release, but text is repetitive financial boilerplate; no independent confirmation.\",\n      \"evidence\": null,\n      \"context\": \"Prospectus quotes a keynote announcing 'Solstice-5, a new language model with open weights', alongside repetitive financial boilerplate.\"\n    },\n    {\n      \"entry_id\": 103,\n      \"key\": \"full.1\",\n      \"kind\": \"supports\",\n      \"reason\": \"Explicitly reports the open weights release of the newly trained Hawthorn-6B language model.\",\n      \"evidence\": \"The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights.\",\n      \"context\": \"Frontier weekly reports that the Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights, alongside other tech news.\"\n    },\n    {\n      \"entry_id\": 102,\n      \"key\": \"full.1\",\n      \"kind\": \"supports\",\n      \"reason\": \"Explicitly states the official release of the Kiruna-X18 large language model.\",\n      \"evidence\": \"Kiruna-X18 大语言模型今天正式发布。\",\n      \"context\": \"News source announces the official release of the Kiruna-X18 large language model, with public weights and code.\"\n    },\n    {\n      \"entry_id\": 101,\n      \"key\": \"full.1\",\n      \"kind\": \"background\",\n      \"reason\": \"Text contains only repetitive gardening information; no mention of AI models.\",\n      \"evidence\": null,\n      \"context\": \"Garden irrigation checklist containing repetitive text about tomatoes and irrigation; irrelevant to AI models.\"\n    },\n    {\n      \"entry_id\": 100,\n      \"key\": \"full.1\",\n      \"kind\": \"background\",\n      \"reason\": \"Text contains only repetitive logistics and operations notes; no mention of AI models.\",\n      \"evidence\": null,\n      \"context\": \"Wednesday dispatch containing repetitive text about logistics, parcel receipts, and inventory; irrelevant to AI models.\"\n    },\n    {\n      \"entry_id\": 6,\n      \"key\": \"full.1\",\n      \"kind\": \"supports\",\n      \"reason\": \"Explicitly announces the launch of the Sable-3 multimodal AI model.\",\n      \"evidence\": \"Sable-3 is our newly released multimodal AI model.\",\n      \"context\": \"News source announces the launch of Sable-3, a newly released multimodal AI model including weights and tokenizer.\"\n    }\n  ]\n}"
+  },
+  {
+    "request": {
+      "stage": "previews",
+      "topic": "newly released AI models",
+      "intent": "Find discussions or announcements regarding newly released or announced AI models (including major versions or open-weights releases), distinguishing from general AI tutorials, old model mentions, or non-AI vehicle model launches.",
+      "previews": [
+        {
+          "entry_id": 103,
+          "title": "Frontier weekly",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Frontier weekly"
+            },
+            {
+              "key": "summary",
+              "text": "Three research developments from this week."
+            },
+            {
+              "key": "opening",
+              "text": "Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            },
+            {
+              "key": "headings",
+              "text": "Database execution\nOpen weights\nHiring"
+            },
+            {
+              "key": "related.1",
+              "text": " on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 407
+        },
+        {
+          "entry_id": 102,
+          "title": "",
+          "source": "新闻来源",
+          "published_at": "2026-10-24 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": ""
+            },
+            {
+              "key": "summary",
+              "text": "Kiruna-X18 的新权重和推理代码已开放。"
+            },
+            {
+              "key": "opening",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            },
+            {
+              "key": "related.1",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 48
+        },
+        {
+          "entry_id": 101,
+          "title": "Garden irrigation checklist",
+          "source": "新闻来源",
+          "published_at": "2026-10-15 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Garden irrigation checklist"
+            },
+            {
+              "key": "summary",
+              "text": "Watering notes from an engineering cooperative."
+            },
+            {
+              "key": "opening",
+              "text": "Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil"
+            },
+            {
+              "key": "headings",
+              "text": "A separate laboratory announcement"
+            },
+            {
+              "key": "related.1",
+              "text": "ure through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. A separate laboratory announcement Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research. The cooperative's final section is the laboratory's official release announcement, separate from the gardening notes."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 10846
+        },
+        {
+          "entry_id": 100,
+          "title": "Wednesday dispatch",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Wednesday dispatch"
+            },
+            {
+              "key": "summary",
+              "text": "Operations, a laboratory note and a software package."
+            },
+            {
+              "key": "opening",
+              "text": "The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down invent"
+            },
+            {
+              "key": "headings",
+              "text": "Vireo weights"
+            },
+            {
+              "key": "related.1",
+              "text": "ciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. Vireo weights The laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning. The new model checkpoints and inference source code were published this morning."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 21334
+        },
+        {
+          "entry_id": 11,
+          "title": "New model templates for database schema diagrams",
+          "source": "新闻来源",
+          "published_at": "2026-10-25 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "New model templates for database schema diagrams"
+            },
+            {
+              "key": "summary",
+              "text": "Diagramming templates get an update."
+            },
+            {
+              "key": "opening",
+              "text": "The new model is a database diagram template; no trained language model is introduced."
+            },
+            {
+              "key": "related.1",
+              "text": "The new model is a database diagram template; no trained language model is introduced."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 86
+        },
+        {
+          "entry_id": 7,
+          "title": "Lumen AI raises $200 million",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Lumen AI raises $200 million"
+            },
+            {
+              "key": "summary",
+              "text": "AI company secures financing to expand its business."
+            },
+            {
+              "key": "opening",
+              "text": "The financing will fund future hiring. No new model or model version is announced. The company's existing language model remains unchanged."
+            },
+            {
+              "key": "related.1",
+              "text": "The financing will fund future hiring. No new model or model version is announced. The company's existing language model remains unchanged."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 139
+        },
+        {
+          "entry_id": 6,
+          "title": "Sable-3 multimodal model launches",
+          "source": "新闻来源",
+          "published_at": "2026-10-18 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Sable-3 multimodal model launches"
+            },
+            {
+              "key": "summary",
+              "text": "The team introduces a new AI model for images and language."
+            },
+            {
+              "key": "opening",
+              "text": "Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report."
+            },
+            {
+              "key": "related.1",
+              "text": "Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 141
+        },
+        {
+          "entry_id": 4,
+          "title": "DeltaLab unveils Terra-8B language model",
+          "source": "技术来源",
+          "published_at": "2026-04-30 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "DeltaLab unveils Terra-8B language model"
+            },
+            {
+              "key": "summary",
+              "text": "New open language model and evaluation results announced."
+            },
+            {
+              "key": "opening",
+              "text": "DeltaLab has released Terra-8B, a newly trained large language model, with public checkpoints and inference examples."
+            },
+            {
+              "key": "related.1",
+              "text": "DeltaLab has released Terra-8B, a newly trained large language model, with public checkpoints and inference examples."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 117
+        }
+      ]
+    },
+    "response": "[\n  {\n    \"entry_id\": 103,\n    \"decision\": \"possible\",\n    \"reason\": \"The article explicitly announces the release of Hawthorn-6B, a newly trained language model with open weights.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public.\"\n    }\n  },\n  {\n    \"entry_id\": 102,\n    \"decision\": \"possible\",\n    \"reason\": \"The text announces the official release of the Kiruna-X18 large language model with open weights and code.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。\"\n    }\n  },\n  {\n    \"entry_id\": 101,\n    \"decision\": \"possible\",\n    \"reason\": \"Despite the gardening title, the text contains a separate announcement for the release of Luma-R17, a new large language model with open weights.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"A separate laboratory announcement Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research.\"\n    }\n  },\n  {\n    \"entry_id\": 100,\n    \"decision\": \"possible\",\n    \"reason\": \"The text announces the release of Vireo-9B, a new open-weight language model, with published checkpoints and source code.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"Vireo weights The laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning. The new model checkpoints and inference source code were published this morning.\"\n    }\n  },\n  {\n    \"entry_id\": 11,\n    \"decision\": \"unrelated\",\n    \"reason\": \"The text explicitly states the 'new model' is a database diagram template and clarifies that no trained language model is introduced.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"The new model is a database diagram template; no trained language model is introduced.\"\n    }\n  },\n  {\n    \"entry_id\": 7,\n    \"decision\": \"unrelated\",\n    \"reason\": \"The article covers a $200 million financing round and explicitly states that no new model or model version is announced.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"The financing will fund future hiring. No new model or model version is announced. The company's existing language model remains unchanged.\"\n    }\n  },\n  {\n    \"entry_id\": 6,\n    \"decision\": \"possible\",\n    \"reason\": \"The article announces the launch of Sable-3, a newly released multimodal AI model with updated weights and tokenizer.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"Sable-3 is our newly released multimodal AI model. This release includes a new version of the model weights, tokenizer and evaluation report.\"\n    }\n  },\n  {\n    \"entry_id\": 4,\n    \"decision\": \"possible\",\n    \"reason\": \"The article announces the release of Terra-8B, a newly trained large language model with public checkpoints.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"DeltaLab has released Terra-8B, a newly trained large language model, with public checkpoints and inference examples.\"\n    }\n  }\n]"
+  },
+  {
+    "request": {
+      "stage": "previews",
+      "topic": "Nebula-Q47 新模型发布",
+      "intent": "Topic search for the release or announcement of the new 'Nebula-Q47' model. This is an event-specific query focusing on a specific AI model identifier.",
+      "previews": [
+        {
+          "entry_id": 106,
+          "title": "Firmware model catalog for electric delivery vans",
+          "source": "新闻来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Firmware model catalog for electric delivery vans"
+            },
+            {
+              "key": "summary",
+              "text": "A vehicle electronics supplier lists controller variants."
+            },
+            {
+              "key": "opening",
+              "text": "The catalog lists motor controller models R9 and R10, connector pinouts, operating voltages and firmware compatibility for electric delivery vans. A service table maps each hardware revision to its replacement part."
+            },
+            {
+              "key": "related.1",
+              "text": "The catalog lists motor controller models R9 and R10, connector pinouts, operating voltages and firmware compatibility for electric delivery vans. A service table maps each hardware revision to its replacement part."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 215
+        },
+        {
+          "entry_id": 105,
+          "title": "Solstice keynote quotation in a funding prospectus",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Solstice keynote quotation in a funding prospectus"
+            },
+            {
+              "key": "summary",
+              "text": "A prospectus opens with a historical quotation and later explains the transaction."
+            },
+            {
+              "key": "opening",
+              "text": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\" The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule"
+            },
+            {
+              "key": "headings",
+              "text": "Context of the quotation"
+            },
+            {
+              "key": "related.1",
+              "text": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\" The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus descr"
+            },
+            {
+              "key": "related.2",
+              "text": "been public since that event. The current transaction issues shares to fund new offices and sales staff. The prospectus describes no current software launch or model upgrade."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 14819
+        },
+        {
+          "entry_id": 103,
+          "title": "Frontier weekly",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Frontier weekly"
+            },
+            {
+              "key": "summary",
+              "text": "Three research developments from this week."
+            },
+            {
+              "key": "opening",
+              "text": "Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            },
+            {
+              "key": "headings",
+              "text": "Database execution\nOpen weights\nHiring"
+            },
+            {
+              "key": "related.1",
+              "text": " on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 407
+        },
+        {
+          "entry_id": 102,
+          "title": "",
+          "source": "新闻来源",
+          "published_at": "2026-10-24 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": ""
+            },
+            {
+              "key": "summary",
+              "text": "Kiruna-X18 的新权重和推理代码已开放。"
+            },
+            {
+              "key": "opening",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            },
+            {
+              "key": "related.1",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 48
+        },
+        {
+          "entry_id": 101,
+          "title": "Garden irrigation checklist",
+          "source": "新闻来源",
+          "published_at": "2026-10-15 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Garden irrigation checklist"
+            },
+            {
+              "key": "summary",
+              "text": "Watering notes from an engineering cooperative."
+            },
+            {
+              "key": "opening",
+              "text": "Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. Tomatoes need even moisture through the summer. The horticulture group recorded soil"
+            },
+            {
+              "key": "headings",
+              "text": "A separate laboratory announcement"
+            },
+            {
+              "key": "related.1",
+              "text": "ure through the summer. The horticulture group recorded soil temperatures and checked the irrigation hoses. A separate laboratory announcement Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research. The cooperative's final section is the laboratory's official release announcement, separate from the gardening notes."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 10846
+        },
+        {
+          "entry_id": 100,
+          "title": "Wednesday dispatch",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Wednesday dispatch"
+            },
+            {
+              "key": "summary",
+              "text": "Operations, a laboratory note and a software package."
+            },
+            {
+              "key": "opening",
+              "text": "The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down invent"
+            },
+            {
+              "key": "headings",
+              "text": "Vireo weights"
+            },
+            {
+              "key": "related.1",
+              "text": "ciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. Vireo weights The laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning. The new model checkpoints and inference source code were published this morning."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 21334
+        },
+        {
+          "entry_id": 30,
+          "title": "ToolForge 2.0 is available",
+          "source": "技术来源",
+          "published_at": "2026-10-21 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "ToolForge 2.0 is available"
+            },
+            {
+              "key": "summary",
+              "text": "An open-source build tool releases a new major version under Apache 2.0."
+            },
+            {
+              "key": "opening",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            },
+            {
+              "key": "related.1",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 166
+        },
+        {
+          "entry_id": 20,
+          "title": "PostgreSQL joins run twice as fast",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "PostgreSQL joins run twice as fast"
+            },
+            {
+              "key": "summary",
+              "text": "A benchmark examines database query execution improvements."
+            },
+            {
+              "key": "opening",
+              "text": "The new hash-join executor reduces SQL query latency by 50 percent on the same dataset and hardware. We compare database throughput and explain the bottleneck."
+            },
+            {
+              "key": "related.1",
+              "text": "The new hash-join executor reduces SQL query latency by 50 percent on the same dataset and hardware. We compare database throughput and explain the bottleneck."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 159
+        }
+      ]
+    },
+    "response": "[\n  {\"entry_id\": 106, \"decision\": \"unrelated\", \"reason\": \"Article discusses firmware catalogs for electric delivery van motor controllers, completely unrelated to AI model releases.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Firmware model catalog for electric delivery vans\"}},\n  {\"entry_id\": 105, \"decision\": \"unrelated\", \"reason\": \"Article discusses a Solstice-5 model quotation in a funding prospectus, focusing on financial operations, not Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Solstice keynote quotation in a funding prospectus\"}},\n  {\"entry_id\": 103, \"decision\": \"unrelated\", \"reason\": \"Article covers Hawthorn-6B release, database benchmarks, and hiring, with no mention of Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Frontier weekly\"}},\n  {\"entry_id\": 102, \"decision\": \"unrelated\", \"reason\": \"Article reports the release of Kiruna-X18 large language model, which is a different model identifier than Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。\"}},\n  {\"entry_id\": 101, \"decision\": \"unrelated\", \"reason\": \"Article covers garden irrigation and the release of Luma-R17, unrelated to Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Garden irrigation checklist\"}},\n  {\"entry_id\": 100, \"decision\": \"unrelated\", \"reason\": \"Article discusses logistics and the release of Vireo-9B model, not Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"Wednesday dispatch\"}},\n  {\"entry_id\": 30, \"decision\": \"unrelated\", \"reason\": \"Article announces ToolForge 2.0, a build tool, which is not an AI model release for Nebula-Q47.\", \"evidence\": {\"key\": \"title\", \"quote\": \"ToolForge 2.0 is available\"}},\n  {\"entry_id\": 20, \"decision\": \"unrelated\", \"reason\": \"Article is about PostgreSQL database query performance, unrelated to AI model releases.\", \"evidence\": {\"key\": \"title\", \"quote\": \"PostgreSQL joins run twice as fast\"}}\n]"
+  },
+  {
+    "request": {
+      "stage": "previews",
+      "topic": "new open-source build tool releases",
+      "intent": "Discover news and discussions about newly released or updated open-source build tools.",
+      "previews": [
+        {
+          "entry_id": 110,
+          "title": "Kestrel Build 4.2 ships incremental compilation",
+          "source": "新闻来源",
+          "published_at": "2026-10-17 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Kestrel Build 4.2 ships incremental compilation"
+            },
+            {
+              "key": "summary",
+              "text": "The open-source command-line build tool publishes a new stable version."
+            },
+            {
+              "key": "opening",
+              "text": "Kestrel Build 4.2 is released under the MIT licence. This open-source build tool adds incremental compilation, with source archives, tagged commits and release notes published alongside the binaries."
+            },
+            {
+              "key": "related.1",
+              "text": "Kestrel Build 4.2 is released under the MIT licence. This open-source build tool adds incremental compilation, with source archives, tagged commits and release notes published alongside the binaries."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 199
+        },
+        {
+          "entry_id": 31,
+          "title": "开源构建工具石燕发布新版",
+          "source": "新闻来源",
+          "published_at": "2026-10-17 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "开源构建工具石燕发布新版"
+            },
+            {
+              "key": "summary",
+              "text": "MIT 许可的命令行构建工具推出 3.1，改进增量编译。"
+            },
+            {
+              "key": "opening",
+              "text": "石燕 3.1 今天正式发布。这个开源构建工具的源代码、发行包和变更日志现已公开。"
+            },
+            {
+              "key": "related.1",
+              "text": "石燕 3.1 今天正式发布。这个开源构建工具的源代码、发行包和变更日志现已公开。"
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 40
+        },
+        {
+          "entry_id": 30,
+          "title": "ToolForge 2.0 is available",
+          "source": "技术来源",
+          "published_at": "2026-10-21 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "ToolForge 2.0 is available"
+            },
+            {
+              "key": "summary",
+              "text": "An open-source build tool releases a new major version under Apache 2.0."
+            },
+            {
+              "key": "opening",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            },
+            {
+              "key": "related.1",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 166
+        },
+        {
+          "entry_id": 104,
+          "title": "EchoChess 1.2 opens its text decoder",
+          "source": "新闻来源",
+          "published_at": "2026-10-19 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "EchoChess 1.2 opens its text decoder"
+            },
+            {
+              "key": "summary",
+              "text": "A research release with multilingual conversation and new transformer weights."
+            },
+            {
+              "key": "opening",
+              "text": "The lab shipped EchoChess 1.2, a text-generating transformer with new open weights. People can converse with the decoder in several languages. The package includes source code, checkpoints and evaluation results."
+            },
+            {
+              "key": "related.1",
+              "text": "The lab shipped EchoChess 1.2, a text-generating transformer with new open weights. People can converse with the decoder in several languages. The package includes source code, checkpoints and evaluation results."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 212
+        },
+        {
+          "entry_id": 103,
+          "title": "Frontier weekly",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Frontier weekly"
+            },
+            {
+              "key": "summary",
+              "text": "Three research developments from this week."
+            },
+            {
+              "key": "opening",
+              "text": "Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            },
+            {
+              "key": "headings",
+              "text": "Database execution\nOpen weights\nHiring"
+            },
+            {
+              "key": "related.1",
+              "text": " on the same dataset reduced query latency by 43 percent. The report includes execution plans and a reproducible SQL script. Open weights The Hawthorn team has released Hawthorn-6B, a newly trained language model with open weights. Its versioned checkpoints and inference implementation are public. Hiring A compiler company opened two documentation roles."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 407
+        },
+        {
+          "entry_id": 102,
+          "title": "",
+          "source": "新闻来源",
+          "published_at": "2026-10-24 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": ""
+            },
+            {
+              "key": "summary",
+              "text": "Kiruna-X18 的新权重和推理代码已开放。"
+            },
+            {
+              "key": "opening",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            },
+            {
+              "key": "related.1",
+              "text": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 48
+        },
+        {
+          "entry_id": 100,
+          "title": "Wednesday dispatch",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Wednesday dispatch"
+            },
+            {
+              "key": "summary",
+              "text": "Operations, a laboratory note and a software package."
+            },
+            {
+              "key": "opening",
+              "text": "The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down invent"
+            },
+            {
+              "key": "headings",
+              "text": "Vireo weights"
+            },
+            {
+              "key": "related.1",
+              "text": "ciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. Vireo weights The laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning. The new model checkpoints and inference source code were published this morning."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 21334
+        },
+        {
+          "entry_id": 32,
+          "title": "Installing an old build utility",
+          "source": "新闻来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Installing an old build utility"
+            },
+            {
+              "key": "summary",
+              "text": "An installation tutorial for an existing open-source tool."
+            },
+            {
+              "key": "opening",
+              "text": "This is a tutorial for a version released years ago. There is no new tool release or version announcement."
+            },
+            {
+              "key": "related.1",
+              "text": "This is a tutorial for a version released years ago. There is no new tool release or version announcement."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 106
+        }
+      ]
+    },
+    "response": "[\n  {\n    \"entry_id\": 110,\n    \"decision\": \"possible\",\n    \"reason\": \"Announcement of a new stable version (4.2) for an open-source command-line build tool named Kestrel Build.\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"Kestrel Build 4.2 is released under the MIT licence. This open-source build tool adds incremental compilation\"\n    }\n  },\n  {\n    \"entry_id\": 31,\n    \"decision\": \"possible\",\n    \"reason\": \"Announcement of a new version (3.1) for an open-source command-line build tool named ShiYan (Stone Swallow).\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"石燕 3.1 今天正式发布。这个开源构建工具的源代码、发行包和变更日志现已公开。\"\n    }\n  },\n  {\n    \"entry_id\": 30,\n    \"decision\": \"possible\",\n    \"reason\": \"Release of a new major version (2.0) for an open-source command-line build tool named ToolForge.\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available\"\n    }\n  },\n  {\n    \"entry_id\": 104,\n    \"decision\": \"unrelated\",\n    \"reason\": \"Topic is an AI language model (transformer) release, not a software build tool.\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"The lab shipped EchoChess 1.2, a text-generating transformer with new open weights.\"\n    }\n  },\n  {\n    \"entry_id\": 103,\n    \"decision\": \"unrelated\",\n    \"reason\": \"Weekly digest covering database benchmarks, AI model releases, and hiring; no build tool release news.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"Database execution A PostgreSQL hash-join benchmark on the same dataset reduced query latency by 43 percent... Open weights The Hawthorn team has released Hawthorn-6B\"\n    }\n  },\n  {\n    \"entry_id\": 102,\n    \"decision\": \"unrelated\",\n    \"reason\": \"Topic is the release of a Large Language Model (Kiruna-X18), not a build tool.\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。\"\n    }\n  },\n  {\n    \"entry_id\": 100,\n    \"decision\": \"unrelated\",\n    \"reason\": \"Digest mentions logistics operations and an AI model (Vireo-9B) release; no build tool news.\",\n    \"evidence\": {\n      \"key\": \"related.1\",\n      \"quote\": \"Vireo weights The laboratory has released Vireo-9B, a new open-weight language model with multilingual reasoning.\"\n    }\n  },\n  {\n    \"entry_id\": 32,\n    \"decision\": \"unrelated\",\n    \"reason\": \"Explicitly a tutorial for an old tool with no new release or version announcement.\",\n    \"evidence\": {\n      \"key\": \"opening\",\n      \"quote\": \"This is a tutorial for a version released years ago. There is no new tool release or version announcement.\"\n    }\n  }\n]"
+  },
+  {
+    "request": {
+      "stage": "previews",
+      "topic": "最近一周已收藏的新的AI模型，来自技术来源",
+      "intent": "Find newly announced or released AI models (including new versions) that were announced/released within the last 7 days, specifically those marked as starred/favorite, from the source '技术来源'.",
+      "previews": [
+        {
+          "entry_id": 105,
+          "title": "Solstice keynote quotation in a funding prospectus",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Solstice keynote quotation in a funding prospectus"
+            },
+            {
+              "key": "summary",
+              "text": "A prospectus opens with a historical quotation and later explains the transaction."
+            },
+            {
+              "key": "opening",
+              "text": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\" The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule"
+            },
+            {
+              "key": "headings",
+              "text": "Context of the quotation"
+            },
+            {
+              "key": "related.1",
+              "text": "The prospectus quotes a keynote: \"Today we release Solstice-5, a new language model with open weights.\" The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus describes regional offices, operating expenses, cash balances, shareholder votes and the schedule for the next quarterly filing. The prospectus descr"
+            },
+            {
+              "key": "related.2",
+              "text": "ghts have been public since that event. The current transaction issues shares to fund new offices and sales staff. The prospectus describes no current software launch or model upgrade."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 14819
+        },
+        {
+          "entry_id": 30,
+          "title": "ToolForge 2.0 is available",
+          "source": "技术来源",
+          "published_at": "2026-10-21 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "ToolForge 2.0 is available"
+            },
+            {
+              "key": "summary",
+              "text": "An open-source build tool releases a new major version under Apache 2.0."
+            },
+            {
+              "key": "opening",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            },
+            {
+              "key": "related.1",
+              "text": "Today we release ToolForge 2.0, our open-source command-line build tool. The repository, source archive and binaries are available with new incremental build support."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 166
+        },
+        {
+          "entry_id": 7,
+          "title": "Lumen AI raises $200 million",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Lumen AI raises $200 million"
+            },
+            {
+              "key": "summary",
+              "text": "AI company secures financing to expand its business."
+            },
+            {
+              "key": "opening",
+              "text": "The financing will fund future hiring. No new model or model version is announced. The company's existing language model remains unchanged."
+            },
+            {
+              "key": "related.1",
+              "text": "The financing will fund future hiring. No new model or model version is announced. The company's existing language model remains unchanged."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 139
+        },
+        {
+          "entry_id": 5,
+          "title": "Engineering dispatch 47",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Engineering dispatch 47"
+            },
+            {
+              "key": "summary",
+              "text": "Infrastructure notes and a research update."
+            },
+            {
+              "key": "opening",
+              "text": "Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastruc"
+            },
+            {
+              "key": "related.1",
+              "text": "Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes"
+            },
+            {
+              "key": "related.2",
+              "text": "enance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. We are releasing a new AI foundation model named Harbor-11. Open weights and the model card are available starting today. This is a model release, not a funding announcement."
+            }
+          ],
+          "complete": false,
+          "basis": "full_body",
+          "material_chars": 27174
+        },
+        {
+          "entry_id": 20,
+          "title": "PostgreSQL joins run twice as fast",
+          "source": "技术来源",
+          "published_at": "2026-10-22 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "PostgreSQL joins run twice as fast"
+            },
+            {
+              "key": "summary",
+              "text": "A benchmark examines database query execution improvements."
+            },
+            {
+              "key": "opening",
+              "text": "The new hash-join executor reduces SQL query latency by 50 percent on the same dataset and hardware. We compare database throughput and explain the bottleneck."
+            },
+            {
+              "key": "related.1",
+              "text": "The new hash-join executor reduces SQL query latency by 50 percent on the same dataset and hardware. We compare database throughput and explain the bottleneck."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 159
+        },
+        {
+          "entry_id": 10,
+          "title": "Aurora unveils its new 2026 vehicle model",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Aurora unveils its new 2026 vehicle model"
+            },
+            {
+              "key": "summary",
+              "text": "The car model launches with improved electric motors."
+            },
+            {
+              "key": "opening",
+              "text": "This is a new automobile model, not an artificial-intelligence model or software release."
+            },
+            {
+              "key": "related.1",
+              "text": "This is a new automobile model, not an artificial-intelligence model or software release."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 89
+        },
+        {
+          "entry_id": 8,
+          "title": "A beginner guide to using large language models",
+          "source": "技术来源",
+          "published_at": "2026-10-24 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "A beginner guide to using large language models"
+            },
+            {
+              "key": "summary",
+              "text": "An old tutorial explains prompting with a previously released AI model."
+            },
+            {
+              "key": "opening",
+              "text": "This tutorial from two years ago teaches how to prompt an existing model. It is not a model release announcement."
+            },
+            {
+              "key": "related.1",
+              "text": "This tutorial from two years ago teaches how to prompt an existing model. It is not a model release announcement."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 113
+        },
+        {
+          "entry_id": 1,
+          "title": "Introducing Nebula-Q47, our new language model",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:24:57",
+          "chunks": [
+            {
+              "key": "title",
+              "text": "Introducing Nebula-Q47, our new language model"
+            },
+            {
+              "key": "summary",
+              "text": "The research team releases an open-weight foundation model for multilingual reasoning."
+            },
+            {
+              "key": "opening",
+              "text": "Today we are releasing Nebula-Q47, a new large language model. The weights and inference code are available under Apache 2.0."
+            },
+            {
+              "key": "related.1",
+              "text": "Today we are releasing Nebula-Q47, a new large language model. The weights and inference code are available under Apache 2.0."
+            }
+          ],
+          "complete": true,
+          "basis": "full_body",
+          "material_chars": 125
+        }
+      ]
+    },
+    "response": "{\n  \"previews\": [\n    {\n      \"entry_id\": 105,\n      \"decision\": \"uncertain\",\n      \"reason\": \"The article is a funding prospectus containing a quoted keynote about a model release. Related chunk 2 explicitly states 'The prospectus describes no current software launch or model upgrade', suggesting the quoted text is historical context. However, the quote itself claims a release. Per instructions, quotes/funding contexts require full context to determine if it's a current event or past reference. Uncertain until full text confirms if Solstice-5 was released this week or is being cited as past news.\",\n      \"evidence\": null\n    },\n    {\n      \"entry_id\": 30,\n      \"decision\": \"unrelated\",\n      \"reason\": \"The article announces ToolForge 2.0, an open-source command-line build tool, which is software infrastructure, not an AI model.\",\n      \"evidence\": {\n        \"key\": \"summary\",\n        \"quote\": \"An open-source build tool releases a new major version under Apache 2.0.\"\n      }\n    },\n    {\n      \"entry_id\": 7,\n      \"decision\": \"unrelated\",\n      \"reason\": \"Explicitly states no new model or model version is announced; only financing for hiring.\",\n      \"evidence\": {\n        \"key\": \"related.1\",\n        \"quote\": \"No new model or model version is announced. The company's existing language model remains unchanged.\"\n      }\n    },\n    {\n      \"entry_id\": 5,\n      \"decision\": \"possible\",\n      \"reason\": \"While the opening discusses infrastructure, the related chunk 2 explicitly announces the release of a new AI foundation model 'Harbor-11' with open weights starting today.\",\n      \"evidence\": {\n        \"key\": \"related.2\",\n        \"quote\": \"We are releasing a new AI foundation model named Harbor-11. Open weights and the model card are available starting today.\"\n      }\n    },\n    {\n      \"entry_id\": 20,\n      \"decision\": \"unrelated\",\n      \"reason\": \"The article discusses PostgreSQL database query execution improvements, which is database software, not an AI model.\",\n      \"evidence\": {\n        \"key\": \"summary\",\n        \"quote\": \"A benchmark examines database query execution improvements.\"\n      }\n    },\n    {\n      \"entry_id\": 10,\n      \"decision\": \"unrelated\",\n      \"reason\": \"Explicitly states this is a new automobile model, not an artificial-intelligence model.\",\n      \"evidence\": {\n        \"key\": \"related.1\",\n        \"quote\": \"This is a new automobile model, not an artificial-intelligence model or software release.\"\n      }\n    },\n    {\n      \"entry_id\": 8,\n      \"decision\": \"unrelated\",\n      \"reason\": \"This is an old tutorial from two years ago about using an existing model, not a new model announcement.\",\n      \"evidence\": {\n        \"key\": \"related.1\",\n        \"quote\": \"This tutorial from two years ago teaches how to prompt an existing model. It is not a model release announcement.\"\n      }\n    },\n    {\n      \"entry_id\": 1,\n      \"decision\": \"possible\",\n      \"reason\": \"Explicitly announces the release of a new large language model 'Nebula-Q47' today.\",\n      \"evidence\": {\n        \"key\": \"opening\",\n        \"quote\": \"Today we are releasing Nebula-Q47, a new large language model. The weights and inference code are available under Apache 2.0.\"\n      }\n    }\n  ]\n}"
+  },
+  {
+    "request": {
+      "stage": "final",
+      "topic": "new open-source build tool releases",
+      "intent": "Find announcements or releases of new open-source build tools. 'New' refers to newly released versions or tools, not a specific recent date window unless explicitly requested (which it is not).",
+      "articles": [
+        {
+          "entry_id": 5,
+          "title": "Engineering dispatch 47",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:41:56",
+          "basis": "full_body",
+          "context": "The article consists of repetitive, irrelevant text about routine infrastructure maintenance and storage notes. This part continues the pattern of meaningless repetition and introduces the release of a new AI foundation model named Harbor-11, which is a model release, not a funding announcement. No mention of new open-source build tools or releases. No relevant information was found in this part or previous parts.",
+          "signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 6,
+            "uncertain": 0
+          },
+          "evidence": [],
+          "parts": 6
+        }
+      ]
+    },
+    "response": "{\"articles\":[{\"entry_id\":5,\"decision\":\"unrelated\",\"score\":10,\"reason\":\"The article discusses infrastructure maintenance and an AI model release, with no mention of open-source build tools.\",\"evidence\":null,\"context_resolution\":null}]}"
+  },
+  {
+    "request": {
+      "stage": "full",
+      "topic": "海底火山声学监测的新发现",
+      "intent": "General discussion on recent discoveries/findings in acoustic monitoring of submarine volcanoes, focusing on new scientific insights or monitoring results rather than just news announcements.",
+      "parts": [
+        {
+          "entry_id": 100,
+          "key": "full.4",
+          "index": 3,
+          "total": 5,
+          "start": 15000,
+          "end": 20000,
+          "context_start": 14800,
+          "text": "e logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocations. The operations crew inspected the loading area and wrote down inventory totals. The logistics desk reconciled parcel receipts and storage allocation",
+          "article_title": "Wednesday dispatch",
+          "source": "技术来源",
+          "published_at": "2026-10-25 19:41:56",
+          "basis": "full_body",
+          "previous_context": "The article 'Wednesday dispatch' continues with repetitive, irrelevant text regarding logistics and inventory totals. There is no mention of submarine volcanoes or acoustic monitoring.",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 3,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        },
+        {
+          "entry_id": 5,
+          "key": "full.4",
+          "index": 3,
+          "total": 6,
+          "start": 15000,
+          "end": 20000,
+          "context_start": 14800,
+          "text": "ine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructure maintenance and storage notes. Routine infrastructu",
+          "article_title": "Engineering dispatch 47",
+          "source": "技术来源",
+          "published_at": "2026-10-26 19:41:56",
+          "basis": "full_body",
+          "previous_context": "The article 'Engineering dispatch 47' continues with repetitive, irrelevant text regarding infrastructure maintenance and storage. There is no mention of submarine volcanoes or acoustic monitoring.",
+          "previous_signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 3,
+            "uncertain": 0
+          },
+          "previous_evidence": []
+        }
+      ]
+    },
+    "response": "{\"parts\":[{\"entry_id\":100,\"key\":\"full.1\",\"kind\":\"background\",\"reason\":\"No new information; repetitive logistics content continues.\",\"evidence\":null,\"context\":\"The article 'Wednesday dispatch' continues with repetitive, irrelevant text regarding logistics and inventory totals. There is no mention of submarine volcanoes or acoustic monitoring.\"},{\"entry_id\":5,\"key\":\"full.1\",\"kind\":\"background\",\"reason\":\"No new information; repetitive maintenance content continues.\",\"evidence\":null,\"context\":\"The article 'Engineering dispatch 47' continues with repetitive, irrelevant text regarding infrastructure maintenance and storage. There is no mention of submarine volcanoes or acoustic monitoring.\"}]}"
+  },
+  {
+    "source": "staged-search-timeout-2026-10-28-live.requests.jsonl #15",
+    "request": {
+      "stage": "final",
+      "topic": "新的AI模型",
+      "intent": "Find discussions or news about newly announced, released, or open-weighted AI models (including major versions), excluding general tutorials or unrelated company news.",
+      "articles": [
+        {
+          "entry_id": 105,
+          "title": "Solstice keynote quotation in a funding prospectus",
+          "source": "技术来源",
+          "published_at": "2026-10-27 07:52:55",
+          "basis": "full_body",
+          "context": "Funding prospectus includes a quote from a keynote 18 months ago announcing 'Solstice-5, a new language model with open weights'. Context clarifies Solstice-5 is an existing product with public weights since that event. The rest of the document is repetitive financial boilerplate about offices and expenses. No new AI model release is described.",
+          "signals": {
+            "supports": 0,
+            "opposes": 0,
+            "background": 3,
+            "uncertain": 0
+          },
+          "evidence": [],
+          "parts": 3
+        },
+        {
+          "entry_id": 101,
+          "title": "Garden irrigation checklist",
+          "source": "新闻来源",
+          "published_at": "2026-10-16 07:52:55",
+          "basis": "full_body",
+          "context": "The document primarily contains repetitive gardening notes. However, it includes a separate laboratory announcement stating 'Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research.' This constitutes a mention of a newly announced open-weighted AI model.",
+          "signals": {
+            "supports": 1,
+            "opposes": 0,
+            "background": 2,
+            "uncertain": 0
+          },
+          "evidence": [
+            {
+              "key": "full.3",
+              "quote": "Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research."
+            }
+          ],
+          "parts": 3
+        },
+        {
+          "entry_id": 3,
+          "title": "Orion 0.9 checkpoints are here",
+          "source": "新闻来源",
+          "published_at": "2026-10-24 07:52:55",
+          "basis": "full_body",
+          "context": "The article announces the introduction of 'Orion 0.9, a new foundation model trained for multilingual reasoning.' It directs users to download the new checkpoints and model card from the release repository, confirming a new AI model release.",
+          "signals": {
+            "supports": 1,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "evidence": [
+            {
+              "key": "full.1",
+              "quote": "We introduce Orion 0.9, a new foundation model trained for multilingual reasoning. Download the new checkpoints and model card from the release repository."
+            }
+          ],
+          "parts": 1
+        },
+        {
+          "entry_id": 102,
+          "title": "",
+          "source": "新闻来源",
+          "published_at": "2026-10-25 07:52:55",
+          "basis": "full_body",
+          "context": "The article announces that 'Kiruna-X18 large language model was officially released today.' The research team has published the new version weights, inference code, and model documentation, indicating a new AI model release.",
+          "signals": {
+            "supports": 1,
+            "opposes": 0,
+            "background": 0,
+            "uncertain": 0
+          },
+          "evidence": [
+            {
+              "key": "full.1",
+              "quote": "Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。"
+            }
+          ],
+          "parts": 1
+        }
+      ]
+    },
+    "response": "[\n  {\n    \"articles\": [\n      {\n        \"entry_id\": 105,\n        \"decision\": \"insufficient\",\n        \"score\": 20,\n        \"reason\": \"文章为融资招股书，仅引用18个月前发布会关于Solstice-5的介绍，无新模型发布新闻。\",\n        \"evidence\": null,\n        \"context_resolution\": \"上下文指出Solstice-5是既有产品，且文章主体为财务样板文，无新模型发布信息。\"\n      },\n      {\n        \"entry_id\": 101,\n        \"decision\": \"relevant\",\n        \"score\": 85,\n        \"reason\": \"文章包含实验室公告，宣布Latticeworks发布新的开源权重大语言模型Luma-R17。\",\n        \"evidence\": {\n          \"key\": \"full.3\",\n          \"quote\": \"Latticeworks has released Luma-R17, a new large language model. The release opens its weights and tokenizer for independent research.\"\n        },\n        \"context_resolution\": \"\"\n      },\n      {\n        \"entry_id\": 3,\n        \"decision\": \"relevant\",\n        \"score\": 90,\n        \"reason\": \"文章明确宣布推出新的基础模型Orion 0.9，并提供检查点下载。\",\n        \"evidence\": {\n          \"key\": \"full.1\",\n          \"quote\": \"We introduce Orion 0.9, a new foundation model trained for multilingual reasoning. Download the new checkpoints and model card from the release repository.\"\n        },\n        \"context_resolution\": \"\"\n      },\n      {\n        \"entry_id\": 102,\n        \"decision\": \"relevant\",\n        \"score\": 90,\n        \"reason\": \"文章正式宣布Kiruna-X18大语言模型发布，并公开了新版本权重和代码。\",\n        \"evidence\": {\n          \"key\": \"full.1\",\n          \"quote\": \"Kiruna-X18 大语言模型今天正式发布。研究团队公开了新版本权重、推理代码和模型说明文档。\"\n        },\n        \"context_resolution\": \"\"\n      }\n    ]\n  }\n]"
+  },
+  {
+    "source": "staged-search-title-fallback-2026-10-28-live.requests.jsonl #1",
+    "request": {
+      "stage": "understanding",
+      "sentence": "新的AI模型",
+      "sources": [],
+      "tags": [],
+      "now_local": "2026-10-28T16:32:02.708353800+08:00",
+      "today_utc": "2026-10-28"
+    },
+    "response": "{\"intent\":\"Looking for news or discussions about newly announced, released, or updated AI models (including LLMs, large models, foundation models), excluding general tutorials or unrelated vehicle models.\",\"entities\":[],\"routes\":[{\"language\":\"zh\",\"groups\":[[\"人工智能\",\"AI\",\"大模型\",\"大语言模型\",\"语言模型\",\"机器学习\"],[\"新\",\"发布\",\"推出\",\"上线\",\"开源\",\"更新\",\"版本\",\"模型\"]]},{\"language\":\"zh\",\"groups\":[[\"大模型\",\"大语言模型\",\"LLM\",\"GPT\",\"Gemini\",\"Claude\",\"Llama\",\"Mistral\"],[\"新\",\"发布\",\"推出\",\"上线\",\"开源\",\"更新\",\"版本\"]]},{\"language\":\"zh\",\"groups\":[[\"人工智能\",\"AI\",\"大模型\",\"大语言模型\",\"语言模型\",\"机器学习\"]]},{\"language\":\"en\",\"groups\":[[\"AI\",\"artificial intelligence\",\"large model\",\"large language model\",\"LLM\",\"foundation model\"],[\"new\",\"release\",\"released\",\"launch\",\"launched\",\"announce\",\"announced\",\"update\",\"open source\"]]},{\"language\":\"en\",\"groups\":[[\"LLM\",\"GPT\",\"Gemini\",\"Claude\",\"Llama\",\"Mistral\",\"foundation model\"],[\"new\",\"release\",\"released\",\"launch\",\"launched\",\"announce\",\"announced\"]]},{\"language\":\"en\",\"groups\":[[\"AI\",\"artificial intelligence\",\"large model\",\"large language model\",\"LLM\",\"foundation model\",\"machine learning\"]]}],\"filter\":{},\"unsupported\":[]}"
+  }
+]

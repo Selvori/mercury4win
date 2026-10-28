@@ -14,6 +14,7 @@ pub enum TaskType {
     Translation,
     Tagging,
     Topic,
+    SearchFilter,
 }
 
 impl TaskType {
@@ -23,6 +24,7 @@ impl TaskType {
             Self::Translation => "translation",
             Self::Tagging => "tagging",
             Self::Topic => "topic",
+            Self::SearchFilter => "search_filter",
         }
     }
     pub fn parse(value: &str) -> Result<Self, String> {
@@ -31,6 +33,7 @@ impl TaskType {
             "translation" => Ok(Self::Translation),
             "tagging" => Ok(Self::Tagging),
             "topic" => Ok(Self::Topic),
+            "search_filter" => Ok(Self::SearchFilter),
             _ => Err("Unknown task type".into()),
         }
     }

@@ -183,6 +183,7 @@ fn launch(
         execute(&runtime, kind, entry, id, &channel, || async {
             match kind {
                 TaskType::Topic => unreachable!("Topic transport is tested by topic_store tests"),
+                TaskType::SearchFilter => unreachable!("Search filter transport has its own tests"),
                 TaskType::Summary => {
                     crate::agent::summary::run_summary(
                         &pool,

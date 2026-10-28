@@ -1,0 +1,1929 @@
+{
+  "date": "2026-10-28T03:40:04.861085400+08:00",
+  "version": "topic-search-staged-v1",
+  "baseline": "81f7b2e plus retained uncommitted work",
+  "platform": "Windows",
+  "model": "ecnu-plus",
+  "synthetic_only": true,
+  "primary_only": true,
+  "no_automatic_retry": true,
+  "max_experiment_requests": 160,
+  "request_count": 41,
+  "total_tokens": 91216,
+  "requests": [
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 927,
+      "completion_tokens": 381,
+      "total_tokens": 1308
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 3218,
+      "completion_tokens": 2592,
+      "total_tokens": 5810
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 467,
+      "completion_tokens": 228,
+      "total_tokens": 695
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 2733,
+      "completion_tokens": 770,
+      "total_tokens": 3503
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 1890,
+      "completion_tokens": 787,
+      "total_tokens": 2677
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 1164,
+      "completion_tokens": 438,
+      "total_tokens": 1602
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 3579,
+      "completion_tokens": 628,
+      "total_tokens": 4207
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 929,
+      "completion_tokens": 356,
+      "total_tokens": 1285
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 3224,
+      "completion_tokens": 2409,
+      "total_tokens": 5633
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 493,
+      "completion_tokens": 259,
+      "total_tokens": 752
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 2268,
+      "completion_tokens": 874,
+      "total_tokens": 3142
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 934,
+      "completion_tokens": 316,
+      "total_tokens": 1250
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 3234,
+      "completion_tokens": 2572,
+      "total_tokens": 5806
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 483,
+      "completion_tokens": 230,
+      "total_tokens": 713
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 2785,
+      "completion_tokens": 554,
+      "total_tokens": 3339
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 929,
+      "completion_tokens": 348,
+      "total_tokens": 1277
+    },
+    {
+      "phase": "search_titles",
+      "status": "timedOut",
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 956,
+      "completion_tokens": 410,
+      "total_tokens": 1366
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 3205,
+      "completion_tokens": 2770,
+      "total_tokens": 5975
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 464,
+      "completion_tokens": 209,
+      "total_tokens": 673
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 2019,
+      "completion_tokens": 831,
+      "total_tokens": 2850
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 959,
+      "completion_tokens": 166,
+      "total_tokens": 1125
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 732,
+      "completion_tokens": 201,
+      "total_tokens": 933
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 2397,
+      "completion_tokens": 831,
+      "total_tokens": 3228
+    },
+    {
+      "phase": "search_plan",
+      "status": "succeeded",
+      "prompt_tokens": 930,
+      "completion_tokens": 362,
+      "total_tokens": 1292
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 3225,
+      "completion_tokens": 2271,
+      "total_tokens": 5496
+    },
+    {
+      "phase": "search_titles",
+      "status": "succeeded",
+      "prompt_tokens": 484,
+      "completion_tokens": 234,
+      "total_tokens": 718
+    },
+    {
+      "phase": "search_previews",
+      "status": "succeeded",
+      "prompt_tokens": 1631,
+      "completion_tokens": 402,
+      "total_tokens": 2033
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 1995,
+      "completion_tokens": 245,
+      "total_tokens": 2240
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 2149,
+      "completion_tokens": 201,
+      "total_tokens": 2350
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 2153,
+      "completion_tokens": 243,
+      "total_tokens": 2396
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 2155,
+      "completion_tokens": 250,
+      "total_tokens": 2405
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 1598,
+      "completion_tokens": 259,
+      "total_tokens": 1857
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "prompt_tokens": 529,
+      "completion_tokens": 70,
+      "total_tokens": 599
+    },
+    {
+      "phase": "search_full",
+      "status": "succeeded",
+      "prompt_tokens": 818,
+      "completion_tokens": 169,
+      "total_tokens": 987
+    },
+    {
+      "phase": "search_final",
+      "status": "succeeded",
+      "prompt_tokens": 554,
+      "completion_tokens": 94,
+      "total_tokens": 648
+    },
+    {
+      "phase": "normal",
+      "status": "succeeded",
+      "prompt_tokens": 922,
+      "completion_tokens": 373,
+      "total_tokens": 1295
+    },
+    {
+      "phase": "normal",
+      "status": "succeeded",
+      "prompt_tokens": 1906,
+      "completion_tokens": 621,
+      "total_tokens": 2527
+    },
+    {
+      "phase": "normal",
+      "status": "succeeded",
+      "prompt_tokens": 1556,
+      "completion_tokens": 472,
+      "total_tokens": 2028
+    },
+    {
+      "phase": "normal",
+      "status": "succeeded",
+      "prompt_tokens": 924,
+      "completion_tokens": 404,
+      "total_tokens": 1328
+    },
+    {
+      "phase": "normal",
+      "status": "succeeded",
+      "prompt_tokens": 1125,
+      "completion_tokens": 743,
+      "total_tokens": 1868
+    }
+  ],
+  "cases": [
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "models_zh",
+        "query": "新的AI模型",
+        "topic": "models",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "invalidJudgment",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "173eab6e-987b-484a-8254-ddbbdf52951d",
+            "started_at": "2026-10-27T19:25:23.100899600+00:00",
+            "status": "failed",
+            "phase": "full",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_excluded": 49,
+            "preview_screened": 22,
+            "further_pending": 13,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 57,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 6,
+            "pending": 13,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 26,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:bfb67765-aaab-4c7c-94a9-88e8d03bbe18",
+          "sentence": "新的AI模型",
+          "input_key": "967baa1e254ebdd2641fbd5abc19dc8695ae68f82c567a009c37f276bbf089e5",
+          "plan": {
+            "intent": "Find discussions or announcements about newly released or updated Artificial Intelligence models, including Large Language Models (LLMs) and foundation models.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "人工智能",
+                    "基础模型",
+                    "大模型",
+                    "大语言模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "artificial intelligence",
+                    "foundation model",
+                    "generative ai",
+                    "large language model",
+                    "llm"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "上线",
+                    "发布",
+                    "开源",
+                    "推出",
+                    "新模型",
+                    "版本更新"
+                  ],
+                  [
+                    "ai",
+                    "llm",
+                    "模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "announce",
+                    "deploy",
+                    "launch",
+                    "new model",
+                    "open source",
+                    "release",
+                    "update"
+                  ],
+                  [
+                    "ai",
+                    "architecture",
+                    "llm",
+                    "model"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:25:23.100899600+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 58,
+          "total": 71,
+          "pending": 13,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 190077,
+      "requests": 7
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "models_en",
+        "query": "newly released AI models",
+        "topic": "models",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "invalidJudgment",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "f0a86c92-eb60-43dc-9829-ff3725a2e966",
+            "started_at": "2026-10-27T19:28:31.718728600+00:00",
+            "status": "failed",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_excluded": 50,
+            "preview_screened": 0,
+            "further_pending": 21,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 50,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 8,
+            "pending": 21,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:80d1ba12-c80f-4834-bac3-804aa448efbc",
+          "sentence": "newly released AI models",
+          "input_key": "bc4b8eae1807e9d5216c3e983c4d485332defedec332961c9c8ae35070683df6",
+          "plan": {
+            "intent": "Find discussions or announcements regarding newly released or announced AI models (including major versions or open-weights releases), distinguishing from general AI tutorials, old model mentions, or non-AI vehicle model launches.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "人工智能",
+                    "大模型",
+                    "语言模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "foundation model",
+                    "large language model",
+                    "llm"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "人工智能",
+                    "大模型",
+                    "语言模型"
+                  ],
+                  [
+                    "上线",
+                    "发布",
+                    "开源",
+                    "推出",
+                    "新模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "language model",
+                    "llm"
+                  ],
+                  [
+                    "announced",
+                    "launched",
+                    "new model",
+                    "released"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:28:31.718728600+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 50,
+          "total": 71,
+          "pending": 21,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 184663,
+      "requests": 4
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "unknown_entity",
+        "query": "Nebula-Q47 新模型发布",
+        "topic": "entity",
+        "expected": [
+          1
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          1
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "invalidJudgment",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "b23bdb01-6909-4d96-a4a6-de4a01ab5eaf",
+            "started_at": "2026-10-27T19:31:18.531323100+00:00",
+            "status": "failed",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_excluded": 49,
+            "preview_screened": 0,
+            "further_pending": 22,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 49,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 8,
+            "pending": 22,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:1cc07ecb-744c-4451-a752-c5855d84e9f0",
+          "sentence": "Nebula-Q47 新模型发布",
+          "input_key": "48320a35d35086dabf6c847fb7a882484c4c4e1d80998a45935debca22403486",
+          "plan": {
+            "intent": "Topic search for the release or announcement of the new 'Nebula-Q47' model. This is an event-specific query focusing on a specific AI model identifier.",
+            "entities": [
+              "Nebula-Q47"
+            ],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "nebula-q47"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "nebula-q47"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "nebula-q47"
+                  ],
+                  [
+                    "上新",
+                    "公开",
+                    "发布",
+                    "推出"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "nebula-q47"
+                  ],
+                  [
+                    "announced",
+                    "launched",
+                    "release",
+                    "unveiled"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "llm",
+                    "nebula-q47",
+                    "人工智能",
+                    "大模型",
+                    "语言模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "model",
+                    "nebula-q47"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:31:18.531323100+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 49,
+          "total": 71,
+          "pending": 22,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 123032,
+      "requests": 4
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "database_zh",
+        "query": "数据库查询性能与加速",
+        "topic": "database",
+        "expected": [
+          20,
+          21,
+          22,
+          103,
+          109
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          20,
+          21,
+          22,
+          103,
+          109
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "timeout",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "d3953be8-e9eb-4aad-9c23-5a148d9d9179",
+            "started_at": "2026-10-27T19:33:29.656588500+00:00",
+            "status": "failed",
+            "phase": "titles",
+            "total": 71,
+            "title_screened": 2,
+            "title_model_reviewed": 0,
+            "title_excluded": 0,
+            "preview_screened": 0,
+            "further_pending": 2,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 0,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 64,
+            "pending": 71,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:1e6bbd98-4806-4d62-a16d-f5b7b992b40e",
+          "sentence": "数据库查询性能与加速",
+          "input_key": "30a0b42847b6c3dbce35e84d67201e7dda74e9f6b58c358d7a8386b9d422dbb9",
+          "plan": {
+            "intent": "General discussion or techniques regarding database query performance optimization and acceleration methods. Not limited to specific event announcements.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "database",
+                    "db",
+                    "sql",
+                    "数据库",
+                    "数据表"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "data store",
+                    "database",
+                    "db",
+                    "relational",
+                    "sql"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "db",
+                    "sql",
+                    "数据库"
+                  ],
+                  [
+                    "优化",
+                    "加速",
+                    "性能",
+                    "慢",
+                    "效率",
+                    "查询",
+                    "索引"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "database",
+                    "db",
+                    "query",
+                    "sql"
+                  ],
+                  [
+                    "acceleration",
+                    "efficiency",
+                    "indexing",
+                    "optimization",
+                    "performance",
+                    "slow",
+                    "tuning"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:33:29.656588500+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 0,
+          "total": 71,
+          "pending": 71,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 134025,
+      "requests": 2
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "tools_en",
+        "query": "new open-source build tool releases",
+        "topic": "tools",
+        "expected": [
+          30,
+          31,
+          110
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          30,
+          31,
+          110
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "invalidJudgment",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "d3a60397-43b9-4848-87b1-51a4f4df9b25",
+            "started_at": "2026-10-27T19:35:59.167851600+00:00",
+            "status": "failed",
+            "phase": "previews",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_excluded": 61,
+            "preview_screened": 1,
+            "further_pending": 9,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 61,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 8,
+            "pending": 9,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:2ef77562-8b33-40d8-8b5c-b2037ae334d0",
+          "sentence": "new open-source build tool releases",
+          "input_key": "07cb211a20e481bb36d5f4d631f1c1026ad1eb326a1a3b36aae87562473d4a02",
+          "plan": {
+            "intent": "Discover news and discussions about newly released or updated open-source build tools.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "open-source",
+                    "开源"
+                  ],
+                  [
+                    "build tool",
+                    "打包工具",
+                    "构建工具",
+                    "编译工具"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "open source",
+                    "open-source"
+                  ],
+                  [
+                    "build system",
+                    "build tool",
+                    "compiler",
+                    "packager"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "上线",
+                    "发布",
+                    "新版本",
+                    "更新"
+                  ],
+                  [
+                    "构建工具",
+                    "编译工具"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "launch",
+                    "release",
+                    "update",
+                    "version"
+                  ],
+                  [
+                    "build system",
+                    "build tool"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "open source build",
+                    "开源构建"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "build tool release",
+                    "open source build"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:35:59.167851600+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 62,
+          "total": 71,
+          "pending": 9,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 92287,
+      "requests": 4
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "explicit_hard",
+        "query": "最近一周已收藏的新的AI模型，来自技术来源",
+        "topic": "hard",
+        "expected": [
+          1,
+          5,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [],
+        "missed": [
+          1,
+          5,
+          107
+        ],
+        "false_positive": [],
+        "error": {
+          "code": "invalidJudgment",
+          "detail": ""
+        },
+        "session": {
+          "scan": {
+            "scan_id": "7f3db8cb-8b4a-4ccc-9be7-98f657ce6aaa",
+            "started_at": "2026-10-27T19:37:06.007828700+00:00",
+            "status": "failed",
+            "phase": "previews",
+            "total": 10,
+            "title_screened": 10,
+            "title_model_reviewed": 10,
+            "title_excluded": 0,
+            "preview_screened": 0,
+            "further_pending": 10,
+            "full_verified": 0,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 0,
+            "insufficient": 0,
+            "changed": 0,
+            "failed": 8,
+            "pending": 10,
+            "matches": 0,
+            "full_parts_done": 0,
+            "full_parts_total": 0,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:30d94717-c1b2-44be-b9ca-cb0bf47959a1",
+          "sentence": "最近一周已收藏的新的AI模型，来自技术来源",
+          "input_key": "90a9ee3f586f006820492bafa0d9044d1499e27edce2404f30fea2951dc92dfc",
+          "plan": {
+            "intent": "Find newly announced or released AI models (including new versions) that were announced/released within the last 7 days, specifically those marked as starred/favorite, from the source '技术来源'.",
+            "entities": [
+              "技术来源"
+            ],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "人工智能",
+                    "大模型"
+                  ],
+                  [
+                    "上线",
+                    "发布",
+                    "开源",
+                    "推出"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "foundation model",
+                    "language model",
+                    "llm"
+                  ],
+                  [
+                    "announce",
+                    "launch",
+                    "open-source",
+                    "release"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "人工智能",
+                    "大模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "foundation model",
+                    "language model",
+                    "llm",
+                    "model"
+                  ]
+                ]
+              },
+              {
+                "language": "neutral",
+                "groups": [
+                  [
+                    "技术来源"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "source": "技术来源",
+              "starred_only": true,
+              "recent_days": 7,
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": 1,
+            "unread_only": false,
+            "starred_only": true,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": 7,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:37:06.007828700+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 0,
+          "total": 10,
+          "pending": 10,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 31607,
+      "requests": 3
+    },
+    {
+      "algorithm": "staged",
+      "case": {
+        "key": "no_relevant",
+        "query": "海底火山声学监测的新发现",
+        "topic": "none",
+        "expected": []
+      },
+      "result": {
+        "passed": true,
+        "actual": [],
+        "missed": [],
+        "false_positive": [],
+        "error": null,
+        "session": {
+          "scan": {
+            "scan_id": "666a175d-03c5-4ccb-acb5-1b153d44f7ce",
+            "started_at": "2026-10-27T19:37:37.607311600+00:00",
+            "status": "complete",
+            "phase": "done",
+            "total": 71,
+            "title_screened": 71,
+            "title_model_reviewed": 69,
+            "title_excluded": 66,
+            "preview_screened": 5,
+            "further_pending": 0,
+            "full_verified": 2,
+            "summary_only": 0,
+            "note_verified": 0,
+            "excluded": 70,
+            "insufficient": 1,
+            "changed": 0,
+            "failed": 0,
+            "pending": 0,
+            "matches": 0,
+            "full_parts_done": 11,
+            "full_parts_total": 11,
+            "cache_hits": 0,
+            "snapshot_revision": 162
+          },
+          "id": "scan:73fa663a-39dc-4d36-931d-5de2f9a39fee",
+          "sentence": "海底火山声学监测的新发现",
+          "input_key": "85a6966acaffe0b26fcd01292f230852800f8f2695a3a70b311bd604325016af",
+          "plan": {
+            "intent": "New findings or research results in acoustic monitoring of submarine volcanoes. This includes scientific studies, new detection methods, and discoveries related to underwater volcanic activity via acoustics.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "水下火山",
+                    "海底火山",
+                    "海底火山喷发"
+                  ],
+                  [
+                    "声学信号",
+                    "声学探测",
+                    "声学监测",
+                    "水声监测"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "seamount",
+                    "submarine volcanism",
+                    "submarine volcano",
+                    "underwater volcano"
+                  ],
+                  [
+                    "acoustic detection",
+                    "acoustic monitoring",
+                    "acoustic signals",
+                    "hydroacoustic"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "水下火山",
+                    "海底火山"
+                  ],
+                  [
+                    "声学",
+                    "水声"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "submarine volcano",
+                    "underwater volcano"
+                  ],
+                  [
+                    "acoustic",
+                    "hydroacoustic"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "水下火山",
+                    "海底火山",
+                    "海底火山喷发"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "seamount",
+                    "submarine volcanism",
+                    "submarine volcano",
+                    "underwater volcano"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:37:37.607311600+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 71,
+          "total": 71,
+          "pending": 0,
+          "matches": 0,
+          "stale": false,
+          "lane_turn": 0
+        }
+      },
+      "first_result_ms": null,
+      "elapsed_ms": 90461,
+      "requests": 12
+    },
+    {
+      "algorithm": "old_v4",
+      "case": {
+        "key": "models_zh",
+        "query": "新的AI模型",
+        "topic": "models",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          100,
+          101,
+          102,
+          103,
+          104,
+          107
+        ]
+      },
+      "result": {
+        "passed": false,
+        "actual": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          101,
+          102,
+          103,
+          107
+        ],
+        "missed": [
+          100,
+          104
+        ],
+        "false_positive": [],
+        "error": null,
+        "session": {
+          "id": "0b275d81-1461-4d5f-b9e2-3294e9197069",
+          "sentence": "新的AI模型",
+          "input_key": "c777f65aa0c20b1b0ce9396b26d2081b211545de6b8d43eabefa9a981a74b436",
+          "plan": {
+            "intent": "Find discussions, news, or articles about newly announced or released AI models (including large language models, foundation models, etc.), distinct from general AI tutorials or unrelated product launches.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "新 ai 模型",
+                    "新人工智能模型",
+                    "新大模型",
+                    "新模型",
+                    "新语言模型"
+                  ],
+                  [
+                    "上线",
+                    "发布",
+                    "开源",
+                    "推出"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "new ai model",
+                    "new foundation model",
+                    "new language model",
+                    "new llm"
+                  ],
+                  [
+                    "announced",
+                    "launched",
+                    "open-sourced",
+                    "released"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "ai",
+                    "llm",
+                    "人工智能",
+                    "大语言模型"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "ai",
+                    "artificial intelligence",
+                    "foundation model",
+                    "large language model",
+                    "llm"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:39:12.647299400+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 21,
+          "total": 21,
+          "pending": 0,
+          "matches": 10,
+          "stale": false,
+          "lane_turn": 21
+        }
+      },
+      "first_result_ms": 33406,
+      "elapsed_ms": 33408,
+      "requests": 3
+    },
+    {
+      "algorithm": "old_v4",
+      "case": {
+        "key": "database_zh",
+        "query": "数据库查询性能与加速",
+        "topic": "database",
+        "expected": [
+          20,
+          21,
+          22,
+          103,
+          109
+        ]
+      },
+      "result": {
+        "passed": true,
+        "actual": [
+          20,
+          21,
+          22,
+          103,
+          109
+        ],
+        "missed": [],
+        "false_positive": [],
+        "error": null,
+        "session": {
+          "id": "c3bcbbee-33d8-4342-8b0c-d17b71edb007",
+          "sentence": "数据库查询性能与加速",
+          "input_key": "341b82215d3ab11ca99a0f58136ae11dcaa085e24eed54e7ad49ef42dd142d98",
+          "plan": {
+            "intent": "General discussion on database query performance and optimization techniques.",
+            "entities": [],
+            "routes": [
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "sql优化",
+                    "数据库性能",
+                    "数据库调优",
+                    "查询优化"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "database performance",
+                    "db tuning",
+                    "query optimization",
+                    "sql optimization"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "sql",
+                    "数据库",
+                    "查询"
+                  ],
+                  [
+                    "优化",
+                    "加速",
+                    "性能",
+                    "瓶颈",
+                    "调优"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "database",
+                    "query",
+                    "sql"
+                  ],
+                  [
+                    "acceleration",
+                    "bottleneck",
+                    "optimization",
+                    "performance",
+                    "tuning"
+                  ]
+                ]
+              },
+              {
+                "language": "zh",
+                "groups": [
+                  [
+                    "执行计划",
+                    "查询计划",
+                    "索引优化"
+                  ]
+                ]
+              },
+              {
+                "language": "en",
+                "groups": [
+                  [
+                    "execution plan",
+                    "index optimization",
+                    "query plan"
+                  ]
+                ]
+              }
+            ],
+            "filter": {
+              "sort": "relevance"
+            },
+            "unsupported": []
+          },
+          "filter": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "manual": {
+            "ai_search_id": null,
+            "feed_id": null,
+            "unread_only": false,
+            "starred_only": false,
+            "search": null,
+            "tag_ids": [],
+            "tag_mode": "any",
+            "is_read": null,
+            "has_note": null,
+            "date_from": null,
+            "date_to": null,
+            "recent_days": null,
+            "search_field": "all",
+            "exclude_title": false,
+            "sort": "relevance"
+          },
+          "anchor": "2026-10-27T19:39:45.392798900+00:00",
+          "revision": 162,
+          "flags": 0,
+          "checked": 6,
+          "total": 6,
+          "pending": 0,
+          "matches": 5,
+          "stale": false,
+          "lane_turn": 6
+        }
+      },
+      "first_result_ms": 27383,
+      "elapsed_ms": 27385,
+      "requests": 2
+    }
+  ],
+  "passed": false
+}

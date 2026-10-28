@@ -264,7 +264,7 @@ fn upgrade_v7_preserves_manual_topics_and_history_and_is_repeatable() {
             |r| r.get::<_, String>(0)
         )
         .unwrap(),
-        "8"
+        crate::db::migrations::SCHEMA_VERSION.to_string()
     );
 }
 #[tokio::test]
